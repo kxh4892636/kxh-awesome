@@ -1,0 +1,15 @@
+{
+	"name": "hono-template",
+	"scripts": {
+		"dev": "bun run --hot app/index.ts"
+	},
+	"dependencies": {
+		"es-toolkit": "^1.44.0",
+		"hono": "^4.11.4",
+		"p-limit": "^7.2.0",
+		"zod": "^4.3.5"
+	},
+	"devDependencies": {
+		"@types/bun": "latest"
+	}
+}
