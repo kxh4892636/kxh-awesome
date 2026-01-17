@@ -1,0 +1,13 @@
+{
+	"permissions": {
+		"allow": [
+			"Bash(git add:*)",
+			"Bash(git commit:*)",
+			"Skill(mini-plan)",
+			"Bash(tree:*)",
+			"Skill(minispec-plan)",
+			"Skill(miniSpec-plan)",
+			"Skill(miniSpec-act)"
+		]
+	}
+}
