@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 
-interface Post {
+export interface Post {
   userId: number;
   id: number;
   title: string;
