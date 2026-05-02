@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vp dev",
     "build": "tsc && vp build",
-    "preview": "vp preview"
+    "preview": "vp preview",
+    "gen:api": "connectrpc-gen go-template"
   },
   "dependencies": {
     "@bufbuild/protobuf": "^2.2.5",
@@ -25,8 +26,7 @@
     "zustand": "catalog:"
   },
   "devDependencies": {
-    "@bufbuild/protoc-gen-es": "^2.2.5",
-    "@connectrpc/protoc-gen-connect-query": "^2.0.2",
+    "@kxh-awesome/connectrpc-gen": "workspace:*",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
     "typescript": "catalog:",
