@@ -13,7 +13,6 @@ const TECH_STACK = [
 export const AboutPage = () => (
   <Card title="Tech Stack">
     <div className="flex flex-wrap gap-2">
-      
       {TECH_STACK.map(({ name, version }) => (
         <Tag key={name} color="blue">{`${name} v${version}`}</Tag>
       ))}

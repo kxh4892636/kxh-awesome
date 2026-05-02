@@ -4,7 +4,7 @@ import { useCounter } from "../stores/use-counter";
 
 export const HomePage = () => {
   const { count, increment, decrement } = useCounter();
-  const { data, loading, error } = usePosts();
+  const { data, isLoading, isError } = usePosts();
 
   return (
     <div className="flex flex-col gap-6">
@@ -19,8 +19,8 @@ export const HomePage = () => {
       </Card>
 
       <Card title="TanStack Query - JSONPlaceholder Posts">
-        {loading && <Spin />}
-        {error && <Tag color="error">Failed to fetch posts</Tag>}
+        {isLoading && <Spin />}
+        {isError && <Tag color="error">Failed to fetch posts</Tag>}
         {data && (
           <Table
             rowKey="id"

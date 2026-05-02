@@ -50,8 +50,6 @@ export const usePosts = () => {
       } catch (e) {
         console.error("fetch posts error", e);
         return [];
-
-        
       }
     },
   });
