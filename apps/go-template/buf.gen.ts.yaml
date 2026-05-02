@@ -1,0 +1,12 @@
+version: v2
+plugins:
+  - local: ["/home/kxh/project/kxh-awesome/apps/react-template/node_modules/.bin/protoc-gen-es"]
+    out: ../../apps/react-template/src/api/gen/go-template
+    opt:
+      - target=ts
+      - import_extension=.js
+  - local: ["/home/kxh/project/kxh-awesome/apps/react-template/node_modules/.bin/protoc-gen-connect-query"]
+    out: ../../apps/react-template/src/api/gen/go-template
+    opt:
+      - target=ts
+      - import_extension=.js

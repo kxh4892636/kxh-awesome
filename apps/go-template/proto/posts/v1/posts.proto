@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package posts.v1;
+
+option go_package = "kxh-awesome/go-template/gen/posts/v1;postsv1";
+
+service PostsService {
+  rpc GetPosts(GetPostsRequest) returns (GetPostsResponse);
+}
+
+message Post {
+  int32 user_id = 1;
+  int32 id = 2;
+  string title = 3;
+  string body = 4;
+}
+
+message GetPostsRequest {}
+
+message GetPostsResponse {
+  repeated Post posts = 1;
+}

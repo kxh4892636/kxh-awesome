@@ -9,6 +9,10 @@
     "preview": "vp preview"
   },
   "dependencies": {
+    "@bufbuild/protobuf": "^2.2.5",
+    "@connectrpc/connect": "^2.0.0",
+    "@connectrpc/connect-query": "^2.0.2",
+    "@connectrpc/connect-web": "^2.0.0",
     "@tailwindcss/vite": "catalog:",
     "@tanstack/react-query": "catalog:",
     "@tanstack/react-router": "catalog:",
@@ -21,6 +25,8 @@
     "zustand": "catalog:"
   },
   "devDependencies": {
+    "@bufbuild/protoc-gen-es": "^2.2.5",
+    "@connectrpc/protoc-gen-connect-query": "^2.0.2",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
     "typescript": "catalog:",
