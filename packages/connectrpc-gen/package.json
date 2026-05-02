@@ -12,9 +12,11 @@
   "scripts": {
     "build": "vp pack",
     "dev": "vp pack --watch",
-    "check": "vp check"
+    "check": "vp check",
+    "prepare": "vp pack"
   },
   "dependencies": {
+    "@bufbuild/buf": "^1.69.0",
     "@bufbuild/protoc-gen-es": "^2.2.5",
     "@connectrpc/protoc-gen-connect-query": "^2.0.2"
   },
