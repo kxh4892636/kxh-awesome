@@ -1,6 +1,18 @@
-# ai/skills 目录规范
+---
+name: skill-extractor
+description: |
+  从外部数据源（git 仓库、markdown 文档等）或通过交互式对话提取生成 AI skill。
+  触发场景：
+  - 用户要求从 git 仓库提取文档生成 skill
+  - 用户提供 markdown 文档链接要求转化为 skill
+  - 用户希望通过多轮对话头脑风暴方式创建 skill
+  - 用户要求更新已有的提取型 skill
+  关键词：提取skill、从仓库生成skill、创建skill、头脑风暴skill、更新skill
+---
 
-本目录用于存放从外部数据源（git 仓库、markdown 文档等）提取的 AI skills。
+# skill-extractor
+
+本 skill 用于从外部数据源（git 仓库、markdown 文档等）或通过交互式对话提取生成 AI skill。生成的 skill 保存到用户指定的目录下。
 
 ## 从 Git 仓库提取 Skill 的流程
 
@@ -16,17 +28,17 @@
 
    文档通常位于 `docs/` 目录下。若找不到，主动询问用户文档位置。
 
-3. **使用 skill-creator 编写 skill**
+3. **询问 skill 保存路径**
 
-   调用 `skill-creator` skill 完成 skill 的编写、测试和迭代优化。
+   向用户确认生成的 skill 保存到哪个目录，确认后再执行后续操作。
 
-4. **遵循渐进式披露原则**
+4. **使用 skill-creator 编写 skill**
+
+   调用 `skill-creator` skill 完成 skill 的编写、测试和迭代优化。`SKILL.md` 中包含该 skill 使用的 git 仓库的 URL 和本地路径。
+
+5. **遵循渐进式披露原则**
 
    Skill 内容遵循渐进式披露原则，但不要滥用。Skill 必须完整包含 git 仓库中文档中的所有内容，不得遗漏。
-
-5. **创建子文件夹 README**
-
-   提取完成后，在 skill 子文件夹创建 `README.md`，说明该 skill 的概述、git 仓库信息和本地路径、文件结构和更新方式。
 
 6. **维护更新**
 
@@ -58,15 +70,19 @@
    - 用户通常在什么情况下会调用这个 skill？
    - 期望 skill 返回什么样的结果（代码片段、检查清单、诊断报告等）？
 
-4. **使用 skill-creator 编写 skill**
+4. **询问 skill 保存路径**
+
+   向用户确认生成的 skill 保存到哪个目录，确认后再执行后续操作。
+
+5. **使用 skill-creator 编写 skill**
 
    将对话中梳理出的内容整理为结构化输入，调用 `skill-creator` skill 完成 skill 的编写、测试和迭代优化。
 
-5. **遵循渐进式披露原则**
+6. **遵循渐进式披露原则**
 
    Skill 内容遵循渐进式披露原则，但不要滥用。Skill 必须完整包含数据源中的所有内容，不得遗漏。
 
-6. **验证与迭代**
+7. **验证与迭代**
 
    编写完成后，通过实际用例验证 skill 的效果，并根据反馈持续优化。
 
