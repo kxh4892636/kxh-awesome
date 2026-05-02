@@ -5,6 +5,7 @@ const TECH_STACK = [
   { name: "Ant Design", version: "6" },
   { name: "Zustand", version: "5" },
   { name: "es-toolkit", version: "1" },
+  { name: "dayjs", version: "1" },
   { name: "Tailwind CSS", version: "4" },
   { name: "TanStack Query", version: "5" },
   { name: "TanStack Router", version: "1" },
