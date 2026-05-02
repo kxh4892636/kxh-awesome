@@ -18,8 +18,8 @@ React 19 SPA 前端模板。
 # 安装依赖
 vp install
 
-# 生成后端接口代码
-vp run gen:api
+# 生成后端接口代码（传入后端项目名）
+vp run gen:api go-template
 
 # 启动开发服务器
 vp dev
@@ -48,7 +48,7 @@ react-template/
 修改后端 proto 后，重新生成前端接口代码：
 
 ```bash
-vp run gen:api
+vp run gen:api go-template
 ```
 
 产物固定输出到 `src/api/gen/go-template/`，前端直接 import 使用，编译时保证类型安全。

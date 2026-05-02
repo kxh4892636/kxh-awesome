@@ -7,7 +7,7 @@
     "dev": "vp dev",
     "build": "tsc && vp build",
     "preview": "vp preview",
-    "gen:api": "connectrpc-gen go-template"
+    "gen:api": "connectrpc-gen"
   },
   "dependencies": {
     "@bufbuild/protobuf": "^2.2.5",

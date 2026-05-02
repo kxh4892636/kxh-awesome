@@ -46,5 +46,5 @@ go run .
 
 ```bash
 cd apps/react-template
-npm run gen:api
+npm run gen:api go-template
 ```
