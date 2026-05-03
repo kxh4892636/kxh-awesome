@@ -1,4 +1,5 @@
 #!/bin/bash
+# 代码生成脚本 - 一键安装 Go 工具链（protoc-gen-go, connect-go, buf, doc），生成 pb 代码和 API 文档
 set -e
 
 # Ensure Go is on PATH

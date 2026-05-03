@@ -4,26 +4,29 @@ package posts.v1;
 
 option go_package = "kxh-awesome/go-template/gen/posts/v1;postsv1";
 
+// PostsService 文章服务，提供文章查询 RPC
 service PostsService {
+  // GetPosts 获取文章列表
   rpc GetPosts(GetPostsRequest) returns (GetPostsResponse);
 }
 
-// 用户列表
+// Post 文章实体
 message Post {
-  // 用户 ID
+  // 作者用户 ID
   int32 user_id = 1;
-  // 标识符
+  // 文章 ID
   int32 id = 2;
-  // 标题
+  // 文章标题
   string title = 3;
-  // 测试
+  // 文章正文
   string body = 4;
 }
 
+// GetPostsRequest 获取文章列表请求（暂无参数）
 message GetPostsRequest {}
 
-// 用户列表响应
+// GetPostsResponse 获取文章列表响应
 message GetPostsResponse {
-  // 用户列表
+  // 文章列表
   repeated Post posts = 1;
 }

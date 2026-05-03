@@ -1,3 +1,4 @@
+// 关于页 - 展示项目前端技术栈列表
 import { Card, Tag } from "antd";
 
 const TECH_STACK = [

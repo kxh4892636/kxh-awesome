@@ -1,3 +1,4 @@
+// 文章列表组件 - 展示 TanStack Query 数据加载三态：加载中 / 错误 / 列表
 import { Card, Spin, Table, Tag } from "antd";
 import type { Post } from "../../../api/gen/go-template/posts/v1/posts_pb";
 

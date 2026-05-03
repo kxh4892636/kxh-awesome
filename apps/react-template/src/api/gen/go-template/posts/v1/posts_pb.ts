@@ -9,8 +9,9 @@ import type { Message } from "@bufbuild/protobuf";
 /**
  * Describes the file posts/v1/posts.proto.
  */
-export const file_posts_v1_posts: GenFile = /*@__PURE__*/
-  fileDesc("ChRwb3N0cy92MS9wb3N0cy5wcm90bxIIcG9zdHMudjEiQAoEUG9zdBIPCgd1c2VyX2lkGAEgASgFEgoKAmlkGAIgASgFEg0KBXRpdGxlGAMgASgJEgwKBGJvZHkYBCABKAkiEQoPR2V0UG9zdHNSZXF1ZXN0IjEKEEdldFBvc3RzUmVzcG9uc2USHQoFcG9zdHMYASADKAsyDi5wb3N0cy52MS5Qb3N0MlEKDFBvc3RzU2VydmljZRJBCghHZXRQb3N0cxIZLnBvc3RzLnYxLkdldFBvc3RzUmVxdWVzdBoaLnBvc3RzLnYxLkdldFBvc3RzUmVzcG9uc2VCLlosa3hoLWF3ZXNvbWUvZ28tdGVtcGxhdGUvZ2VuL3Bvc3RzL3YxO3Bvc3RzdjFiBnByb3RvMw");
+export const file_posts_v1_posts: GenFile /*@__PURE__*/ = fileDesc(
+  "ChRwb3N0cy92MS9wb3N0cy5wcm90bxIIcG9zdHMudjEiQAoEUG9zdBIPCgd1c2VyX2lkGAEgASgFEgoKAmlkGAIgASgFEg0KBXRpdGxlGAMgASgJEgwKBGJvZHkYBCABKAkiEQoPR2V0UG9zdHNSZXF1ZXN0IjEKEEdldFBvc3RzUmVzcG9uc2USHQoFcG9zdHMYASADKAsyDi5wb3N0cy52MS5Qb3N0MlEKDFBvc3RzU2VydmljZRJBCghHZXRQb3N0cxIZLnBvc3RzLnYxLkdldFBvc3RzUmVxdWVzdBoaLnBvc3RzLnYxLkdldFBvc3RzUmVzcG9uc2VCLlosa3hoLWF3ZXNvbWUvZ28tdGVtcGxhdGUvZ2VuL3Bvc3RzL3YxO3Bvc3RzdjFiBnByb3RvMw",
+);
 
 /**
  * 用户列表
@@ -51,21 +52,21 @@ export type Post = Message<"posts.v1.Post"> & {
  * Describes the message posts.v1.Post.
  * Use `create(PostSchema)` to create a new message.
  */
-export const PostSchema: GenMessage<Post> = /*@__PURE__*/
-  messageDesc(file_posts_v1_posts, 0);
+export const PostSchema: GenMessage<Post> /*@__PURE__*/ = messageDesc(file_posts_v1_posts, 0);
 
 /**
  * @generated from message posts.v1.GetPostsRequest
  */
-export type GetPostsRequest = Message<"posts.v1.GetPostsRequest"> & {
-};
+export type GetPostsRequest = Message<"posts.v1.GetPostsRequest"> & {};
 
 /**
  * Describes the message posts.v1.GetPostsRequest.
  * Use `create(GetPostsRequestSchema)` to create a new message.
  */
-export const GetPostsRequestSchema: GenMessage<GetPostsRequest> = /*@__PURE__*/
-  messageDesc(file_posts_v1_posts, 1);
+export const GetPostsRequestSchema: GenMessage<GetPostsRequest> /*@__PURE__*/ = messageDesc(
+  file_posts_v1_posts,
+  1,
+);
 
 /**
  * 用户列表响应
@@ -85,8 +86,10 @@ export type GetPostsResponse = Message<"posts.v1.GetPostsResponse"> & {
  * Describes the message posts.v1.GetPostsResponse.
  * Use `create(GetPostsResponseSchema)` to create a new message.
  */
-export const GetPostsResponseSchema: GenMessage<GetPostsResponse> = /*@__PURE__*/
-  messageDesc(file_posts_v1_posts, 2);
+export const GetPostsResponseSchema: GenMessage<GetPostsResponse> /*@__PURE__*/ = messageDesc(
+  file_posts_v1_posts,
+  2,
+);
 
 /**
  * @generated from service posts.v1.PostsService
@@ -99,7 +102,5 @@ export const PostsService: GenService<{
     methodKind: "unary";
     input: typeof GetPostsRequestSchema;
     output: typeof GetPostsResponseSchema;
-  },
-}> = /*@__PURE__*/
-  serviceDesc(file_posts_v1_posts, 0);
-
+  };
+}> /*@__PURE__*/ = serviceDesc(file_posts_v1_posts, 0);

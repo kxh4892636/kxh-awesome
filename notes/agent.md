@@ -24,7 +24,6 @@
 
 ### 框架架构
 
-
 - 感知模块;
 - 定义模块: Agent 信息;
 - 记忆模块;
@@ -38,7 +37,6 @@
 - OpenAI: Agent = LLM + Memory + planning + Tool;
 - 人大: Agent = Profile(定义 Agent) + Memory + planning + Action;
 - 复旦大学: Agent = Perception + Brain + Action;
-
 
 ## Perception
 
@@ -56,7 +54,6 @@
 
 - 使用 embedding 模型, 将数据转换为向量, 可处理多模态数据
 - 根据向量相似度进行检索, 可进行语义匹配;
-
 
 #### RAG
 
@@ -107,7 +104,7 @@
 - 检索上下文: 子任务, 使用 RAG 动态选择上下文;
 - 优化上下文: 上下文压缩, 防止上下文溢出和 lost in the middle;
 - 分割上下文
-  - 复制任务拆分为多个子智能体,  每个 subAgent 具有独立上下文;
+  - 复制任务拆分为多个子智能体, 每个 subAgent 具有独立上下文;
   - 沙盒环境;
 
 ## 规划

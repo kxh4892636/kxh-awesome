@@ -1,3 +1,4 @@
+// 根路由与布局 - Ant Design Layout + 导航菜单，所有子路由通过 Outlet 渲染
 import { createRootRoute, Link, Outlet } from "@tanstack/react-router";
 import { Layout, Menu } from "antd";
 import { aboutRoute } from "./about-route";
@@ -5,6 +6,7 @@ import { indexRoute } from "./index-route";
 
 const { Header, Content } = Layout;
 
+// RootLayout 提供全局布局骨架：顶栏导航 + 内容区
 const RootLayout = () => (
   <Layout className="min-h-screen">
     <Header className="flex items-center gap-4! px-6!">
@@ -29,4 +31,5 @@ export const rootRoute = createRootRoute({
   component: RootLayout,
 });
 
+// routeTree 是路由树的根节点，子路由通过 addChildren 挂载
 export const routeTree = rootRoute.addChildren([indexRoute, aboutRoute]);

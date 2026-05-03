@@ -213,14 +213,14 @@
 
       
         <h3 id="posts.v1.GetPostsRequest">GetPostsRequest</h3>
-        <p></p>
+        <p>GetPostsRequest 获取文章列表请求（暂无参数）</p>
 
         
 
         
       
         <h3 id="posts.v1.GetPostsResponse">GetPostsResponse</h3>
-        <p>用户列表响应</p>
+        <p>GetPostsResponse 获取文章列表响应</p>
 
         
           <table class="field-table">
@@ -233,7 +233,7 @@
                   <td>posts</td>
                   <td><a href="#posts.v1.Post">Post</a></td>
                   <td>repeated</td>
-                  <td><p>用户列表 </p></td>
+                  <td><p>文章列表 </p></td>
                 </tr>
               
             </tbody>
@@ -244,7 +244,7 @@
         
       
         <h3 id="posts.v1.Post">Post</h3>
-        <p>用户列表</p>
+        <p>Post 文章实体</p>
 
         
           <table class="field-table">
@@ -257,28 +257,28 @@
                   <td>user_id</td>
                   <td><a href="#int32">int32</a></td>
                   <td></td>
-                  <td><p>用户 ID </p></td>
+                  <td><p>作者用户 ID </p></td>
                 </tr>
               
                 <tr>
                   <td>id</td>
                   <td><a href="#int32">int32</a></td>
                   <td></td>
-                  <td><p>标识符 </p></td>
+                  <td><p>文章 ID </p></td>
                 </tr>
               
                 <tr>
                   <td>title</td>
                   <td><a href="#string">string</a></td>
                   <td></td>
-                  <td><p>标题 </p></td>
+                  <td><p>文章标题 </p></td>
                 </tr>
               
                 <tr>
                   <td>body</td>
                   <td><a href="#string">string</a></td>
                   <td></td>
-                  <td><p>测试 </p></td>
+                  <td><p>文章正文 </p></td>
                 </tr>
               
             </tbody>
@@ -295,7 +295,7 @@
 
       
         <h3 id="posts.v1.PostsService">PostsService</h3>
-        <p></p>
+        <p>PostsService 文章服务，提供文章查询 RPC</p>
         <table class="enum-table">
           <thead>
             <tr><td>Method Name</td><td>Request Type</td><td>Response Type</td><td>Description</td></tr>
@@ -306,7 +306,7 @@
                 <td>GetPosts</td>
                 <td><a href="#posts.v1.GetPostsRequest">GetPostsRequest</a></td>
                 <td><a href="#posts.v1.GetPostsResponse">GetPostsResponse</a></td>
-                <td><p></p></td>
+                <td><p>GetPosts 获取文章列表</p></td>
               </tr>
             
           </tbody>

@@ -1,3 +1,4 @@
+// 计数器组件 - 展示 Zustand 全局状态，通过 props 接收 count 和操作回调
 import { Button, Card } from "antd";
 
 interface CounterSectionProps {

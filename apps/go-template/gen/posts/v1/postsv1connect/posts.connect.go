@@ -39,6 +39,7 @@ const (
 
 // PostsServiceClient is a client for the posts.v1.PostsService service.
 type PostsServiceClient interface {
+	// GetPosts 获取文章列表
 	GetPosts(context.Context, *connect.Request[v1.GetPostsRequest]) (*connect.Response[v1.GetPostsResponse], error)
 }
 
@@ -74,6 +75,7 @@ func (c *postsServiceClient) GetPosts(ctx context.Context, req *connect.Request[
 
 // PostsServiceHandler is an implementation of the posts.v1.PostsService service.
 type PostsServiceHandler interface {
+	// GetPosts 获取文章列表
 	GetPosts(context.Context, *connect.Request[v1.GetPostsRequest]) (*connect.Response[v1.GetPostsResponse], error)
 }
 

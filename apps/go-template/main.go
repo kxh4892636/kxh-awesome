@@ -1,3 +1,4 @@
+// 程序入口 - 启动 ConnectRPC HTTP 服务器，支持 h2c、CORS、优雅关闭，内嵌 API 文档
 package main
 
 import (
@@ -24,8 +25,10 @@ var docsDir embed.FS
 func main() {
 	postsService := &service.PostsService{}
 	mux := http.NewServeMux()
+	// 注册 ConnectRPC 服务处理器
 	mux.Handle(postsv1connect.NewPostsServiceHandler(postsService))
 
+	// 内嵌 API 文档，挂载到 /doc/ 路径
 	docsFS, _ := fs.Sub(docsDir, "docs")
 	mux.Handle("/doc/", http.StripPrefix("/doc/", http.FileServer(http.FS(docsFS))))
 
@@ -43,6 +46,7 @@ func main() {
 		}
 	}()
 
+	// 等待 SIGINT/SIGTERM 信号后执行优雅关闭（5s 超时）
 	quit := make(chan os.Signal, 1)
 	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
 	<-quit
@@ -55,6 +59,7 @@ func main() {
 	}
 }
 
+// corsMiddleware 为 ConnectRPC 前端请求添加 CORS 头，处理 OPTIONS 预检
 func corsMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Access-Control-Allow-Origin", "*")
