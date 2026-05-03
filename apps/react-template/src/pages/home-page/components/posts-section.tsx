@@ -22,6 +22,7 @@ export const PostsSection = (props: PostsSectionProps) => {
           columns={[
             { title: "ID", dataIndex: "id", width: 60 },
             { title: "Title", dataIndex: "title" },
+            { title: "Body", dataIndex: "body" },
           ]}
           pagination={false}
         />
