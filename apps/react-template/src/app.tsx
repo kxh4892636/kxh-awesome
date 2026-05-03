@@ -2,7 +2,7 @@
 import { RouterProvider, createRouter } from "@tanstack/react-router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { TransportProvider } from "@connectrpc/connect-query";
-import { routeTree } from "./routes/__root";
+import { routeTree } from "./routes";
 import { transport } from "./api/client";
 
 const queryClient = new QueryClient();
