@@ -21,12 +21,17 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
+// 用户列表
 type Post struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	UserId        int32                  `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
-	Id            int32                  `protobuf:"varint,2,opt,name=id,proto3" json:"id,omitempty"`
-	Title         string                 `protobuf:"bytes,3,opt,name=title,proto3" json:"title,omitempty"`
-	Body          string                 `protobuf:"bytes,4,opt,name=body,proto3" json:"body,omitempty"`
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// 用户 ID
+	UserId int32 `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	// 标识符
+	Id int32 `protobuf:"varint,2,opt,name=id,proto3" json:"id,omitempty"`
+	// 标题
+	Title string `protobuf:"bytes,3,opt,name=title,proto3" json:"title,omitempty"`
+	// 测试
+	Body          string `protobuf:"bytes,4,opt,name=body,proto3" json:"body,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -125,9 +130,11 @@ func (*GetPostsRequest) Descriptor() ([]byte, []int) {
 	return file_posts_v1_posts_proto_rawDescGZIP(), []int{1}
 }
 
+// 用户列表响应
 type GetPostsResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Posts         []*Post                `protobuf:"bytes,1,rep,name=posts,proto3" json:"posts,omitempty"`
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// 用户列表
+	Posts         []*Post `protobuf:"bytes,1,rep,name=posts,proto3" json:"posts,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }

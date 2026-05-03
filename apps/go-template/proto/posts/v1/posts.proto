@@ -8,15 +8,22 @@ service PostsService {
   rpc GetPosts(GetPostsRequest) returns (GetPostsResponse);
 }
 
+// 用户列表
 message Post {
+  // 用户 ID
   int32 user_id = 1;
+  // 标识符
   int32 id = 2;
+  // 标题
   string title = 3;
+  // 测试
   string body = 4;
 }
 
 message GetPostsRequest {}
 
+// 用户列表响应
 message GetPostsResponse {
+  // 用户列表
   repeated Post posts = 1;
 }

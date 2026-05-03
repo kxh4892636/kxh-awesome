@@ -13,25 +13,35 @@ export const file_posts_v1_posts: GenFile = /*@__PURE__*/
   fileDesc("ChRwb3N0cy92MS9wb3N0cy5wcm90bxIIcG9zdHMudjEiQAoEUG9zdBIPCgd1c2VyX2lkGAEgASgFEgoKAmlkGAIgASgFEg0KBXRpdGxlGAMgASgJEgwKBGJvZHkYBCABKAkiEQoPR2V0UG9zdHNSZXF1ZXN0IjEKEEdldFBvc3RzUmVzcG9uc2USHQoFcG9zdHMYASADKAsyDi5wb3N0cy52MS5Qb3N0MlEKDFBvc3RzU2VydmljZRJBCghHZXRQb3N0cxIZLnBvc3RzLnYxLkdldFBvc3RzUmVxdWVzdBoaLnBvc3RzLnYxLkdldFBvc3RzUmVzcG9uc2VCLlosa3hoLWF3ZXNvbWUvZ28tdGVtcGxhdGUvZ2VuL3Bvc3RzL3YxO3Bvc3RzdjFiBnByb3RvMw");
 
 /**
+ * 用户列表
+ *
  * @generated from message posts.v1.Post
  */
 export type Post = Message<"posts.v1.Post"> & {
   /**
+   * 用户 ID
+   *
    * @generated from field: int32 user_id = 1;
    */
   userId: number;
 
   /**
+   * 标识符
+   *
    * @generated from field: int32 id = 2;
    */
   id: number;
 
   /**
+   * 标题
+   *
    * @generated from field: string title = 3;
    */
   title: string;
 
   /**
+   * 测试
+   *
    * @generated from field: string body = 4;
    */
   body: string;
@@ -58,10 +68,14 @@ export const GetPostsRequestSchema: GenMessage<GetPostsRequest> = /*@__PURE__*/
   messageDesc(file_posts_v1_posts, 1);
 
 /**
+ * 用户列表响应
+ *
  * @generated from message posts.v1.GetPostsResponse
  */
 export type GetPostsResponse = Message<"posts.v1.GetPostsResponse"> & {
   /**
+   * 用户列表
+   *
    * @generated from field: repeated posts.v1.Post posts = 1;
    */
   posts: Post[];

@@ -1,5 +1,5 @@
 import { Card, Spin, Table, Tag } from "antd";
-import type { Post } from "../../../hooks/use-posts";
+import type { Post } from "../../../api/gen/go-template/posts/v1/posts_pb";
 
 interface PostsSectionProps {
   data: Post[] | undefined;

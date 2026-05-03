@@ -2,6 +2,8 @@ package main
 
 import (
 	"context"
+	"embed"
+	"io/fs"
 	"log"
 	"net/http"
 	"os"
@@ -16,10 +18,16 @@ import (
 	"kxh-awesome/go-template/internal/service"
 )
 
+//go:embed docs/*
+var docsDir embed.FS
+
 func main() {
 	postsService := &service.PostsService{}
 	mux := http.NewServeMux()
 	mux.Handle(postsv1connect.NewPostsServiceHandler(postsService))
+
+	docsFS, _ := fs.Sub(docsDir, "docs")
+	mux.Handle("/doc/", http.StripPrefix("/doc/", http.FileServer(http.FS(docsFS))))
 
 	server := &http.Server{
 		Addr: ":8080",

@@ -30,6 +30,13 @@ install_if_missing protoc-gen-connect-go connectrpc.com/connect/cmd/protoc-gen-c
 # Ensure buf
 install_if_missing buf github.com/bufbuild/buf/cmd/buf
 
+# Ensure protoc-gen-doc
+install_if_missing protoc-gen-doc github.com/pseudomuto/protoc-gen-doc/cmd/protoc-gen-doc
+
 echo "Generating Go code..."
 buf generate
+
+echo "Generating documentation..."
+buf generate --template buf.gen.doc.yaml
+
 echo "Done."
