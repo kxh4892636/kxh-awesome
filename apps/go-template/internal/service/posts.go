@@ -3,6 +3,7 @@ package service
 
 import (
 	"context"
+	"math/rand/v2"
 
 	"connectrpc.com/connect"
 
@@ -26,13 +27,22 @@ var mockPosts = []*postsv1.Post{
 	{UserId: 3, Id: 6, Title: "ConnectRPC + Go", Body: "ConnectRPC provides type-safe RPC between Go backend and TypeScript frontend."},
 }
 
-// GetPosts 返回全部模拟文章列表
+// GetPosts 返回全部模拟文章列表，当 random 为 true 时随机排序
 func (s *PostsService) GetPosts(
 	_ context.Context,
-	_ *connect.Request[postsv1.GetPostsRequest],
+	req *connect.Request[postsv1.GetPostsRequest],
 ) (*connect.Response[postsv1.GetPostsResponse], error) {
+	posts := mockPosts
+	if req.Msg.GetRandom() {
+		shuffled := make([]*postsv1.Post, len(posts))
+		copy(shuffled, posts)
+		rand.Shuffle(len(shuffled), func(i, j int) {
+			shuffled[i], shuffled[j] = shuffled[j], shuffled[i]
+		})
+		posts = shuffled
+	}
 	res := connect.NewResponse(&postsv1.GetPostsResponse{
-		Posts: mockPosts,
+		Posts: posts,
 	})
 	return res, nil
 }

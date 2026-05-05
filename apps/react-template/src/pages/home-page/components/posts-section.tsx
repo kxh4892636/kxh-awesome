@@ -1,18 +1,20 @@
 // 文章列表组件 - 展示 TanStack Query 数据加载三态：加载中 / 错误 / 列表
-import { Card, Spin, Table, Tag } from "antd";
-import type { Post } from "../../../api/gen/go-template/posts/v1/posts_pb";
+import { Button, Card, Spin, Table, Tag } from "antd";
+import { usePosts } from "../../../hooks/use-posts";
 
-interface PostsSectionProps {
-  data: Post[] | undefined;
-  isLoading: boolean;
-  isError: boolean;
-}
-
-export const PostsSection = (props: PostsSectionProps) => {
-  const { data, isLoading, isError } = props;
+export const PostsSection = () => {
+  const { data, isLoading, isError, refetch, isRefetching } = usePosts();
 
   return (
-    <Card id="posts" title="TanStack Query - JSONPlaceholder Posts">
+    <Card
+      id="posts"
+      title="TanStack Query - JSONPlaceholder Posts"
+      extra={
+        <Button onClick={() => refetch()} loading={isRefetching}>
+          Refresh
+        </Button>
+      }
+    >
       {isLoading && <Spin />}
       {isError && <Tag color="error">Failed to fetch posts</Tag>}
       {data && (

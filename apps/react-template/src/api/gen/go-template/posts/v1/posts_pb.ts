@@ -10,38 +10,38 @@ import type { Message } from "@bufbuild/protobuf";
  * Describes the file posts/v1/posts.proto.
  */
 export const file_posts_v1_posts: GenFile /*@__PURE__*/ = fileDesc(
-  "ChRwb3N0cy92MS9wb3N0cy5wcm90bxIIcG9zdHMudjEiQAoEUG9zdBIPCgd1c2VyX2lkGAEgASgFEgoKAmlkGAIgASgFEg0KBXRpdGxlGAMgASgJEgwKBGJvZHkYBCABKAkiEQoPR2V0UG9zdHNSZXF1ZXN0IjEKEEdldFBvc3RzUmVzcG9uc2USHQoFcG9zdHMYASADKAsyDi5wb3N0cy52MS5Qb3N0MlEKDFBvc3RzU2VydmljZRJBCghHZXRQb3N0cxIZLnBvc3RzLnYxLkdldFBvc3RzUmVxdWVzdBoaLnBvc3RzLnYxLkdldFBvc3RzUmVzcG9uc2VCLlosa3hoLWF3ZXNvbWUvZ28tdGVtcGxhdGUvZ2VuL3Bvc3RzL3YxO3Bvc3RzdjFiBnByb3RvMw",
+  "ChRwb3N0cy92MS9wb3N0cy5wcm90bxIIcG9zdHMudjEiQAoEUG9zdBIPCgd1c2VyX2lkGAEgASgFEgoKAmlkGAIgASgFEg0KBXRpdGxlGAMgASgJEgwKBGJvZHkYBCABKAkiIQoPR2V0UG9zdHNSZXF1ZXN0Eg4KBnJhbmRvbRgBIAEoCCIxChBHZXRQb3N0c1Jlc3BvbnNlEh0KBXBvc3RzGAEgAygLMg4ucG9zdHMudjEuUG9zdDJRCgxQb3N0c1NlcnZpY2USQQoIR2V0UG9zdHMSGS5wb3N0cy52MS5HZXRQb3N0c1JlcXVlc3QaGi5wb3N0cy52MS5HZXRQb3N0c1Jlc3BvbnNlQi5aLGt4aC1hd2Vzb21lL2dvLXRlbXBsYXRlL2dlbi9wb3N0cy92MTtwb3N0c3YxYgZwcm90bzM",
 );
 
 /**
- * 用户列表
+ * Post 文章实体
  *
  * @generated from message posts.v1.Post
  */
 export type Post = Message<"posts.v1.Post"> & {
   /**
-   * 用户 ID
+   * 作者用户 ID
    *
    * @generated from field: int32 user_id = 1;
    */
   userId: number;
 
   /**
-   * 标识符
+   * 文章 ID
    *
    * @generated from field: int32 id = 2;
    */
   id: number;
 
   /**
-   * 标题
+   * 文章标题
    *
    * @generated from field: string title = 3;
    */
   title: string;
 
   /**
-   * 测试
+   * 文章正文
    *
    * @generated from field: string body = 4;
    */
@@ -55,9 +55,18 @@ export type Post = Message<"posts.v1.Post"> & {
 export const PostSchema: GenMessage<Post> /*@__PURE__*/ = messageDesc(file_posts_v1_posts, 0);
 
 /**
+ * GetPostsRequest 获取文章列表请求
+ *
  * @generated from message posts.v1.GetPostsRequest
  */
-export type GetPostsRequest = Message<"posts.v1.GetPostsRequest"> & {};
+export type GetPostsRequest = Message<"posts.v1.GetPostsRequest"> & {
+  /**
+   * 是否随机排序
+   *
+   * @generated from field: bool random = 1;
+   */
+  random: boolean;
+};
 
 /**
  * Describes the message posts.v1.GetPostsRequest.
@@ -69,13 +78,13 @@ export const GetPostsRequestSchema: GenMessage<GetPostsRequest> /*@__PURE__*/ = 
 );
 
 /**
- * 用户列表响应
+ * GetPostsResponse 获取文章列表响应
  *
  * @generated from message posts.v1.GetPostsResponse
  */
 export type GetPostsResponse = Message<"posts.v1.GetPostsResponse"> & {
   /**
-   * 用户列表
+   * 文章列表
    *
    * @generated from field: repeated posts.v1.Post posts = 1;
    */
@@ -92,10 +101,14 @@ export const GetPostsResponseSchema: GenMessage<GetPostsResponse> /*@__PURE__*/ 
 );
 
 /**
+ * PostsService 文章服务，提供文章查询 RPC
+ *
  * @generated from service posts.v1.PostsService
  */
 export const PostsService: GenService<{
   /**
+   * GetPosts 获取文章列表
+   *
    * @generated from rpc posts.v1.PostsService.GetPosts
    */
   getPosts: {

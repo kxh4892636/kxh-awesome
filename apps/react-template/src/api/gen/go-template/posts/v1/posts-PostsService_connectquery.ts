@@ -5,6 +5,8 @@
 import { PostsService } from "./posts_pb.js";
 
 /**
+ * GetPosts 获取文章列表
+ *
  * @generated from rpc posts.v1.PostsService.GetPosts
  */
 export const getPosts = PostsService.method.getPosts;

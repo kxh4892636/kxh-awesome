@@ -15,7 +15,7 @@ go-template/
 ├── proto/                 # IDL 定义（接口唯一真实源）
 │   └── posts/v1/
 │       └── posts.proto
-├── gen/                   # 生成代码（只读，不手动编辑）
+├── gen/                   # 生成代码（自动生成，无须阅读，不手动编辑）
 │   └── posts/v1/
 ├── docs/                  # API 文档站点（由 generate.sh 自动生成）
 │   └── index.html

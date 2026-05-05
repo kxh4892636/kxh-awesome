@@ -22,8 +22,11 @@ message Post {
   string body = 4;
 }
 
-// GetPostsRequest 获取文章列表请求（暂无参数）
-message GetPostsRequest {}
+// GetPostsRequest 获取文章列表请求
+message GetPostsRequest {
+  // 是否随机排序
+  bool random = 1;
+}
 
 // GetPostsResponse 获取文章列表响应
 message GetPostsResponse {

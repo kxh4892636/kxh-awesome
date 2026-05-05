@@ -94,9 +94,11 @@ func (x *Post) GetBody() string {
 	return ""
 }
 
-// GetPostsRequest 获取文章列表请求（暂无参数）
+// GetPostsRequest 获取文章列表请求
 type GetPostsRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// 是否随机排序
+	Random        bool `protobuf:"varint,1,opt,name=random,proto3" json:"random,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -129,6 +131,13 @@ func (x *GetPostsRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use GetPostsRequest.ProtoReflect.Descriptor instead.
 func (*GetPostsRequest) Descriptor() ([]byte, []int) {
 	return file_posts_v1_posts_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *GetPostsRequest) GetRandom() bool {
+	if x != nil {
+		return x.Random
+	}
+	return false
 }
 
 // GetPostsResponse 获取文章列表响应
@@ -186,8 +195,9 @@ const file_posts_v1_posts_proto_rawDesc = "" +
 	"\auser_id\x18\x01 \x01(\x05R\x06userId\x12\x0e\n" +
 	"\x02id\x18\x02 \x01(\x05R\x02id\x12\x14\n" +
 	"\x05title\x18\x03 \x01(\tR\x05title\x12\x12\n" +
-	"\x04body\x18\x04 \x01(\tR\x04body\"\x11\n" +
-	"\x0fGetPostsRequest\"8\n" +
+	"\x04body\x18\x04 \x01(\tR\x04body\")\n" +
+	"\x0fGetPostsRequest\x12\x16\n" +
+	"\x06random\x18\x01 \x01(\bR\x06random\"8\n" +
 	"\x10GetPostsResponse\x12$\n" +
 	"\x05posts\x18\x01 \x03(\v2\x0e.posts.v1.PostR\x05posts2Q\n" +
 	"\fPostsService\x12A\n" +
