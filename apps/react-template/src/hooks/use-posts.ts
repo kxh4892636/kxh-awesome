@@ -8,7 +8,14 @@ import { postsClient } from "../api/client";
 export const usePosts = (random = true) => {
   const query = useQuery({
     queryKey: ["posts", random],
-    queryFn: () => postsClient.getPosts({ random }),
+    queryFn: () => {
+      try {
+        return postsClient.getPosts({ random });
+      } catch (error) {
+        console.error(error);
+        throw error;
+      }
+    },
   });
   const { data, ...rest } = query;
 
