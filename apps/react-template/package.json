@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@bufbuild/protobuf": "^2.2.5",
-    "@connectrpc/connect-query": "^2.0.2",
+    "@connectrpc/connect": "catalog:",
     "@connectrpc/connect-web": "^2.0.0",
     "@tailwindcss/vite": "catalog:",
     "@tanstack/react-query": "catalog:",
