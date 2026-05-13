@@ -1,6 +1,6 @@
 ---
 name: git-commit
-description: "根据当前仓库变更文件和历史 commit message 风格, 总结生成规范化的 commit message，并执行提交操作。当用户要求提交 git 变更时，生成 git message 消息时, 使用该 skill."
+description: "根据当前仓库变更文件, 总结生成规范化的 commit message，并执行提交操作。当用户要求提交 git 变更时，生成 git message 消息时, 使用该 skill."
 ---
 
 # git-commit
@@ -10,6 +10,7 @@ description: "根据当前仓库变更文件和历史 commit message 风格, 总
 ## 执行步骤
 
 1. 查看详细的代码变更内容（用于理解变更）：
+
    ```bash
    git diff
    ```
@@ -34,26 +35,25 @@ type: subject
 
 ### Type 类型（必选其一）
 
-| 类型 | 说明 |
-|------|------|
-| feat | 新功能 |
-| fix | 修复 bug |
-| docs | 文档变更 |
-| style | 代码格式（不影响代码运行的变动）|
-| refactor | 重构（既不是新增功能，也不是修改 bug）|
-| perf | 性能优化 |
-| test | 增加测试 |
-| chore | 构建过程或辅助工具的变动 |
-| ci | CI 相关变更 |
-| build | 构建系统或外部依赖变更 |
-| revert | 回滚 commit |
+| 类型     | 说明                                   |
+| -------- | -------------------------------------- |
+| feat     | 新功能                                 |
+| fix      | 修复 bug                               |
+| docs     | 文档变更                               |
+| style    | 代码格式（不影响代码运行的变动）       |
+| refactor | 重构（既不是新增功能，也不是修改 bug） |
+| perf     | 性能优化                               |
+| test     | 增加测试                               |
+| chore    | 构建过程或辅助工具的变动               |
+| ci       | CI 相关变更                            |
+| build    | 构建系统或外部依赖变更                 |
+| revert   | 回滚 commit                            |
 
 ### 规则
 
 - **type**: 必须为小写
-- **subject**: 
+- **subject**:
   - 简短描述，不超过 13 个字符
-  - 描述**变化概述**（做了什么、改了什么），不写具体实现细节（如函数名、文件名、算法等）
   - 中文描述
 
 ### 示例
