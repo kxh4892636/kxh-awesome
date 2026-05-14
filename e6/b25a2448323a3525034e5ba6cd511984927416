@@ -1,0 +1,161 @@
+scripts/link-skills.cjs
+  3db398e40219f6ea 9-10
+  259cbcac8bf318c2 7-8,14,16-19,21,23-25,27-28,30,32,34-42,45-47 gitai:{"mixed_line_ranges":[],"operations":[{"operation_id":"6a05b375be03b3fbe1a1fd39","tool_type":"agent","tool_id":"SearchReplace","line_ranges":[{"Range":[7,8]},{"Single":14},{"Range":[16,19]},{"Single":21},{"Range":[23,25]},{"Range":[27,28]},{"Single":30},{"Single":32},{"Range":[34,42]},{"Range":[45,47]}]}]}
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.4",
+  "base_commit_sha": "e6b25a2448323a3525034e5ba6cd511984927416",
+  "prompts": {
+    "259cbcac8bf318c2": {
+      "agent_id": {
+        "tool": "trae",
+        "id": "6a05b34ebe03b3fbe1a1fd29",
+        "model": "glm-5.1__dev"
+      },
+      "human_author": "kongxiaohan <kongxiaohan.xiaoyu@bytedance.com>",
+      "messages": [],
+      "total_additions": 36,
+      "total_deletions": 37,
+      "accepted_lines": 36,
+      "overriden_lines": 0
+    },
+    "3db398e40219f6ea": {
+      "agent_id": {
+        "tool": "trae-cue",
+        "id": "ai_tab-icr-537fb1f2-ba82-40c1-b5c9-4c49b05623b7",
+        "model": "default"
+      },
+      "human_author": "kongxiaohan <kongxiaohan.xiaoyu@bytedance.com>",
+      "messages": [],
+      "total_additions": 2,
+      "total_deletions": 1,
+      "accepted_lines": 2,
+      "overriden_lines": 0
+    }
+  },
+  "attestation_metadata": {
+    "scripts/link-skills.cjs": [
+      {
+        "hash": "259cbcac8bf318c2",
+        "line_ranges": [
+          {
+            "Range": [
+              7,
+              8
+            ]
+          },
+          {
+            "Single": 14
+          },
+          {
+            "Range": [
+              16,
+              19
+            ]
+          },
+          {
+            "Single": 21
+          },
+          {
+            "Range": [
+              23,
+              25
+            ]
+          },
+          {
+            "Range": [
+              27,
+              28
+            ]
+          },
+          {
+            "Single": 30
+          },
+          {
+            "Single": 32
+          },
+          {
+            "Range": [
+              34,
+              42
+            ]
+          },
+          {
+            "Range": [
+              45,
+              47
+            ]
+          }
+        ],
+        "mixed_line_ranges": [],
+        "operations": [
+          {
+            "operation_id": "6a05b375be03b3fbe1a1fd39",
+            "tool_type": "agent",
+            "tool_id": "SearchReplace",
+            "line_ranges": [
+              {
+                "Range": [
+                  7,
+                  8
+                ]
+              },
+              {
+                "Single": 14
+              },
+              {
+                "Range": [
+                  16,
+                  19
+                ]
+              },
+              {
+                "Single": 21
+              },
+              {
+                "Range": [
+                  23,
+                  25
+                ]
+              },
+              {
+                "Range": [
+                  27,
+                  28
+                ]
+              },
+              {
+                "Single": 30
+              },
+              {
+                "Single": 32
+              },
+              {
+                "Range": [
+                  34,
+                  42
+                ]
+              },
+              {
+                "Range": [
+                  45,
+                  47
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "remote_transcripts": {
+    "259cbcac8bf318c2": {
+      "tool": "trae",
+      "conversation_id": "6a05b34ebe03b3fbe1a1fd29",
+      "session_id": "6a05b34ebe03b3fbe1a1fd29",
+      "status": "remote_only",
+      "message": "Remote transcript resolution is not implemented yet for TRAE prompts."
+    }
+  }
+}
