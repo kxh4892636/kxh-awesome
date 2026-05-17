@@ -1,31 +1,29 @@
-// 根路由与布局 - Ant Design Layout + 导航菜单，所有子路由通过 Outlet 渲染
+// 根路由与布局 - 顶栏导航 + 内容区，所有子路由通过 Outlet 渲染
 import { createRootRoute, createRoute, Link, Outlet } from "@tanstack/react-router";
-import { Layout, Menu } from "antd";
+import { Button } from "@/components/ui/button";
 import { AboutPage } from "../pages/about-page";
 import { HomePage } from "../pages/home-page";
 
-const { Header, Content } = Layout;
-
 // RootLayout 提供全局布局骨架：顶栏导航 + 内容区
 const RootLayout = () => (
-  <Layout className="min-h-screen">
-    <Header className="flex items-center gap-4! px-6!">
-      <span className="text-white font-bold text-lg">React Template</span>
-      <Menu
-        theme="dark"
-        mode="horizontal"
-        className="flex-1"
-        defaultSelectedKeys={["home"]}
-        items={[
-          { key: "home", label: <Link to="/">Home</Link> },
-          { key: "about", label: <Link to="/about">About</Link> },
-        ]}
-      />
-    </Header>
-    <Content className="p-6">
+  <div className="min-h-screen bg-background">
+    <header className="border-b bg-background">
+      <div className="flex h-14 items-center gap-4 px-6">
+        <span className="text-lg font-bold">React Template</span>
+        <nav className="flex items-center gap-2">
+          <Button asChild variant="ghost">
+            <Link to="/">Home</Link>
+          </Button>
+          <Button asChild variant="ghost">
+            <Link to="/about">About</Link>
+          </Button>
+        </nav>
+      </div>
+    </header>
+    <main className="p-6">
       <Outlet />
-    </Content>
-  </Layout>
+    </main>
+  </div>
 );
 
 export const rootRoute = createRootRoute({
