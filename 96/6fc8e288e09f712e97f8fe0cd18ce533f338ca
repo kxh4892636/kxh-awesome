@@ -1,0 +1,38 @@
+inbox/go/020-模块-包-导入.md
+  b671939c77282f77 57-60
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.4",
+  "base_commit_sha": "966fc8e288e09f712e97f8fe0cd18ce533f338ca",
+  "prompts": {
+    "80edc3c296da4118": {
+      "agent_id": {
+        "tool": "trae-cue",
+        "id": "ai_tab-icr-23a05da0-e8ed-46c2-8f65-1c887ca5d8c4",
+        "model": "default"
+      },
+      "human_author": "kongxiaohan <kongxiaohan.xiaoyu@bytedance.com>",
+      "messages": [],
+      "total_additions": 1,
+      "total_deletions": 1,
+      "accepted_lines": 0,
+      "overriden_lines": 0
+    },
+    "b671939c77282f77": {
+      "agent_id": {
+        "tool": "trae-cue",
+        "id": "ai_tab-icr-ea5e66e6-5920-4e85-93c5-8f16a9e19a91",
+        "model": "default"
+      },
+      "human_author": "kongxiaohan <kongxiaohan.xiaoyu@bytedance.com>",
+      "messages": [],
+      "total_additions": 4,
+      "total_deletions": 1,
+      "accepted_lines": 4,
+      "overriden_lines": 0
+    }
+  },
+  "attestation_metadata": {},
+  "remote_transcripts": {}
+}
