@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "skills": {
+    "design-lark-chart": {
+      "source": "iaasng/veai",
+      "sourceType": "byted",
+      "computedHash": "561b6595dc0449bbedc109baea7922fa8565b7783c4108146ded359fe9fbff30"
+    },
+    "mindai-chart-generation": {
+      "source": "ecom/mindai",
+      "sourceType": "byted",
+      "computedHash": "7a46f20abc9e796660092064df7cda8f9fb94eda525c2ab883766082d62a61dc"
+    }
+  }
+}
