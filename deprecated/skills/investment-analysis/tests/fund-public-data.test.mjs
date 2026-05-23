@@ -96,7 +96,10 @@ function fundFetch(url) {
   if (parsed.hostname === "fundf10.eastmoney.com" && parsed.pathname === "/F10DataApi.aspx") {
     return textResponse(navText());
   }
-  if (parsed.hostname === "fundf10.eastmoney.com" && parsed.pathname === "/FundArchivesDatas.aspx") {
+  if (
+    parsed.hostname === "fundf10.eastmoney.com" &&
+    parsed.pathname === "/FundArchivesDatas.aspx"
+  ) {
     return textResponse(holdingsText());
   }
   if (parsed.hostname === "fund.eastmoney.com") return textResponse(profileText());
@@ -149,7 +152,11 @@ test("fetchFundDailyNav returns the requested day row", async () => {
 });
 
 test("fetchFundNavRange merges paged NAV history", async () => {
-  const result = await fetchFundNavRange("161725", { fetchImpl: fundFetch, pageSize: 5, maxPages: 1 });
+  const result = await fetchFundNavRange("161725", {
+    fetchImpl: fundFetch,
+    pageSize: 5,
+    maxPages: 1,
+  });
 
   assert.equal(result.data.length, 1);
   assert.equal(result.data[0].accumulatedNav, 2.345);

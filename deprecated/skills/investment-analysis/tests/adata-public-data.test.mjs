@@ -72,7 +72,9 @@ function baiduKlineJson() {
         ],
         marketData: "1735776000,2025-01-02,10,11,100,12,9,1000,1,10,2,9;",
       },
-      priceinfo: [["1735776000", "11", "10%", "1", "100", "10.5", "1000", "", "2025-01-02 09:31", "1000"]],
+      priceinfo: [
+        ["1735776000", "11", "10%", "1", "100", "10.5", "1000", "", "2025-01-02 09:31", "1000"],
+      ],
     },
   };
 }
@@ -93,7 +95,21 @@ function eastmoneyListJson() {
   return {
     data: {
       total: 1,
-      diff: [{ f12: "512880", f13: 1, f14: "证券ETF", f2: "1.10", f3: "2.30", f4: "0.02", f5: "100", f6: "1000", f17: "1.00", f18: "0.99", f62: "123" }],
+      diff: [
+        {
+          f12: "512880",
+          f13: 1,
+          f14: "证券ETF",
+          f2: "1.10",
+          f3: "2.30",
+          f4: "0.02",
+          f5: "100",
+          f6: "1000",
+          f17: "1.00",
+          f18: "0.99",
+          f62: "123",
+        },
+      ],
     },
   };
 }
@@ -208,7 +224,13 @@ function dividendJson() {
                     content: {
                       newCompany: {
                         bonusTransfer: {
-                          body: [{ 公告日: "2025-01-01", 分红方案: "10派10元", 除权除息日: "2025-02-01" }],
+                          body: [
+                            {
+                              公告日: "2025-01-01",
+                              分红方案: "10派10元",
+                              除权除息日: "2025-02-01",
+                            },
+                          ],
                         },
                       },
                     },
@@ -226,25 +248,67 @@ function dividendJson() {
 function industryJson() {
   return {
     Result: {
-      "600519": [{ name: "行业", list: [{ xcx_query: "code=801125", name: "白酒", describe: "申万二级" }] }],
+      600519: [
+        { name: "行业", list: [{ xcx_query: "code=801125", name: "白酒", describe: "申万二级" }] },
+      ],
     },
   };
 }
 
 function northJson() {
-  return { result: { data: [{ TRADE_DATE: "2025-01-02 00:00:00", MUTUAL_TYPE: "001", NET_DEAL_AMT: "1", BUY_AMT: "2", SELL_AMT: "1" }] } };
+  return {
+    result: {
+      data: [
+        {
+          TRADE_DATE: "2025-01-02 00:00:00",
+          MUTUAL_TYPE: "001",
+          NET_DEAL_AMT: "1",
+          BUY_AMT: "2",
+          SELL_AMT: "1",
+        },
+      ],
+    },
+  };
 }
 
 function marginJson() {
-  return { success: true, result: { pages: 1, data: [{ DIM_DATE: "2025-01-02 00:00:00", RZYE: "1", RQYE: "2", RZRQYE: "3", RZRQYECZ: "4" }] } };
+  return {
+    success: true,
+    result: {
+      pages: 1,
+      data: [{ DIM_DATE: "2025-01-02 00:00:00", RZYE: "1", RQYE: "2", RZRQYE: "3", RZRQYECZ: "4" }],
+    },
+  };
 }
 
 function indexConstituentJson() {
-  return { ResultCode: "0", Result: [{ DisplayData: { resultData: { tplData: { result: { list: [{ code: "600519", name: "贵州茅台" }] } } } } }] };
+  return {
+    ResultCode: "0",
+    Result: [
+      {
+        DisplayData: {
+          resultData: { tplData: { result: { list: [{ code: "600519", name: "贵州茅台" }] } } },
+        },
+      },
+    ],
+  };
 }
 
 function indexCurrentJson() {
-  return { data: { f58: "沪深300", f57: "000300", f43: 400000, f46: 399000, f44: 401000, f45: 398000, f47: 100, f48: 1000, f60: 399000, f170: 25 } };
+  return {
+    data: {
+      f58: "沪深300",
+      f57: "000300",
+      f43: 400000,
+      f46: 399000,
+      f44: 401000,
+      f45: 398000,
+      f47: 100,
+      f48: 1000,
+      f60: 399000,
+      f170: 25,
+    },
+  };
 }
 
 function calendarJson() {
@@ -252,7 +316,12 @@ function calendarJson() {
 }
 
 function mineJson() {
-  return { name: "贵州茅台", data: [{ name: "财务风险", rows: [{ lx: "盈利", trigyy: "无", trig: 0, fs: 1, commonlxid: [] }] }] };
+  return {
+    name: "贵州茅台",
+    data: [
+      { name: "财务风险", rows: [{ lx: "盈利", trigyy: "无", trig: 0, fs: 1, commonlxid: [] }] },
+    ],
+  };
 }
 
 function newStockJson() {
@@ -265,23 +334,56 @@ function thsText() {
 
 function adataFetch(url, init = {}) {
   const parsed = new URL(String(url));
-  if (parsed.hostname === "finance.pae.baidu.com" && parsed.pathname.includes("/vapi/")) return jsonResponse(baiduQuoteJson());
-  if (parsed.hostname === "finance.pae.baidu.com" && parsed.pathname.includes("/api/getrelatedblock")) return jsonResponse(industryJson());
+  if (parsed.hostname === "finance.pae.baidu.com" && parsed.pathname.includes("/vapi/"))
+    return jsonResponse(baiduQuoteJson());
+  if (
+    parsed.hostname === "finance.pae.baidu.com" &&
+    parsed.pathname.includes("/api/getrelatedblock")
+  )
+    return jsonResponse(industryJson());
   if (parsed.hostname === "finance.pae.baidu.com") return jsonResponse(baiduKlineJson());
-  if (parsed.hostname === "gushitong.baidu.com" && parsed.searchParams.get("resource_id") === "5429") return jsonResponse(dividendJson());
+  if (
+    parsed.hostname === "gushitong.baidu.com" &&
+    parsed.searchParams.get("resource_id") === "5429"
+  )
+    return jsonResponse(dividendJson());
   if (parsed.hostname === "gushitong.baidu.com") return jsonResponse(indexConstituentJson());
-  if (parsed.hostname === "push2.eastmoney.com" && parsed.pathname.includes("/stock/trends2")) return jsonResponse(eastmoneyMinuteJson());
-  if (parsed.hostname === "push2.eastmoney.com" && parsed.pathname.includes("/stock/fflow")) return jsonResponse(flowJson());
-  if (parsed.hostname === "push2.eastmoney.com" && parsed.pathname.includes("/stock/get")) return jsonResponse(indexCurrentJson());
+  if (parsed.hostname === "push2.eastmoney.com" && parsed.pathname.includes("/stock/trends2"))
+    return jsonResponse(eastmoneyMinuteJson());
+  if (parsed.hostname === "push2.eastmoney.com" && parsed.pathname.includes("/stock/fflow"))
+    return jsonResponse(flowJson());
+  if (parsed.hostname === "push2.eastmoney.com" && parsed.pathname.includes("/stock/get"))
+    return jsonResponse(indexCurrentJson());
   if (parsed.hostname === "push2.eastmoney.com") return jsonResponse(eastmoneyListJson());
-  if (parsed.hostname === "push2his.eastmoney.com" && parsed.pathname.includes("/fflow/")) return jsonResponse(flowJson());
+  if (parsed.hostname === "push2his.eastmoney.com" && parsed.pathname.includes("/fflow/"))
+    return jsonResponse(flowJson());
   if (parsed.hostname === "push2his.eastmoney.com") return jsonResponse(eastmoneyKlineJson());
-  if (parsed.hostname === "datacenter.eastmoney.com" && parsed.searchParams.get("reportName") === "RPT_F10_EH_EQUITY") return jsonResponse(sharesJson());
-  if (parsed.hostname === "datacenter.eastmoney.com" && parsed.searchParams.get("type") === "RPT_F10_CORETHEME_BOARDTYPE") return jsonResponse(conceptJson());
-  if (parsed.hostname === "datacenter.eastmoney.com" && parsed.searchParams.get("reportName") === "RPT_F10_CORETHEME_BOARDTYPE") return jsonResponse(conceptJson());
+  if (
+    parsed.hostname === "datacenter.eastmoney.com" &&
+    parsed.searchParams.get("reportName") === "RPT_F10_EH_EQUITY"
+  )
+    return jsonResponse(sharesJson());
+  if (
+    parsed.hostname === "datacenter.eastmoney.com" &&
+    parsed.searchParams.get("type") === "RPT_F10_CORETHEME_BOARDTYPE"
+  )
+    return jsonResponse(conceptJson());
+  if (
+    parsed.hostname === "datacenter.eastmoney.com" &&
+    parsed.searchParams.get("reportName") === "RPT_F10_CORETHEME_BOARDTYPE"
+  )
+    return jsonResponse(conceptJson());
   if (parsed.hostname === "datacenter.eastmoney.com") return jsonResponse(financialCoreJson());
-  if (parsed.hostname === "datacenter-web.eastmoney.com" && parsed.searchParams.get("reportName") === "RPTA_RZRQ_LSHJ") return jsonResponse(marginJson());
-  if (parsed.hostname === "datacenter-web.eastmoney.com" && parsed.searchParams.get("reportName") === "RPTA_APP_IPOAPPLY") return jsonResponse(newStockJson());
+  if (
+    parsed.hostname === "datacenter-web.eastmoney.com" &&
+    parsed.searchParams.get("reportName") === "RPTA_RZRQ_LSHJ"
+  )
+    return jsonResponse(marginJson());
+  if (
+    parsed.hostname === "datacenter-web.eastmoney.com" &&
+    parsed.searchParams.get("reportName") === "RPTA_APP_IPOAPPLY"
+  )
+    return jsonResponse(newStockJson());
   if (parsed.hostname === "datacenter-web.eastmoney.com") return jsonResponse(northJson());
   if (parsed.hostname === "emappdata.eastmoney.com") {
     assert.equal(init.method, "POST");
@@ -294,47 +396,162 @@ function adataFetch(url, init = {}) {
 }
 
 test("Baidu stock market functions parse K-line, minute, order book and ticks", async () => {
-  assert.equal((await fetchBaiduStockKline("600519", { fetchImpl: adataFetch, start: "2025-01-01", end: "2025-01-31" })).data.rows[0].close, 11);
-  assert.equal((await fetchBaiduStockMinute("600519", { fetchImpl: adataFetch })).data.rows[0].price, 11);
-  assert.equal((await fetchBaiduStockOrderBook("600519", { fetchImpl: adataFetch })).data.orderBook.asks[0].price, 101);
-  assert.equal((await fetchBaiduStockTicks("600519", { fetchImpl: adataFetch })).data.rows[0].price, 101);
+  assert.equal(
+    (
+      await fetchBaiduStockKline("600519", {
+        fetchImpl: adataFetch,
+        start: "2025-01-01",
+        end: "2025-01-31",
+      })
+    ).data.rows[0].close,
+    11,
+  );
+  assert.equal(
+    (await fetchBaiduStockMinute("600519", { fetchImpl: adataFetch })).data.rows[0].price,
+    11,
+  );
+  assert.equal(
+    (await fetchBaiduStockOrderBook("600519", { fetchImpl: adataFetch })).data.orderBook.asks[0]
+      .price,
+    101,
+  );
+  assert.equal(
+    (await fetchBaiduStockTicks("600519", { fetchImpl: adataFetch })).data.rows[0].price,
+    101,
+  );
 });
 
 test("Eastmoney list and financial functions parse ETF, concepts, finance and market rows", async () => {
-  assert.equal((await fetchEastmoneyEtfList({ fetchImpl: adataFetch, etfLimit: 5 })).data.rows[0].code, "512880");
-  assert.equal((await fetchEastmoneyConceptList({ fetchImpl: adataFetch })).data.rows[0].conceptName, "证券ETF");
-  assert.equal((await fetchEastmoneyConceptConstituents("BK0966", { fetchImpl: adataFetch })).data.rows[0].stockCode, "512880");
-  assert.equal((await fetchEastmoneyFinancialCore("600519", { fetchImpl: adataFetch })).data.rows[0].roeWeighted, 5.2);
-  assert.equal((await fetchEastmoneyStockKline("600519", { fetchImpl: adataFetch, start: "2025-01-01", end: "2025-01-31" })).data.rows[0].turnoverRatio, 0.5);
-  assert.equal((await fetchEastmoneyStockMinute("600519", { fetchImpl: adataFetch })).data.rows[0].price, 101);
+  assert.equal(
+    (await fetchEastmoneyEtfList({ fetchImpl: adataFetch, etfLimit: 5 })).data.rows[0].code,
+    "512880",
+  );
+  assert.equal(
+    (await fetchEastmoneyConceptList({ fetchImpl: adataFetch })).data.rows[0].conceptName,
+    "证券ETF",
+  );
+  assert.equal(
+    (await fetchEastmoneyConceptConstituents("BK0966", { fetchImpl: adataFetch })).data.rows[0]
+      .stockCode,
+    "512880",
+  );
+  assert.equal(
+    (await fetchEastmoneyFinancialCore("600519", { fetchImpl: adataFetch })).data.rows[0]
+      .roeWeighted,
+    5.2,
+  );
+  assert.equal(
+    (
+      await fetchEastmoneyStockKline("600519", {
+        fetchImpl: adataFetch,
+        start: "2025-01-01",
+        end: "2025-01-31",
+      })
+    ).data.rows[0].turnoverRatio,
+    0.5,
+  );
+  assert.equal(
+    (await fetchEastmoneyStockMinute("600519", { fetchImpl: adataFetch })).data.rows[0].price,
+    101,
+  );
 });
 
 test("Eastmoney capital flow, concepts, plates and shares parse provider data", async () => {
-  assert.equal((await fetchEastmoneyCapitalFlowDaily("600519", { fetchImpl: adataFetch })).data.rows[0].mainNetInflow, 1);
-  assert.equal((await fetchEastmoneyCapitalFlowMinute("600519", { fetchImpl: adataFetch })).data.rows[0].extraLargeNetInflow, 5);
-  assert.equal((await fetchEastmoneyStockConcepts("600519", { fetchImpl: adataFetch })).data.rows[0].conceptName, "白酒");
-  assert.equal((await fetchEastmoneyStockPlates("600519", { fetchImpl: adataFetch })).data.rows[0].plateType, "行业");
-  assert.equal((await fetchEastmoneyStockShares("600519", { fetchImpl: adataFetch })).data.rows[0].totalShares, 1000);
+  assert.equal(
+    (await fetchEastmoneyCapitalFlowDaily("600519", { fetchImpl: adataFetch })).data.rows[0]
+      .mainNetInflow,
+    1,
+  );
+  assert.equal(
+    (await fetchEastmoneyCapitalFlowMinute("600519", { fetchImpl: adataFetch })).data.rows[0]
+      .extraLargeNetInflow,
+    5,
+  );
+  assert.equal(
+    (await fetchEastmoneyStockConcepts("600519", { fetchImpl: adataFetch })).data.rows[0]
+      .conceptName,
+    "白酒",
+  );
+  assert.equal(
+    (await fetchEastmoneyStockPlates("600519", { fetchImpl: adataFetch })).data.rows[0].plateType,
+    "行业",
+  );
+  assert.equal(
+    (await fetchEastmoneyStockShares("600519", { fetchImpl: adataFetch })).data.rows[0].totalShares,
+    1000,
+  );
 });
 
 test("Dividend, industry, north flow, margin and hot rank functions parse source data", async () => {
-  assert.equal((await fetchBaiduStockDividend("600519", { fetchImpl: adataFetch })).data.rows[0].dividendPlan, "10派10元");
-  assert.equal((await fetchBaiduStockIndustry("600519", { fetchImpl: adataFetch })).data.rows[0].industryName, "白酒");
-  assert.equal((await fetchEastmoneyNorthFlow({ fetchImpl: adataFetch })).data.shenzhen.rows[0].netDealAmount, 1);
-  assert.equal((await fetchEastmoneySecuritiesMargin({ fetchImpl: adataFetch })).data.rows[0].marginBalance, 3);
+  assert.equal(
+    (await fetchBaiduStockDividend("600519", { fetchImpl: adataFetch })).data.rows[0].dividendPlan,
+    "10派10元",
+  );
+  assert.equal(
+    (await fetchBaiduStockIndustry("600519", { fetchImpl: adataFetch })).data.rows[0].industryName,
+    "白酒",
+  );
+  assert.equal(
+    (await fetchEastmoneyNorthFlow({ fetchImpl: adataFetch })).data.shenzhen.rows[0].netDealAmount,
+    1,
+  );
+  assert.equal(
+    (await fetchEastmoneySecuritiesMargin({ fetchImpl: adataFetch })).data.rows[0].marginBalance,
+    3,
+  );
   assert.equal((await fetchEastmoneyHotRank({ fetchImpl: adataFetch })).data.rows[0].rank, 1);
 });
 
 test("Index, calendar, risk and ETF THS functions parse source data", async () => {
-  assert.equal((await fetchEastmoneyIndexList({ fetchImpl: adataFetch })).data.rows[0].indexCode, "512880");
-  assert.equal((await fetchBaiduIndexConstituents("000300", { fetchImpl: adataFetch })).data.rows[0].stockCode, "600519");
-  assert.equal((await fetchEastmoneyIndexKline("000300", { fetchImpl: adataFetch, start: "2025-01-01", end: "2025-01-31" })).data.rows[0].date, "2025-01-02");
-  assert.equal((await fetchEastmoneyIndexCurrent("000300", { fetchImpl: adataFetch })).data.name, "沪深300");
-  assert.equal((await fetchSzseTradeCalendar(2025, { fetchImpl: adataFetch, month: 1 })).data.rows[0].tradeStatus, 1);
-  assert.equal((await fetchTdxMineClearance("600519", { fetchImpl: adataFetch })).data.stockName, "贵州茅台");
-  assert.equal((await fetchEastmoneyAStockList({ fetchImpl: adataFetch })).data.rows[0].name, "证券ETF");
-  assert.equal((await fetchEastmoneyNewStockList({ fetchImpl: adataFetch })).data.rows[0].SECURITY_CODE, "301000");
-  assert.equal((await fetchThsEtfKline("512880", { fetchImpl: adataFetch, start: "2025-01-01", end: "2025-01-31" })).data.rows[0].close, 1.5);
+  assert.equal(
+    (await fetchEastmoneyIndexList({ fetchImpl: adataFetch })).data.rows[0].indexCode,
+    "512880",
+  );
+  assert.equal(
+    (await fetchBaiduIndexConstituents("000300", { fetchImpl: adataFetch })).data.rows[0].stockCode,
+    "600519",
+  );
+  assert.equal(
+    (
+      await fetchEastmoneyIndexKline("000300", {
+        fetchImpl: adataFetch,
+        start: "2025-01-01",
+        end: "2025-01-31",
+      })
+    ).data.rows[0].date,
+    "2025-01-02",
+  );
+  assert.equal(
+    (await fetchEastmoneyIndexCurrent("000300", { fetchImpl: adataFetch })).data.name,
+    "沪深300",
+  );
+  assert.equal(
+    (await fetchSzseTradeCalendar(2025, { fetchImpl: adataFetch, month: 1 })).data.rows[0]
+      .tradeStatus,
+    1,
+  );
+  assert.equal(
+    (await fetchTdxMineClearance("600519", { fetchImpl: adataFetch })).data.stockName,
+    "贵州茅台",
+  );
+  assert.equal(
+    (await fetchEastmoneyAStockList({ fetchImpl: adataFetch })).data.rows[0].name,
+    "证券ETF",
+  );
+  assert.equal(
+    (await fetchEastmoneyNewStockList({ fetchImpl: adataFetch })).data.rows[0].SECURITY_CODE,
+    "301000",
+  );
+  assert.equal(
+    (
+      await fetchThsEtfKline("512880", {
+        fetchImpl: adataFetch,
+        start: "2025-01-01",
+        end: "2025-01-31",
+      })
+    ).data.rows[0].close,
+    1.5,
+  );
 });
 
 test("fetchAdataPublicData aggregates source sections and records failures", async () => {

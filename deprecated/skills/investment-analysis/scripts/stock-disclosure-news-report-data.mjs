@@ -15,42 +15,42 @@ const headers = {
 };
 
 const CNINFO_MARKETS = {
-  "沪深京": { column: "szse", stockList: "http://www.cninfo.com.cn/new/data/szse_stock.json" },
-  "港股": { column: "hke", stockList: "http://www.cninfo.com.cn/new/data/hke_stock.json" },
-  "三板": { column: "third", stockList: "http://www.cninfo.com.cn/new/data/gfzr_stock.json" },
-  "基金": { column: "fund", stockList: "http://www.cninfo.com.cn/new/data/fund_stock.json" },
-  "债券": { column: "bond", stockList: "http://www.cninfo.com.cn/new/data/bond_stock.json" },
-  "监管": { column: "regulator", stockList: "" },
-  "预披露": { column: "pre_disclosure", stockList: "" },
+  沪深京: { column: "szse", stockList: "http://www.cninfo.com.cn/new/data/szse_stock.json" },
+  港股: { column: "hke", stockList: "http://www.cninfo.com.cn/new/data/hke_stock.json" },
+  三板: { column: "third", stockList: "http://www.cninfo.com.cn/new/data/gfzr_stock.json" },
+  基金: { column: "fund", stockList: "http://www.cninfo.com.cn/new/data/fund_stock.json" },
+  债券: { column: "bond", stockList: "http://www.cninfo.com.cn/new/data/bond_stock.json" },
+  监管: { column: "regulator", stockList: "" },
+  预披露: { column: "pre_disclosure", stockList: "" },
 };
 
 const CNINFO_CATEGORIES = {
-  "年报": "category_ndbg_szsh",
-  "半年报": "category_bndbg_szsh",
-  "一季报": "category_yjdbg_szsh",
-  "三季报": "category_sjdbg_szsh",
-  "业绩预告": "category_yjygjxz_szsh",
-  "权益分派": "category_qyfpxzcs_szsh",
-  "董事会": "category_dshgg_szsh",
-  "监事会": "category_jshgg_szsh",
-  "股东大会": "category_gddh_szsh",
-  "日常经营": "category_rcjy_szsh",
-  "公司治理": "category_gszl_szsh",
-  "中介报告": "category_zj_szsh",
-  "首发": "category_sf_szsh",
-  "增发": "category_zf_szsh",
-  "股权激励": "category_gqjl_szsh",
-  "配股": "category_pg_szsh",
-  "解禁": "category_jj_szsh",
-  "公司债": "category_gszq_szsh",
-  "可转债": "category_kzzq_szsh",
-  "其他融资": "category_qtrz_szsh",
-  "股权变动": "category_gqbd_szsh",
-  "补充更正": "category_bcgz_szsh",
-  "澄清致歉": "category_cqdq_szsh",
-  "风险提示": "category_fxts_szsh",
-  "特别处理和退市": "category_tbclts_szsh",
-  "退市整理期": "category_tszlq_szsh",
+  年报: "category_ndbg_szsh",
+  半年报: "category_bndbg_szsh",
+  一季报: "category_yjdbg_szsh",
+  三季报: "category_sjdbg_szsh",
+  业绩预告: "category_yjygjxz_szsh",
+  权益分派: "category_qyfpxzcs_szsh",
+  董事会: "category_dshgg_szsh",
+  监事会: "category_jshgg_szsh",
+  股东大会: "category_gddh_szsh",
+  日常经营: "category_rcjy_szsh",
+  公司治理: "category_gszl_szsh",
+  中介报告: "category_zj_szsh",
+  首发: "category_sf_szsh",
+  增发: "category_zf_szsh",
+  股权激励: "category_gqjl_szsh",
+  配股: "category_pg_szsh",
+  解禁: "category_jj_szsh",
+  公司债: "category_gszq_szsh",
+  可转债: "category_kzzq_szsh",
+  其他融资: "category_qtrz_szsh",
+  股权变动: "category_gqbd_szsh",
+  补充更正: "category_bcgz_szsh",
+  澄清致歉: "category_cqdq_szsh",
+  风险提示: "category_fxts_szsh",
+  特别处理和退市: "category_tbclts_szsh",
+  退市整理期: "category_tszlq_szsh",
 };
 
 function parseArgs(argv) {
@@ -157,13 +157,14 @@ function buildCninfoPdfUrl(row) {
 
 async function fetchText(url, options = {}) {
   const fetchImpl = options.fetchImpl || globalThis.fetch;
-  if (!fetchImpl) throw new Error("global fetch is unavailable; use Node 18+ or pass options.fetchImpl");
+  if (!fetchImpl)
+    throw new Error("global fetch is unavailable; use Node 18+ or pass options.fetchImpl");
   const response = await fetchImpl(url, {
     method: options.method || "GET",
     headers: {
       ...headers,
       ...(options.referer ? { referer: options.referer } : {}),
-      ...(options.headers || {}),
+      ...options.headers,
     },
     ...(options.body ? { body: options.body } : {}),
   });
@@ -196,7 +197,10 @@ async function fetchJsonp(url, options = {}) {
 export async function fetchCninfoStockList(market = "沪深京", options = {}) {
   const config = CNINFO_MARKETS[market] || CNINFO_MARKETS["沪深京"];
   if (!config.stockList) return { response: null, data: { rows: [], byCode: {} } };
-  const response = await fetchJson(config.stockList, { ...options, referer: "http://www.cninfo.com.cn/" });
+  const response = await fetchJson(config.stockList, {
+    ...options,
+    referer: "http://www.cninfo.com.cn/",
+  });
   const rows = Array.isArray(response.json?.stockList) ? response.json.stockList : [];
   return {
     response,
@@ -274,7 +278,7 @@ async function fetchCninfoRows(tabName, stockCode, options = {}) {
       referer: "http://www.cninfo.com.cn/new/commonUrl/pageOfSearch?url=disclosure/list/search",
       headers: {
         "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
-        ...(options.headers || {}),
+        ...options.headers,
       },
     });
     responses.push(response);

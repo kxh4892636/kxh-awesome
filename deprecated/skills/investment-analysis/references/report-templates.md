@@ -12,6 +12,7 @@ Sources: [source list]
 Decision context: [user horizon / question]
 
 ## Summary
+
 - View: [Attractive / Watchlist / Neutral / Avoid]
 - Score: [x/100; band; veto if any]
 - Main reason:
@@ -20,32 +21,36 @@ Decision context: [user horizon / question]
 - What would change the view:
 
 ## Data Snapshot
-| Item | Value | Source | As of |
-| --- | ---: | --- | --- |
-| ETF price / NAV | | | |
-| Tracking index | | | |
-| PE / PE percentile | | | |
-| PB / PB percentile | | | |
-| ROE | | | |
-| Historical PE/PB/ROE windows | 3y / 5y / provider all | | |
-| Dividend yield | | | |
-| Fee / tracking error / liquidity | | | |
+
+| Item                             |                  Value | Source | As of |
+| -------------------------------- | ---------------------: | ------ | ----- |
+| ETF price / NAV                  |                        |        |       |
+| Tracking index                   |                        |        |       |
+| PE / PE percentile               |                        |        |       |
+| PB / PB percentile               |                        |        |       |
+| ROE                              |                        |        |       |
+| Historical PE/PB/ROE windows     | 3y / 5y / provider all |        |       |
+| Dividend yield                   |                        |        |       |
+| Fee / tracking error / liquidity |                        |        |       |
 
 ## Scorecard
-| Category | Score | Reason | Key Deduction |
-| --- | ---: | --- | --- |
-| Valuation | /25 | | |
-| Exposure quality | /25 | | |
-| Index method and wrapper | /15 | | |
-| Timing and cycle | /10 | | |
-| Margin of safety and risk | /15 | | |
-| Data confidence | /10 | | |
-| Total | /100 | | |
+
+| Category                  | Score | Reason | Key Deduction |
+| ------------------------- | ----: | ------ | ------------- |
+| Valuation                 |   /25 |        |               |
+| Exposure quality          |   /25 |        |               |
+| Index method and wrapper  |   /15 |        |               |
+| Timing and cycle          |   /10 |        |               |
+| Margin of safety and risk |   /15 |        |               |
+| Data confidence           |   /10 |        |               |
+| Total                     |  /100 |        |               |
 
 Hard vetoes:
+
 - [None / list]
 
 ## Exposure And Quality
+
 - Index methodology:
 - Top holdings and concentration:
 - Industry / region exposure:
@@ -56,6 +61,7 @@ Hard vetoes:
 - Earnings position: [depressed / normal / peak-cycle / unknown]
 
 ## Valuation
+
 - Current level vs history:
 - 3y / 5y / near-10y PE-PB-ROE trend:
 - Current level vs peers:
@@ -63,6 +69,7 @@ Hard vetoes:
 - Dividend yield and bond yield comparison:
 
 ## Timing And Cycle
+
 - Policy cycle:
 - Market / valuation cycle:
 - Economic cycle:
@@ -70,6 +77,7 @@ Hard vetoes:
 - Flow and crowding:
 
 ## Risks
+
 - Value trap:
 - Growth/theme trap:
 - Cycle trap:
@@ -77,13 +85,15 @@ Hard vetoes:
 - Reflexivity:
 
 ## Scenarios
+
 | Scenario | Assumptions | Implication |
-| --- | --- | --- |
-| Downside | | |
-| Base | | |
-| Upside | | |
+| -------- | ----------- | ----------- |
+| Downside |             |             |
+| Base     |             |             |
+| Upside   |             |             |
 
 ## Margin Of Safety
+
 - Valuation anchor:
 - Downside support:
 - What must go right:
@@ -92,6 +102,7 @@ Hard vetoes:
 - Positioning implication:
 
 ## Watchpoints
+
 - Fetch next:
 - Monitor:
 - Invalidate if:
@@ -108,6 +119,7 @@ Sources: [source list]
 Decision context: [user horizon / question]
 
 ## Summary
+
 - View: [Attractive / Watchlist / Neutral / Avoid]
 - Score: [x/100; band; veto if any]
 - Why cheap/expensive:
@@ -117,32 +129,36 @@ Decision context: [user horizon / question]
 - Biggest uncertainty:
 
 ## Data Snapshot
-| Item | Value | Source | As of |
-| --- | ---: | --- | --- |
-| Price / market cap | | | |
-| Revenue / growth | | | |
-| Net profit / growth | | | |
-| ROE / ROIC | | | |
-| Gross / net margin | | | |
-| Operating cash flow | | | |
-| Debt / asset-liability ratio | | | |
-| PE / PB / dividend yield | | | |
+
+| Item                         | Value | Source | As of |
+| ---------------------------- | ----: | ------ | ----- |
+| Price / market cap           |       |        |       |
+| Revenue / growth             |       |        |       |
+| Net profit / growth          |       |        |       |
+| ROE / ROIC                   |       |        |       |
+| Gross / net margin           |       |        |       |
+| Operating cash flow          |       |        |       |
+| Debt / asset-liability ratio |       |        |       |
+| PE / PB / dividend yield     |       |        |       |
 
 ## Scorecard
-| Category | Score | Reason | Key Deduction |
-| --- | ---: | --- | --- |
-| Valuation | /25 | | |
-| Business and industry quality | /30 | | |
-| Financial quality | /15 | | |
-| Timing and catalyst | /10 | | |
-| Margin of safety and risk | /15 | | |
-| Data confidence | /5 | | |
-| Total | /100 | | |
+
+| Category                      | Score | Reason | Key Deduction |
+| ----------------------------- | ----: | ------ | ------------- |
+| Valuation                     |   /25 |        |               |
+| Business and industry quality |   /30 |        |               |
+| Financial quality             |   /15 |        |               |
+| Timing and catalyst           |   /10 |        |               |
+| Margin of safety and risk     |   /15 |        |               |
+| Data confidence               |    /5 |        |               |
+| Total                         |  /100 |        |               |
 
 Hard vetoes:
+
 - [None / list]
 
 ## Business And Industry
+
 - Business model:
 - Customer and supplier power:
 - Real competitive boundary:
@@ -152,6 +168,7 @@ Hard vetoes:
 - Good industry / good company / good price:
 
 ## Quality
+
 - Moat:
 - Pricing power:
 - Cash conversion:
@@ -159,6 +176,7 @@ Hard vetoes:
 - Management and governance:
 
 ## Valuation
+
 - Multiple comparison:
 - Historical range:
 - Normalized earnings:
@@ -166,12 +184,14 @@ Hard vetoes:
 - Valuation anchor:
 
 ## Timing
+
 - Recent price and sentiment:
 - Earnings cycle:
 - Policy / liquidity:
 - Catalysts:
 
 ## Risks And Traps
+
 - Value trap:
 - Growth trap:
 - Accounting / cash-flow risk:
@@ -179,13 +199,15 @@ Hard vetoes:
 - What the market may be correctly pricing:
 
 ## Scenarios
+
 | Scenario | Assumptions | Implication |
-| --- | --- | --- |
-| Downside | | |
-| Base | | |
-| Upside | | |
+| -------- | ----------- | ----------- |
+| Downside |             |             |
+| Base     |             |             |
+| Upside   |             |             |
 
 ## Margin Of Safety
+
 - Valuation anchor:
 - Downside support:
 - What must go right:
@@ -194,6 +216,7 @@ Hard vetoes:
 - Positioning implication:
 
 ## Watchpoints
+
 - Fetch next:
 - Monitor:
 - Invalidate if:

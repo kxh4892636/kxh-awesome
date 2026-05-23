@@ -60,25 +60,25 @@ General scoring rules:
 
 ETF/index scorecard, 100 points:
 
-| Category | Points | What To Check |
-| --- | ---: | --- |
-| Valuation | 25 | PE/PB percentile, dividend yield, valuation vs ROE, history window, peer comparison, earnings-cycle adjustment |
-| Exposure quality | 25 | leader weight, "moon" content, concentration, pricing power, cash-flow quality, industry structure |
-| Index method and wrapper | 15 | methodology, rebalance behavior, theme purity, fee, liquidity, tracking error, premium/discount, fund size |
-| Timing and cycle | 10 | policy, liquidity, market valuation, economic cycle, earnings cycle, crowding and flows |
-| Margin of safety and risk | 15 | downside support, value/growth/cycle traps, reflexivity, liquidity mismatch, forced-sale risk |
-| Data confidence | 10 | source freshness, cross-source agreement, coverage of constituents, missing fields and provider failures |
+| Category                  | Points | What To Check                                                                                                  |
+| ------------------------- | -----: | -------------------------------------------------------------------------------------------------------------- |
+| Valuation                 |     25 | PE/PB percentile, dividend yield, valuation vs ROE, history window, peer comparison, earnings-cycle adjustment |
+| Exposure quality          |     25 | leader weight, "moon" content, concentration, pricing power, cash-flow quality, industry structure             |
+| Index method and wrapper  |     15 | methodology, rebalance behavior, theme purity, fee, liquidity, tracking error, premium/discount, fund size     |
+| Timing and cycle          |     10 | policy, liquidity, market valuation, economic cycle, earnings cycle, crowding and flows                        |
+| Margin of safety and risk |     15 | downside support, value/growth/cycle traps, reflexivity, liquidity mismatch, forced-sale risk                  |
+| Data confidence           |     10 | source freshness, cross-source agreement, coverage of constituents, missing fields and provider failures       |
 
 Stock scorecard, 100 points:
 
-| Category | Points | What To Check |
-| --- | ---: | --- |
-| Valuation | 25 | current multiple vs history and peers, normalized earnings, asset value, free cash flow, dividend support |
-| Business and industry quality | 30 | moat, pricing power, repeatable growth, industry structure, bargaining power, management and capital allocation |
-| Financial quality | 15 | ROE/ROIC source, margin stability, cash conversion, working capital, capex, debt, dilution |
-| Timing and catalyst | 10 | bad news priced in, policy/liquidity, earnings inflection, sentiment, but with humility about timing |
-| Margin of safety and risk | 15 | downside scenario, reflexivity, balance sheet, accounting risk, value/growth/cycle traps |
-| Data confidence | 5 | latest filings, source consistency, missing three-statement or governance fields |
+| Category                      | Points | What To Check                                                                                                   |
+| ----------------------------- | -----: | --------------------------------------------------------------------------------------------------------------- |
+| Valuation                     |     25 | current multiple vs history and peers, normalized earnings, asset value, free cash flow, dividend support       |
+| Business and industry quality |     30 | moat, pricing power, repeatable growth, industry structure, bargaining power, management and capital allocation |
+| Financial quality             |     15 | ROE/ROIC source, margin stability, cash conversion, working capital, capex, debt, dilution                      |
+| Timing and catalyst           |     10 | bad news priced in, policy/liquidity, earnings inflection, sentiment, but with humility about timing            |
+| Margin of safety and risk     |     15 | downside scenario, reflexivity, balance sheet, accounting risk, value/growth/cycle traps                        |
+| Data confidence               |      5 | latest filings, source consistency, missing three-statement or governance fields                                |
 
 Hard vetoes:
 

@@ -294,8 +294,7 @@ export async function probeDanjuanEndpoints(indexCode = DEFAULT_CODE, options = 
   return {
     indexCode,
     fetchedAt: new Date().toISOString(),
-    note:
-      "Native Node probe for Danjuan valuation endpoints. Candidate history endpoints are exploratory and may change.",
+    note: "Native Node probe for Danjuan valuation endpoints. Candidate history endpoints are exploratory and may change.",
     results,
   };
 }
@@ -362,7 +361,9 @@ function normalizeHistory(metric, day, rawData, sourceUrl) {
 
 export async function fetchDanjuanIndexValuation(indexCode = DEFAULT_CODE, options = {}) {
   const metrics = options.metrics || ["pe", "pb", "roe"];
-  const windows = (options.windows || ["3y", "5y", "all"]).map((window) => normalizeDay(window)).filter(Boolean);
+  const windows = (options.windows || ["3y", "5y", "all"])
+    .map((window) => normalizeDay(window))
+    .filter(Boolean);
   const detailResult = await fetchDanjuanValuationDetail(indexCode, options);
   const histories = [];
   const raw = options.includeRaw ? { detail: detailResult.data, histories: {} } : undefined;

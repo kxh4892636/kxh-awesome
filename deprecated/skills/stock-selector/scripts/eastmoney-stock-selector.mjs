@@ -3,8 +3,7 @@
 import { mkdir, rm, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 
-const ENDPOINT =
-  "https://np-tjxg-b.eastmoney.com/api/smart-tag/stock/v3/pw/search-code";
+const ENDPOINT = "https://np-tjxg-b.eastmoney.com/api/smart-tag/stock/v3/pw/search-code";
 
 export const CONDITION_1 =
   "A股，近三年销售毛利率均大于29%，近三年加权净资产收益率ROE均大于14%，总市值大于500亿元，非科创板，非北交所，非ST股，显示总市值、收盘价、市盈率TTM、市净率、近10年市盈率百分位、近10年市净率百分位、年度股息率、近三年销售毛利率、近三年加权净资产收益率ROE、近三年营业收入同比增长率、近三年归母净利润同比增长率、近三年经营活动产生的现金流量净额、资产负债率、有息负债率、所属行业、主营业务、收盘价(季线)、近一年涨跌幅、成交额、换手率";
@@ -22,8 +21,7 @@ function randomHex(length = 32) {
 }
 
 function randomRequestId() {
-  const chars =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
   let out = "";
   for (let i = 0; i < 32; i += 1) {
     out += chars[Math.floor(Math.random() * chars.length)];
@@ -90,9 +88,7 @@ export async function searchCode(query, options = {}) {
     });
   } catch (error) {
     if (error.name === "AbortError" || error.name === "TimeoutError") {
-      throw new Error(
-        `Eastmoney request timed out after ${requestTimeoutMs}ms on page ${pageNo}`,
-      );
+      throw new Error(`Eastmoney request timed out after ${requestTimeoutMs}ms on page ${pageNo}`);
     }
     throw error;
   }
@@ -213,10 +209,12 @@ function csvEscape(value) {
 
 function sanitizeFilenamePart(value) {
   const text = value == null ? "" : String(value);
-  return text
-    .replace(/[\\/:*?"<>|]/g, "_")
-    .replace(/\s+/g, " ")
-    .trim() || "unknown";
+  return (
+    text
+      .replace(/[\\/:*?"<>|]/g, "_")
+      .replace(/\s+/g, " ")
+      .trim() || "unknown"
+  );
 }
 
 function columnLabel(cond1, cond2, key) {
@@ -261,9 +259,7 @@ async function writePerStockCsvs(outDir, cond1, cond2, rows) {
 }
 
 function conditions(raw) {
-  return (raw.data?.responseConditionList ?? [])
-    .map((item) => `- ${item.describe}`)
-    .join("\n");
+  return (raw.data?.responseConditionList ?? []).map((item) => `- ${item.describe}`).join("\n");
 }
 
 function dateMessages(...rawResponses) {
@@ -348,9 +344,7 @@ async function removeStaleOutputs(outDir) {
     "key-metrics.csv",
     "key-metrics.json",
   ];
-  await Promise.all(
-    staleFiles.map((file) => rm(join(outDir, file), { force: true })),
-  );
+  await Promise.all(staleFiles.map((file) => rm(join(outDir, file), { force: true })));
 }
 
 async function main() {

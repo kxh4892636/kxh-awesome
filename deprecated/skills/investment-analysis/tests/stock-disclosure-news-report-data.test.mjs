@@ -100,16 +100,30 @@ function eastmoneyReportJson(page = 1) {
 
 async function stockDisclosureFetch(url, options = {}) {
   const parsed = new URL(String(url));
-  if (parsed.hostname === "www.cninfo.com.cn" && parsed.pathname.endsWith("/new/data/szse_stock.json")) {
+  if (
+    parsed.hostname === "www.cninfo.com.cn" &&
+    parsed.pathname.endsWith("/new/data/szse_stock.json")
+  ) {
     return jsonResponse(cninfoStockListJson());
   }
-  if (parsed.hostname === "www.cninfo.com.cn" && parsed.pathname.endsWith("/new/hisAnnouncement/query")) {
-    const body = options.body instanceof URLSearchParams ? options.body : new URLSearchParams(String(options.body || ""));
+  if (
+    parsed.hostname === "www.cninfo.com.cn" &&
+    parsed.pathname.endsWith("/new/hisAnnouncement/query")
+  ) {
+    const body =
+      options.body instanceof URLSearchParams
+        ? options.body
+        : new URLSearchParams(String(options.body || ""));
     const tabName = body.get("tabName");
-    return jsonResponse(cninfoAnnouncementJson(tabName === "relation" ? "投资者关系活动记录表" : "平安银行：2025年年度报告"));
+    return jsonResponse(
+      cninfoAnnouncementJson(
+        tabName === "relation" ? "投资者关系活动记录表" : "平安银行：2025年年度报告",
+      ),
+    );
   }
   if (parsed.hostname === "search-api-web.eastmoney.com") return textResponse(eastmoneyNewsJsonp());
-  if (parsed.hostname === "reportapi.eastmoney.com") return jsonResponse(eastmoneyReportJson(Number(parsed.searchParams.get("pageNo") || 1)));
+  if (parsed.hostname === "reportapi.eastmoney.com")
+    return jsonResponse(eastmoneyReportJson(Number(parsed.searchParams.get("pageNo") || 1)));
   throw new Error(`Unexpected URL ${url}`);
 }
 
@@ -125,10 +139,15 @@ test("CNInfo stock list and disclosure functions parse official rows", async () 
   });
   assert.equal(announcements.data.rows[0].stockName, "平安银行");
   assert.equal(announcements.data.rows[0].title, "平安银行：2025年年度报告");
-  assert.equal(announcements.data.rows[0].pdfUrl, "https://static.cninfo.com.cn/finalpage/2025-01-01/1210000001.PDF");
+  assert.equal(
+    announcements.data.rows[0].pdfUrl,
+    "https://static.cninfo.com.cn/finalpage/2025-01-01/1210000001.PDF",
+  );
   assert.match(announcements.data.rows[0].detailUrl, /announcementId=1210000001/);
 
-  const relations = await fetchCninfoInvestorRelations("000001", { fetchImpl: stockDisclosureFetch });
+  const relations = await fetchCninfoInvestorRelations("000001", {
+    fetchImpl: stockDisclosureFetch,
+  });
   assert.equal(relations.data.rows[0].title, "投资者关系活动记录表");
 });
 

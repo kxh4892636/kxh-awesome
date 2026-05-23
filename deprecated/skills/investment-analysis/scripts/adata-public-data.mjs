@@ -43,12 +43,14 @@ function parseArgs(argv) {
     else if (arg.startsWith("--etf")) options.etf = readValue();
     else if (arg.startsWith("--index")) options.index = readValue();
     else if (arg.startsWith("--concept")) options.concept = readValue();
-    else if (arg.startsWith("--year")) options.year = Number(readValue()) || new Date().getFullYear();
+    else if (arg.startsWith("--year"))
+      options.year = Number(readValue()) || new Date().getFullYear();
     else if (arg.startsWith("--month")) options.month = Number(readValue()) || undefined;
     else if (arg.startsWith("--start")) options.start = readValue();
     else if (arg.startsWith("--end")) options.end = readValue();
     else if (arg.startsWith("--etf-limit")) options.etfLimit = Number(readValue()) || 20;
-    else if (arg.startsWith("--finance-page-size")) options.financePageSize = Number(readValue()) || 20;
+    else if (arg.startsWith("--finance-page-size"))
+      options.financePageSize = Number(readValue()) || 20;
     else if (arg.startsWith("--out")) options.output = readValue();
     else if (arg === "--include-raw") options.includeRaw = true;
     else if (!arg.startsWith("-")) options.stock = arg;
@@ -95,13 +97,14 @@ function eastmoneySecid(code) {
 
 async function fetchText(url, options = {}) {
   const fetchImpl = options.fetchImpl || globalThis.fetch;
-  if (!fetchImpl) throw new Error("global fetch is unavailable; use Node 18+ or pass options.fetchImpl");
+  if (!fetchImpl)
+    throw new Error("global fetch is unavailable; use Node 18+ or pass options.fetchImpl");
   const response = await fetchImpl(url, {
     method: options.method || "GET",
     headers: {
       ...headers,
       ...(options.referer ? { referer: options.referer } : {}),
-      ...(options.headers || {}),
+      ...options.headers,
     },
     ...(options.body ? { body: options.body } : {}),
   });
@@ -155,7 +158,11 @@ function parseBaiduKline(json, stockCode, startDate, endDate) {
     })
     .filter((row) => {
       if (!row.time) return false;
-      return row.time >= startDate && row.time <= endDate && ((row.amount || 0) > 0 || (row.volume || 0) > 0);
+      return (
+        row.time >= startDate &&
+        row.time <= endDate &&
+        ((row.amount || 0) > 0 || (row.volume || 0) > 0)
+      );
     });
   return {
     resultCode: json?.ResultCode ?? null,
@@ -313,7 +320,8 @@ function parseEastmoneyMinute(json, stockCode) {
   const preClose = numberOrNull(data.preClose);
   const rows = Array.isArray(data.trends)
     ? data.trends.map((line) => {
-        const [tradeTime, open, close, high, low, volume, amount, avgPrice] = String(line).split(",");
+        const [tradeTime, open, close, high, low, volume, amount, avgPrice] =
+          String(line).split(",");
         const price = numberOrNull(close);
         const change = price !== null && preClose !== null ? price - preClose : null;
         return {
@@ -490,7 +498,9 @@ function parseSecuritiesMargin(json) {
 
 function parseHotRank(json) {
   const rows = Array.isArray(json?.data) ? json.data : [];
-  return { rows: rows.map((item, index) => ({ rank: index + 1, rawCode: item.sc || null, raw: item })) };
+  return {
+    rows: rows.map((item, index) => ({ rank: index + 1, rawCode: item.sc || null, raw: item })),
+  };
 }
 
 function parseConceptList(json) {
@@ -628,7 +638,8 @@ function parseTdxMineClearance(json, stockCode) {
 function parseThsJsonp(text) {
   const start = text.indexOf("{");
   const end = text.lastIndexOf("}");
-  if (start < 0 || end <= start) throw new Error(`Cannot parse THS response: ${text.slice(0, 120)}`);
+  if (start < 0 || end <= start)
+    throw new Error(`Cannot parse THS response: ${text.slice(0, 120)}`);
   return JSON.parse(text.slice(start, end + 1));
 }
 
@@ -877,7 +888,10 @@ export async function fetchEastmoneyCapitalFlowDaily(stockCode, options = {}) {
       fields2: "f51,f52,f53,f54,f55,f56,f57,f58,f59,f60,f61",
       secid: eastmoneySecid(stockCode),
     });
-  const response = await fetchJson(url, { ...options, referer: "https://data.eastmoney.com/zjlx/" });
+  const response = await fetchJson(url, {
+    ...options,
+    referer: "https://data.eastmoney.com/zjlx/",
+  });
   return { response, data: parseCapitalFlowDaily(response.json, stockCode) };
 }
 
@@ -891,7 +905,10 @@ export async function fetchEastmoneyCapitalFlowMinute(stockCode, options = {}) {
       fields2: "f51,f52,f53,f54,f55,f56,f57,f58,f59,f60,f61,f62,f63,f64,f65",
       secid: eastmoneySecid(stockCode),
     });
-  const response = await fetchJson(url, { ...options, referer: "https://data.eastmoney.com/zjlx/" });
+  const response = await fetchJson(url, {
+    ...options,
+    referer: "https://data.eastmoney.com/zjlx/",
+  });
   return { response, data: parseCapitalFlowMinute(response.json, stockCode) };
 }
 
@@ -912,7 +929,10 @@ export async function fetchEastmoneyStockConcepts(stockCode, options = {}) {
       source: "HSF10",
       client: "PC",
     });
-  const response = await fetchJson(url, { ...options, referer: "https://data.eastmoney.com/bkzj/gn.html" });
+  const response = await fetchJson(url, {
+    ...options,
+    referer: "https://data.eastmoney.com/bkzj/gn.html",
+  });
   return { response, data: parseConcepts(response.json) };
 }
 
@@ -931,7 +951,10 @@ export async function fetchEastmoneyStockPlates(stockCode, options = {}) {
       source: "HSF10",
       client: "PC",
     });
-  const response = await fetchJson(url, { ...options, referer: "https://emweb.securities.eastmoney.com/" });
+  const response = await fetchJson(url, {
+    ...options,
+    referer: "https://emweb.securities.eastmoney.com/",
+  });
   return { response, data: parsePlates(response.json) };
 }
 
@@ -952,7 +975,10 @@ export async function fetchEastmoneyStockShares(stockCode, options = {}) {
       source: "HSF10",
       client: "PC",
     });
-  const response = await fetchJson(url, { ...options, referer: "https://emweb.securities.eastmoney.com/" });
+  const response = await fetchJson(url, {
+    ...options,
+    referer: "https://emweb.securities.eastmoney.com/",
+  });
   return { response, data: parseStockShares(response.json) };
 }
 
@@ -977,7 +1003,9 @@ export async function fetchBaiduStockDividend(stockCode, options = {}) {
 
 export async function fetchBaiduStockIndustry(stockCodes, options = {}) {
   const codes = Array.isArray(stockCodes) ? stockCodes : [stockCodes];
-  const stock = JSON.stringify(codes.map((code) => ({ code: String(code), market: "ab", type: "stock" })));
+  const stock = JSON.stringify(
+    codes.map((code) => ({ code: String(code), market: "ab", type: "stock" })),
+  );
   const url =
     "https://finance.pae.baidu.com/api/getrelatedblock?" +
     new URLSearchParams({
@@ -1029,7 +1057,10 @@ export async function fetchEastmoneySecuritiesMargin(options = {}) {
       pageNumber: String(options.page || 1),
       pageSize: String(options.pageSize || 250),
     });
-  const response = await fetchJson(url, { ...options, referer: "https://data.eastmoney.com/rzrq/total.html" });
+  const response = await fetchJson(url, {
+    ...options,
+    referer: "https://data.eastmoney.com/rzrq/total.html",
+  });
   return { response, data: parseSecuritiesMargin(response.json) };
 }
 
@@ -1068,7 +1099,10 @@ export async function fetchEastmoneyIndexList(options = {}) {
       fs,
       fields: "f12,f13,f14",
     });
-  const response = await fetchJson(url, { ...options, referer: "https://quote.eastmoney.com/center/" });
+  const response = await fetchJson(url, {
+    ...options,
+    referer: "https://quote.eastmoney.com/center/",
+  });
   return { response, data: parseIndexList(response.json) };
 }
 
@@ -1107,7 +1141,10 @@ export async function fetchEastmoneyIndexKline(indexCode, options = {}) {
       smplmt: "100000",
       lmt: "1000000",
     });
-  const response = await fetchJson(url, { ...options, referer: "https://quote.eastmoney.com/center/" });
+  const response = await fetchJson(url, {
+    ...options,
+    referer: "https://quote.eastmoney.com/center/",
+  });
   return { response, data: parseEastmoneyStockKline(response.json, indexCode) };
 }
 
@@ -1117,19 +1154,23 @@ export async function fetchEastmoneyIndexCurrent(indexCode, options = {}) {
     new URLSearchParams({
       invt: "2",
       fltt: "1",
-      fields:
-        "f58,f107,f57,f43,f59,f169,f170,f152,f46,f60,f44,f45,f47,f48,f86,f116",
+      fields: "f58,f107,f57,f43,f59,f169,f170,f152,f46,f60,f44,f45,f47,f48,f86,f116",
       secid: indexSecid(indexCode),
       wbp2u: "|0|0|0|web",
     });
-  const response = await fetchJson(url, { ...options, referer: "https://quote.eastmoney.com/center/" });
+  const response = await fetchJson(url, {
+    ...options,
+    referer: "https://quote.eastmoney.com/center/",
+  });
   return { response, data: parseIndexCurrent(response.json, indexCode) };
 }
 
 export async function fetchSzseTradeCalendar(year = new Date().getFullYear(), options = {}) {
   const monthRows = [];
   const responses = [];
-  const months = options.month ? [Number(options.month)] : Array.from({ length: 12 }, (_, index) => index + 1);
+  const months = options.month
+    ? [Number(options.month)]
+    : Array.from({ length: 12 }, (_, index) => index + 1);
   for (const month of months) {
     const url =
       "http://www.szse.cn/api/report/exchange/onepersistenthour/monthList?" +
@@ -1163,7 +1204,10 @@ export async function fetchEastmoneyAStockList(options = {}) {
       fs: "m:0+t:6,m:0+t:80,m:1+t:2,m:1+t:23",
       fields: "f12,f13,f14,f2,f3,f5,f6,f20",
     });
-  const response = await fetchJson(url, { ...options, referer: "https://quote.eastmoney.com/center/gridlist.html" });
+  const response = await fetchJson(url, {
+    ...options,
+    referer: "https://quote.eastmoney.com/center/gridlist.html",
+  });
   return { response, data: parseEtfList(response.json) };
 }
 
@@ -1180,7 +1224,10 @@ export async function fetchEastmoneyNewStockList(options = {}) {
       pageNumber: String(options.page || 1),
       pageSize: String(options.pageSize || 50),
     });
-  const response = await fetchJson(url, { ...options, referer: "https://data.eastmoney.com/xg/xg/" });
+  const response = await fetchJson(url, {
+    ...options,
+    referer: "https://data.eastmoney.com/xg/xg/",
+  });
   return {
     response,
     data: {
@@ -1198,7 +1245,7 @@ export async function fetchThsEtfKline(etfCode, options = {}) {
   const response = await fetchText(url, {
     ...options,
     referer: `http://stockpage.10jqka.com.cn/${etfCode}/`,
-    headers: { "hexin-v": options.hexinV || "", ...(options.headers || {}) },
+    headers: { "hexin-v": options.hexinV || "", ...options.headers },
   });
   return { response, data: parseThsEtfKline(parseThsJsonp(response.text), etfCode, start, end) };
 }
@@ -1227,12 +1274,16 @@ export async function fetchAdataPublicData(options = {}) {
     capture("stockTicksBaidu", () => fetchBaiduStockTicks(stockCode, options)),
     capture("etfListEastmoney", () => fetchEastmoneyEtfList(options)),
     capture("conceptListEastmoney", () => fetchEastmoneyConceptList(options)),
-    capture("conceptConstituentsEastmoney", () => fetchEastmoneyConceptConstituents(conceptCode, options)),
+    capture("conceptConstituentsEastmoney", () =>
+      fetchEastmoneyConceptConstituents(conceptCode, options),
+    ),
     capture("financialCoreEastmoney", () => fetchEastmoneyFinancialCore(stockCode, options)),
     capture("eastmoneyKline", () => fetchEastmoneyStockKline(stockCode, options)),
     capture("eastmoneyMinute", () => fetchEastmoneyStockMinute(stockCode, options)),
     capture("capitalFlowDailyEastmoney", () => fetchEastmoneyCapitalFlowDaily(stockCode, options)),
-    capture("capitalFlowMinuteEastmoney", () => fetchEastmoneyCapitalFlowMinute(stockCode, options)),
+    capture("capitalFlowMinuteEastmoney", () =>
+      fetchEastmoneyCapitalFlowMinute(stockCode, options),
+    ),
     capture("stockConceptsEastmoney", () => fetchEastmoneyStockConcepts(stockCode, options)),
     capture("stockPlatesEastmoney", () => fetchEastmoneyStockPlates(stockCode, options)),
     capture("stockSharesEastmoney", () => fetchEastmoneyStockShares(stockCode, options)),
@@ -1245,7 +1296,9 @@ export async function fetchAdataPublicData(options = {}) {
     capture("indexConstituentsBaidu", () => fetchBaiduIndexConstituents(indexCode, options)),
     capture("indexKlineEastmoney", () => fetchEastmoneyIndexKline(indexCode, options)),
     capture("indexCurrentEastmoney", () => fetchEastmoneyIndexCurrent(indexCode, options)),
-    capture("tradeCalendarSzse", () => fetchSzseTradeCalendar(options.year || new Date().getFullYear(), options)),
+    capture("tradeCalendarSzse", () =>
+      fetchSzseTradeCalendar(options.year || new Date().getFullYear(), options),
+    ),
     capture("mineClearanceTdx", () => fetchTdxMineClearance(stockCode, options)),
     capture("aStockListEastmoney", () => fetchEastmoneyAStockList(options)),
     capture("newStockListEastmoney", () => fetchEastmoneyNewStockList(options)),
@@ -1274,7 +1327,8 @@ export async function fetchAdataPublicData(options = {}) {
       noExternalDependencies: true,
       endpoints: {
         stockMarketBaidu: "finance.pae.baidu.com/selfselect/getstockquotation",
-        stockMinuteBaidu: "finance.pae.baidu.com/selfselect/getstockquotation?group=quotation_minute_ab",
+        stockMinuteBaidu:
+          "finance.pae.baidu.com/selfselect/getstockquotation?group=quotation_minute_ab",
         stockQuoteDetailBaidu: "finance.pae.baidu.com/vapi/v1/getquotation",
         etfListEastmoney: "push2.eastmoney.com/api/qt/clist/get",
         financialCoreEastmoney: "datacenter.eastmoney.com/securities/api/data/get",

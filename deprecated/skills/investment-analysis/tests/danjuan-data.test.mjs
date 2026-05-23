@@ -37,7 +37,9 @@ const detailPayload = {
 const peHistoryPayload = {
   result_code: 0,
   data: {
-    horizontal_lines: [{ line_name: "median", line_value: "18.5", line_color: "#aaa", line_type: 1 }],
+    horizontal_lines: [
+      { line_name: "median", line_value: "18.5", line_color: "#aaa", line_type: 1 },
+    ],
     index_eva_pe_growths: [{ ts: 1704067200000, pe: "17.2" }],
   },
 };
@@ -51,7 +53,11 @@ test("fetchDanjuanJson appends params and parses JSON", async () => {
     return jsonResponse({ result_code: 0, data: { ok: true } });
   };
 
-  const result = await fetchDanjuanJson("/djapi/index_eva/pe_history/SZ399812", { day: "3y" }, { fetchImpl });
+  const result = await fetchDanjuanJson(
+    "/djapi/index_eva/pe_history/SZ399812",
+    { day: "3y" },
+    { fetchImpl },
+  );
 
   assert.equal(result.json.data.ok, true);
   assert.equal(seenUrl.pathname, "/djapi/index_eva/pe_history/SZ399812");
@@ -120,7 +126,8 @@ test("fetchDanjuanIndexValuation aggregates detail and selected histories", asyn
   const fetchImpl = async (url) => {
     const parsed = new URL(String(url));
     if (parsed.pathname === "/djapi/index_eva/detail/SZ399812") return jsonResponse(detailPayload);
-    if (parsed.pathname === "/djapi/index_eva/pe_history/SZ399812") return jsonResponse(peHistoryPayload);
+    if (parsed.pathname === "/djapi/index_eva/pe_history/SZ399812")
+      return jsonResponse(peHistoryPayload);
     throw new Error(`Unexpected URL ${url}`);
   };
 

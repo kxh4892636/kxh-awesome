@@ -95,7 +95,12 @@ function numberOrNull(value) {
 }
 
 function stripTags(value) {
-  return decodeHtml(String(value).replace(/<[^>]+>/g, "").replace(/\s+/g, " ").trim());
+  return decodeHtml(
+    String(value)
+      .replace(/<[^>]+>/g, "")
+      .replace(/\s+/g, " ")
+      .trim(),
+  );
 }
 
 function decodeHtml(value) {
@@ -271,7 +276,8 @@ function normalizeProfile(text) {
     sourceRate: extractScriptString(text, "fund_sourceRate"),
     currentRate: extractScriptString(text, "fund_Rate"),
     minPurchaseAmount: extractScriptString(text, "fund_minsg"),
-    stockCodes: extractScriptJson(text, "stockCodesNew") || extractScriptJson(text, "stockCodes") || [],
+    stockCodes:
+      extractScriptJson(text, "stockCodesNew") || extractScriptJson(text, "stockCodes") || [],
     bondCodes: extractScriptJson(text, "zqCodesNew") || extractScriptJson(text, "zqCodes") || [],
     netWorthTrendSample: (extractScriptJson(text, "Data_netWorthTrend") || []).slice(-5),
     annualReturns: {
@@ -292,7 +298,8 @@ function normalizePingzhongdata(text, fundCode) {
     sourceRate: extractScriptString(text, "fund_sourceRate"),
     currentRate: extractScriptString(text, "fund_Rate"),
     minPurchaseAmount: extractScriptString(text, "fund_minsg"),
-    stockCodes: extractScriptJson(text, "stockCodesNew") || extractScriptJson(text, "stockCodes") || [],
+    stockCodes:
+      extractScriptJson(text, "stockCodesNew") || extractScriptJson(text, "stockCodes") || [],
     bondCodes: extractScriptJson(text, "zqCodesNew") || extractScriptJson(text, "zqCodes") || [],
     netWorthTrend,
     accumulatedNetWorthTrend: extractScriptJson(text, "Data_ACWorthTrend") || [],
@@ -374,7 +381,9 @@ function normalizeSinaEstimate(raw, fundCode, dataSource = 2) {
       time: point.min_time || null,
       value: numberOrNull(point[navKey]),
       growthRatePct:
-        point[growthKey] === null || point[growthKey] === undefined ? null : numberOrNull(point[growthKey]) * 100,
+        point[growthKey] === null || point[growthKey] === undefined
+          ? null
+          : numberOrNull(point[growthKey]) * 100,
     }))
     .filter((point) => point.value !== null);
   const last = points[points.length - 1] || null;
@@ -423,12 +432,13 @@ function parseTencentIndex(raw, fallback, type) {
 
 async function fetchText(url, options = {}) {
   const fetchImpl = options.fetchImpl || globalThis.fetch;
-  if (!fetchImpl) throw new Error("global fetch is unavailable; use Node 18+ or pass options.fetchImpl");
+  if (!fetchImpl)
+    throw new Error("global fetch is unavailable; use Node 18+ or pass options.fetchImpl");
   const response = await fetchImpl(url, {
     method: options.method || "GET",
     headers: {
       ...headers,
-      ...(options.headers || {}),
+      ...options.headers,
     },
     ...(options.body ? { body: options.body } : {}),
   });
@@ -460,7 +470,12 @@ export async function fetchFundEstimate(fundCode, options = {}) {
 }
 
 export async function fetchFundDailyNav(fundCode, date, options = {}) {
-  const result = await fetchFundNavHistory(fundCode, { ...options, start: date, end: date, pageSize: 1 });
+  const result = await fetchFundNavHistory(fundCode, {
+    ...options,
+    start: date,
+    end: date,
+    pageSize: 1,
+  });
   return {
     response: result.response,
     data: result.data.find((row) => row.date === date) || null,
@@ -607,7 +622,9 @@ export async function fetchTencentMarketIndices(options = {}) {
   const assignments = parseTencentAssignments(response.text);
   return {
     response,
-    data: indexKeys.map((item) => parseTencentIndex(assignments.get(item.code), item, item.type)).filter(Boolean),
+    data: indexKeys
+      .map((item) => parseTencentIndex(assignments.get(item.code), item, item.type))
+      .filter(Boolean),
   };
 }
 
@@ -694,7 +711,8 @@ export async function fetchFundPublicData(options = {}) {
         "fund.eastmoney.com/pingzhongdata/{fundCode}.js",
         "qt.gtimg.cn/q={marketIndexCodes}",
       ],
-      parser: "Native JSONP, JavaScript-global, Tencent quote-string, and HTML table parsing; no external dependencies.",
+      parser:
+        "Native JSONP, JavaScript-global, Tencent quote-string, and HTML table parsing; no external dependencies.",
     },
     ...(options.includeRaw ? { raw } : {}),
   };
