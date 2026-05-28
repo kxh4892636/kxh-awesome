@@ -12,6 +12,7 @@ const LOCAL_TARGET_DIRS = [
 ];
 const DEFAULT_REMOTE_TARGETS = [
   'kongxiaohan.xiaoyu@10.37.19.84:~/.agents',
+  'kongxiaohan.xiaoyu@10.37.247.107:~/.agents',
 ];
 const REMOTE_EXCLUDES = ['node_modules', '.DS_Store'];
 
