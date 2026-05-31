@@ -174,7 +174,7 @@ export const KlineChart = (props: KlineChartProps) => {
     });
   };
 
-  const handleWheel = (event: React.WheelEvent<HTMLCanvasElement>): void => {
+  const handleWheel = (event: React.WheelEvent<HTMLCanvasElement> | WheelEvent): void => {
     const canvas = canvasRef.current;
     if (!canvas || visibleBars.length === 0) {
       return;
@@ -229,6 +229,41 @@ export const KlineChart = (props: KlineChartProps) => {
   };
 
   useEffect(() => {
+    window.addEventListener("wheel", handleWheel, { passive: false, capture: true });
+    return () => {
+      window.removeEventListener("wheel", handleWheel, true);
+    };
+  }, [handleWheel]);
+
+  useEffect(() => {
+    if (!tooltip) {
+      return;
+    }
+
+    const handleWindowMove = (event: MouseEvent): void => {
+      const canvas = canvasRef.current;
+      if (!canvas) {
+        return;
+      }
+      const rect = canvas.getBoundingClientRect();
+      const isInside =
+        event.clientX >= rect.left &&
+        event.clientX <= rect.right &&
+        event.clientY >= rect.top &&
+        event.clientY <= rect.bottom;
+
+      if (!isInside) {
+        setTooltip(null);
+      }
+    };
+
+    window.addEventListener("mousemove", handleWindowMove);
+    return () => {
+      window.removeEventListener("mousemove", handleWindowMove);
+    };
+  }, [tooltip]);
+
+  useEffect(() => {
     const handleMove = (event: MouseEvent): void => {
       const drag = dragRef.current;
       if (!drag) {
@@ -279,7 +314,6 @@ export const KlineChart = (props: KlineChartProps) => {
             onMouseMove={updateTooltip}
             onMouseLeave={() => setTooltip(null)}
             onMouseDown={handleMouseDown}
-            onWheel={handleWheel}
           />
           <div className="flex flex-wrap gap-2 border-t border-slate-100 px-3 py-2">
             {calculateMaSeries({ bars, periods: maPeriods }).map((series) => (

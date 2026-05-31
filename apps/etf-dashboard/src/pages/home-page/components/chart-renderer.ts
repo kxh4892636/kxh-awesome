@@ -1,6 +1,8 @@
 import { formatLargeNumber, formatNumber } from "../../../utils/format";
 import type { ChartBar, MaSeries } from "../../../utils/chart-data";
 
+const MIN_X_AXIS_LABEL_GAP = 92;
+
 export interface ChartLayout {
   priceTop: number;
   priceBottom: number;
@@ -201,7 +203,11 @@ const drawAxes = (params: {
     geometry.volumeTop + 4,
   );
 
-  const labelCount = Math.min(7, bars.length);
+  const labelCount = Math.min(
+    7,
+    bars.length,
+    Math.max(1, Math.floor(geometry.plotWidth / MIN_X_AXIS_LABEL_GAP) + 1),
+  );
   ctx.textBaseline = "top";
   for (let index = 0; index < labelCount; index += 1) {
     const dataIndex =
