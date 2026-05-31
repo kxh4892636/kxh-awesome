@@ -6,14 +6,17 @@
 
 ## 执行方式
 
-- 使用 `@chrome` 插件控制真实 Chrome 页面执行。
+- 使用 `@浏览器`（Browser 插件）控制真实浏览器页面执行；历史文档中的 `@chrome` 也指同一类真实浏览器执行方式。
 - 不使用 Playwright CLI，不写前端单元测试或组件测试。
 - 交互验证优先使用可见文本、控件选中态、Chrome 截图和控制台错误。
 - K 线图是否有效渲染以真实截图为准；不要求通过测试脚本读取 canvas 像素。
 - 页面上的行情数值、数据范围日期和数据行数不是固定值，只校验存在且格式正确。
 - 摘要区数值只要求是有效数字或百分比；K 线卡片右上角只要求匹配 `cache|refreshed · 正整数 条`。
 - 周期和范围分段控件建议按 `.ant-segmented-item` 的精确文本点击，并在每次点击后读取 `.ant-segmented-item-selected` 确认选中态。
+- Ant Design Select 下拉层在 Browser 快照中可能同时出现 `option` 和弹层文本；如果按 `role=option` 点击提示元素不可见，可改用弹层里的可见文本（如 `中证红利质量 932315.CSI`）点击，或用键盘上下键选择。
 - K 线 hover、缩放、拖拽建议先读取 canvas 的 `getBoundingClientRect()`，再使用相对坐标命中绘图区，避免不同 Chrome 窗口尺寸导致固定坐标失效。
+- 滚轮缩放后必须读取 `window.scrollY`，确认绘图区内向上和向下滚动都没有触发整页滚动；只在页面顶部验证向上滚动不充分，因为页面本来无法继续向上滚。
+- 鼠标移出 K 线区域建议移动到视口左上角 `10,10` 这类明确在 canvas 外的坐标，再确认 tooltip 消失。
 
 ## 前置条件
 
@@ -125,4 +128,5 @@ K 线图交互：
 - 输入无效值后报错：检查均线解析是否过滤非正整数、超大值和重复值。
 - hover 无 tooltip：检查 hover 坐标是否落在绘图区内，再检查 canvas 坐标换算和 `getVisibleIndexFromX`。
 - 滚轮导致页面滚动：检查绘图区内是否调用 `event.preventDefault()`。
+- 如果 Browser 的滚轮事件没有落在 canvas 元素上，单独在 canvas 上监听 `wheel` 可能不够，需要在 `window` 捕获阶段按 canvas 坐标兜底阻止默认滚动。
 - 拖拽无效：先放大到非全量视图；未缩放时可能没有可平移空间。
