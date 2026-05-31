@@ -1,4 +1,4 @@
-# react-template
+# react-go-template
 
 React 19 SPA 前端模板。
 
@@ -33,7 +33,7 @@ vp dlx -- shadcn@latest add button
 ## 项目结构
 
 ```
-react-template/
+react-go-template/
 ├── src/
 │   ├── api/                    # ConnectRPC 客户端
 │   │   ├── client.ts           # Transport 配置
