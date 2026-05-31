@@ -1,5 +1,5 @@
 {
   "projects": {
-    "go-template": "apps/go-template"
+    "go-template": "templates/go-template"
   }
 }

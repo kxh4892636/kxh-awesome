@@ -61,6 +61,6 @@ buf generate --template buf.gen.doc.yaml
 前端通过 `connectrpc-gen` CLI 自动同步接口代码：
 
 ```bash
-cd apps/react-go-template
+cd templates/react-go-template
 npm run gen:api go-template
 ```
