@@ -1,6 +1,6 @@
 ---
 name: kxh-awesome
-description: kxh-awesome 仓库任务分流与工程操作规范。在本仓库中处理代码、依赖、Node.js、workspace、构建、测试、格式化、RPC、生成代码、git hook 或提交相关操作时必须使用；处理笔记撰写、股票/基金分析、周报、调研报告、文档润色等非代码内容任务时，也可用它判定仓库边界，但不要默认读取 package.json、vite.config.ts、tsconfig.json 或运行 vp，除非任务实际触碰构建、代码、配置或用户明确要求。关键词：pnpm、node、依赖、workspace、monorepo、vp、vite-plus、kxh、install、build、dev、test、lint、fmt、check、connectrpc、proto、codegen、git hook、pre-commit、commit-msg、笔记、股票分析、周报
+description: kxh-awesome 仓库任务分流与工程操作规范。触发：本仓库内代码、依赖、Node、workspace、构建、测试、格式化、RPC/proto、codegen、git hook 或提交任务；非代码内容仅用于判定仓库边界，除非触碰工程配置或用户要求，不主动运行 Node/Vite+ 检查。关键词：pnpm、vp、vite-plus、monorepo、connectrpc、pre-commit、commit-msg。
 ---
 
 # kxh-awesome
@@ -41,7 +41,7 @@ vp 涵盖了本仓库的全部操作，包括：
 - **Git hooks**：安装 pre-commit hook，提交前自动检查
 - **升级维护**：升级 vp 自身、清除任务缓存、环境诊断
 
-具体命令参见 **vite-plus** skill。
+具体命令参见 `code-spec/vite-plus` 子目录。
 
 ## 工程配置文件
 
@@ -59,7 +59,7 @@ vp 涵盖了本仓库的全部操作，包括：
 ## 仓库地图
 
 - `apps/wiki`：Docusaurus 知识库和 Markdown 内容。
-- `apps/react-template`：React 19 SPA 模板，使用 TanStack Router/Query、shadcn/ui、Tailwind CSS、Zustand、ConnectRPC。
+- `apps/react-go-template`：React 19 SPA 模板，使用 TanStack Router/Query、shadcn/ui、Tailwind CSS、Zustand、ConnectRPC。
 - `apps/go-template`：Go ConnectRPC 后端；`proto/` 是 API 契约，`internal/` 写业务逻辑，`gen/` 和 `docs/` 是生成物。
 - `packages/connectrpc-gen`：从后端 proto 项目生成前端 ConnectRPC 客户端的 CLI。
 - `packages/utils`：通过 Vite+ 构建和测试的 TypeScript 工具包。
@@ -69,7 +69,7 @@ vp 涵盖了本仓库的全部操作，包括：
 ## 命名规范
 
 - **所有子包的 `package.json` 中 `name` 字段必须为 `@kxh-awesome/xxx` 格式**，其中 `xxx` 为项目名称，一般与项目文件夹名称相同
-  - 示例：`apps/react-template` → `"name": "@kxh-awesome/react-template"`
+  - 示例：`apps/react-go-template` → `"name": "@kxh-awesome/react-go-template"`
   - 示例：`packages/utils` → `"name": "@kxh-awesome/utils"`
 
 ## 核心原则
@@ -83,8 +83,8 @@ vp 涵盖了本仓库的全部操作，包括：
 
 ## 常用流程
 
-- React 模板：在 `apps/react-template` 中使用 `vp dev`、`vp run build`、`vp run gen:api go-template`；添加 shadcn/ui 组件时使用 `vp dlx -- shadcn@latest add <component> --cwd apps/react-template`。
+- React 模板：在 `apps/react-go-template` 中使用 `vp dev`、`vp run build`、`vp run gen:api go-template`；添加 shadcn/ui 组件时使用 `vp dlx -- shadcn@latest add <component> --cwd apps/react-go-template`。
 - Wiki：在 `apps/wiki` 中通过 `vp run <script>` 执行 Docusaurus 脚本。
 - Go 后端：修改 `apps/go-template/proto/**` 后运行 `apps/go-template/generate.sh`，再补齐 `internal/` 实现。
-- 前端 RPC 客户端：后端 proto 变化后，在 `apps/react-template` 运行 `vp run gen:api go-template`。
+- 前端 RPC 客户端：后端 proto 变化后，在 `apps/react-go-template` 运行 `vp run gen:api go-template`。
 - TypeScript 包：通过 package 脚本或 workspace 过滤使用 `vp pack`、`vp test`、`vp check [path]`。

@@ -1,0 +1,88 @@
+import { useEffect, useMemo, useState } from "react";
+import { Alert, Card, Spin, Typography } from "antd";
+import { useDailyBars, useSecurities } from "../../hooks/use-market";
+import { DashboardToolbar } from "./components/dashboard-toolbar";
+import { KlineChart } from "./components/kline-chart";
+import { MarketSummary } from "./components/market-summary";
+import {
+  aggregateBars,
+  getRangeBars,
+  type ChartPeriod,
+  type ChartRange,
+} from "../../utils/chart-data";
+
+export const HomePage = () => {
+  const [selectedSymbol, setSelectedSymbol] = useState<string | null>(null);
+  const [period, setPeriod] = useState<ChartPeriod>("day");
+  const [range, setRange] = useState<ChartRange>("all");
+  const [maText, setMaText] = useState("5 8 13 21 34 55");
+  const securitiesQuery = useSecurities();
+  const dailyBarsQuery = useDailyBars(selectedSymbol);
+
+  useEffect(() => {
+    if (!selectedSymbol && securitiesQuery.data.length > 0) {
+      setSelectedSymbol(securitiesQuery.data[0]?.symbol ?? null);
+    }
+  }, [securitiesQuery.data, selectedSymbol]);
+
+  const chartBars = useMemo(() => {
+    const bars = dailyBarsQuery.data?.bars ?? [];
+    return getRangeBars({
+      bars: aggregateBars({ bars, period }),
+      range,
+    });
+  }, [dailyBarsQuery.data?.bars, period, range]);
+
+  const selectedSecurity = securitiesQuery.data.find((item) => item.symbol === selectedSymbol);
+  const hasError = securitiesQuery.isError || dailyBarsQuery.isError;
+
+  return (
+    <div className="mx-auto flex max-w-[1440px] flex-col gap-4">
+      <div>
+        <Typography.Title level={3} className="m-0">
+          ETF K 线看板
+        </Typography.Title>
+        <Typography.Text type="secondary">
+          {selectedSecurity
+            ? `${selectedSecurity.name} · ${selectedSecurity.symbol}`
+            : "加载可用标的"}
+        </Typography.Text>
+      </div>
+      <Card>
+        <DashboardToolbar
+          securities={securitiesQuery.data}
+          selectedSymbol={selectedSymbol}
+          period={period}
+          range={range}
+          maText={maText}
+          isLoading={securitiesQuery.isLoading || dailyBarsQuery.isFetching}
+          onSymbolChange={setSelectedSymbol}
+          onPeriodChange={setPeriod}
+          onRangeChange={setRange}
+          onMaTextChange={setMaText}
+          onRefresh={() => {
+            void dailyBarsQuery.refetch();
+          }}
+        />
+      </Card>
+      {hasError && (
+        <Alert type="error" showIcon message="数据加载失败，请确认 etf-service 已启动" />
+      )}
+      <MarketSummary data={dailyBarsQuery.data} />
+      <Card
+        title="K 线"
+        extra={
+          dailyBarsQuery.data ? (
+            <Typography.Text type="secondary">
+              {dailyBarsQuery.data.meta.cacheStatus} · {dailyBarsQuery.data.meta.rows} 条
+            </Typography.Text>
+          ) : null
+        }
+      >
+        <Spin spinning={dailyBarsQuery.isLoading && !dailyBarsQuery.data}>
+          <KlineChart bars={chartBars} maText={maText} />
+        </Spin>
+      </Card>
+    </div>
+  );
+};
