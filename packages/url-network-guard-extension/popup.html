@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>URL Network Guard</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <main class="popup-shell">
+      <header class="topbar">
+        <div class="title-group">
+          <h1>URL 网络守卫</h1>
+          <p id="statusText" class="status-text">读取中</p>
+        </div>
+        <span id="statusDot" class="status-dot" aria-hidden="true"></span>
+      </header>
+
+      <section class="current-url-section" aria-labelledby="currentUrlLabel">
+        <span id="currentUrlLabel" class="section-label">当前 URL</span>
+        <output id="currentUrl" class="current-url">-</output>
+      </section>
+
+      <form id="rulesForm" class="rules-form">
+        <div class="switch-row">
+          <label class="switch-field">
+            <input id="enabledInput" type="checkbox" />
+            <span class="switch-track" aria-hidden="true">
+              <span class="switch-thumb"></span>
+            </span>
+            <span id="enabledLabel" class="switch-label">已开启</span>
+          </label>
+        </div>
+
+        <label class="field">
+          <span class="field-label">黑名单</span>
+          <textarea
+            id="blacklistInput"
+            spellcheck="false"
+            rows="5"
+            placeholder="blocked.example, /debug"
+          ></textarea>
+        </label>
+
+        <label class="field">
+          <span class="field-label">白名单</span>
+          <textarea
+            id="whitelistInput"
+            spellcheck="false"
+            rows="5"
+            placeholder="safe.example, /allowed"
+          ></textarea>
+        </label>
+
+        <div class="form-footer">
+          <span id="countText" class="count-text">黑 0 / 白 0</span>
+          <button id="saveButton" type="submit">保存</button>
+        </div>
+      </form>
+
+      <p id="feedbackText" class="feedback-text" role="status" aria-live="polite"></p>
+    </main>
+
+    <script src="popup.js"></script>
+  </body>
+</html>

@@ -1,0 +1,15 @@
+{
+  "manifest_version": 3,
+  "name": "URL Network Guard",
+  "version": "0.1.0",
+  "description": "Block page network requests when the current tab URL matches blacklist entries unless whitelist entries match.",
+  "minimum_chrome_version": "101",
+  "permissions": ["declarativeNetRequest", "storage", "tabs"],
+  "action": {
+    "default_title": "URL Network Guard",
+    "default_popup": "popup.html"
+  },
+  "background": {
+    "service_worker": "background.js"
+  }
+}
