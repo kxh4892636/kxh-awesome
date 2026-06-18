@@ -1,9 +1,6 @@
 import { serve } from "@hono/node-server";
 import { app } from "./app";
 import { config } from "./config/env";
-import { initializeDatabase } from "./db/setup";
-
-await initializeDatabase();
 
 const server = serve({
   fetch: app.fetch,
