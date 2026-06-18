@@ -1,8 +1,8 @@
 import { and, asc, desc, eq, gte, lte, sql } from "drizzle-orm";
-import { db } from "../../db/client";
-import { dailyBars, securities, tradingCalendar, type DailyBarRow } from "../../db/schema";
-import type { DailyBar } from "../../routes/market/schema";
-import type { MarketCalendarInput, MarketDataStore } from "./service";
+import { db } from "../db/client";
+import { dailyBars, securities, tradingCalendar, type DailyBarRow } from "../db/schema";
+import type { DailyBar } from "../routes/market/schema";
+import type { MarketCalendarInput, MarketDataStore } from "../services/market/service";
 
 const INSERT_CHUNK_SIZE = 250;
 
@@ -43,7 +43,7 @@ const upsertCalendarRows = async (rows: MarketCalendarInput[]): Promise<void> =>
   }
 };
 
-export const marketDataStore = {
+export const marketRepository = {
   upsertSecurity: async (params) => {
     await db
       .insert(securities)
