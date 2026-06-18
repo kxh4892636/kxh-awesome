@@ -25,13 +25,19 @@ export const HomePage = () => {
     }
   }, [securitiesQuery.data, selectedSymbol]);
 
-  const chartBars = useMemo(() => {
+  const fullChartBars = useMemo(() => {
     const bars = dailyBarsQuery.data?.bars ?? [];
-    return getRangeBars({
-      bars: aggregateBars({ bars, period }),
-      range,
-    });
-  }, [dailyBarsQuery.data?.bars, period, range]);
+    return aggregateBars({ bars, period });
+  }, [dailyBarsQuery.data?.bars, period]);
+
+  const chartBars = useMemo(
+    () =>
+      getRangeBars({
+        bars: fullChartBars,
+        range,
+      }),
+    [fullChartBars, range],
+  );
 
   const selectedSecurity = securitiesQuery.data.find((item) => item.symbol === selectedSymbol);
   const hasError = securitiesQuery.isError || dailyBarsQuery.isError;
@@ -80,7 +86,7 @@ export const HomePage = () => {
         }
       >
         <Spin spinning={dailyBarsQuery.isLoading && !dailyBarsQuery.data}>
-          <KlineChart bars={chartBars} maText={maText} />
+          <KlineChart bars={chartBars} maBars={fullChartBars} maText={maText} />
         </Spin>
       </Card>
     </div>

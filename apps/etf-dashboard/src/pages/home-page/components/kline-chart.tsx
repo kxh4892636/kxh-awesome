@@ -15,6 +15,7 @@ const WHEEL_ZOOM_OUT_RATE = 1.22;
 
 interface KlineChartProps {
   bars: ChartBar[];
+  maBars: ChartBar[];
   maText: string;
 }
 
@@ -63,6 +64,26 @@ const normalizeZoom = (params: { zoom: ZoomWindow | null; totalCount: number }):
   );
 
   return { start, end: start + visibleCount };
+};
+
+const getMaStartIndex = (params: { bars: ChartBar[]; maBars: ChartBar[] }): number => {
+  const firstBar = params.bars[0];
+  if (!firstBar) {
+    return 0;
+  }
+
+  const identityIndex = params.maBars.indexOf(firstBar);
+  if (identityIndex >= 0) {
+    return identityIndex;
+  }
+
+  const matchedIndex = params.maBars.findIndex(
+    (record) =>
+      record.startDate === firstBar.startDate &&
+      record.endDate === firstBar.endDate &&
+      record.label === firstBar.label,
+  );
+  return Math.max(matchedIndex, 0);
 };
 
 const buildTooltipRows = (
@@ -115,7 +136,7 @@ const buildTooltipRows = (
 };
 
 export const KlineChart = (props: KlineChartProps) => {
-  const { bars, maText } = props;
+  const { bars, maBars, maText } = props;
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const dragRef = useRef<DragState | null>(null);
   const [zoom, setZoom] = useState<ZoomWindow | null>(null);
@@ -125,15 +146,23 @@ export const KlineChart = (props: KlineChartProps) => {
   const maPeriods = useMemo(() => parseMaPeriods(maText), [maText]);
   const zoomWindow = normalizeZoom({ zoom, totalCount: bars.length });
   const visibleBars = bars.slice(zoomWindow.start, zoomWindow.end);
+  const maStartIndex = useMemo(() => getMaStartIndex({ bars, maBars }), [bars, maBars]);
+  const maSourceSeries = useMemo(
+    () => calculateMaSeries({ bars: maBars, periods: maPeriods }),
+    [maBars, maPeriods],
+  );
   const maSeries = useMemo(
     () =>
-      calculateMaSeries({ bars, periods: maPeriods })
+      maSourceSeries
         .filter((series) => !hiddenPeriods.has(series.period))
         .map((series) => ({
           ...series,
-          values: series.values.slice(zoomWindow.start, zoomWindow.end),
+          values: series.values.slice(
+            maStartIndex + zoomWindow.start,
+            maStartIndex + zoomWindow.end,
+          ),
         })),
-    [bars, hiddenPeriods, maPeriods, zoomWindow.end, zoomWindow.start],
+    [hiddenPeriods, maSourceSeries, maStartIndex, zoomWindow.end, zoomWindow.start],
   );
 
   useEffect(() => {
@@ -316,7 +345,7 @@ export const KlineChart = (props: KlineChartProps) => {
             onMouseDown={handleMouseDown}
           />
           <div className="flex flex-wrap gap-2 border-t border-slate-100 px-3 py-2">
-            {calculateMaSeries({ bars, periods: maPeriods }).map((series) => (
+            {maSourceSeries.map((series) => (
               <button
                 key={series.period}
                 type="button"
