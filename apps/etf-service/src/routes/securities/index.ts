@@ -1,6 +1,6 @@
 import { Hono } from "hono";
 import { zValidator } from "@hono/zod-validator";
-import { listSecuritiesRequestSchema, listSecuritiesResponseSchema } from "../market/schema";
+import { listSecuritiesRequestSchema, listSecuritiesResponseSchema } from "./schema";
 import type { CreateSecuritiesRoutesParams } from "./types";
 
 export const createSecuritiesRoutes = (params: CreateSecuritiesRoutesParams) => {

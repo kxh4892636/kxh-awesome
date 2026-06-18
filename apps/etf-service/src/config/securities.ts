@@ -1,5 +1,5 @@
 import { fileURLToPath } from "node:url";
-import type { AdjType, AssetType } from "../routes/market/schema";
+import type { AdjType, AssetType } from "../common/schema";
 
 export interface SecurityConfig {
   symbol: string;

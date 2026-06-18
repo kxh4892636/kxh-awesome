@@ -1,5 +1,5 @@
 import { index, primaryKey, real, sqliteTable, text, integer } from "drizzle-orm/sqlite-core";
-import type { AdjType, AssetType } from "../../routes/market/schema";
+import type { AdjType, AssetType } from "../../common/schema";
 
 export const securities = sqliteTable("securities", {
   symbol: text("symbol").primaryKey(),

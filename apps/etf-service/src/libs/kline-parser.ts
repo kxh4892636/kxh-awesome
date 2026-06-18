@@ -1,4 +1,4 @@
-import type { AdjType } from "../routes/market/schema";
+import type { AdjType } from "../common/schema";
 import type { NewDailyBarRow } from "../db/schema";
 import { compareDate, parseDateMs } from "../utils/date";
 

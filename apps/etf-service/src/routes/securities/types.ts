@@ -1,4 +1,4 @@
-import type { ListSecuritiesRequest, ListSecuritiesResponse } from "../market/schema";
+import type { ListSecuritiesRequest, ListSecuritiesResponse } from "./schema";
 
 export interface SecuritiesService {
   listSecurities: (params: ListSecuritiesRequest) => Promise<ListSecuritiesResponse>;

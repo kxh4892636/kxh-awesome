@@ -1,19 +1,5 @@
 import { z } from "zod";
-
-export const adjTypeSchema = z.enum(["none", "qfq", "hfq"]);
-export const assetTypeSchema = z.enum(["stock", "etf", "index", "fund", "other"]);
-export const dateSchema = z.string().regex(/^\d{4}-\d{2}-\d{2}$/);
-
-export const securitySchema = z.object({
-  symbol: z.string().min(1),
-  name: z.string().min(1),
-  assetType: assetTypeSchema,
-  exchange: z.string().nullable(),
-  currency: z.string().min(1),
-  source: z.string().nullable(),
-  earliestTradeDate: dateSchema,
-  latestCachedTradeDate: dateSchema.nullable(),
-});
+import { adjTypeSchema, dateSchema, securitySchema } from "../../common/schema";
 
 export const dailyBarSchema = z.object({
   symbol: z.string().min(1),
@@ -28,12 +14,6 @@ export const dailyBarSchema = z.object({
   changeAmount: z.number(),
   changePercent: z.number(),
   rawWeekday: z.string(),
-});
-
-export const listSecuritiesRequestSchema = z.object({});
-
-export const listSecuritiesResponseSchema = z.object({
-  securities: z.array(securitySchema),
 });
 
 export const getDailyBarsRequestSchema = z.object({
@@ -59,11 +39,6 @@ export const getDailyBarsResponseSchema = z.object({
   }),
 });
 
-export type AdjType = z.infer<typeof adjTypeSchema>;
-export type AssetType = z.infer<typeof assetTypeSchema>;
-export type Security = z.infer<typeof securitySchema>;
 export type DailyBar = z.infer<typeof dailyBarSchema>;
-export type ListSecuritiesRequest = z.infer<typeof listSecuritiesRequestSchema>;
-export type ListSecuritiesResponse = z.infer<typeof listSecuritiesResponseSchema>;
 export type GetDailyBarsRequest = z.infer<typeof getDailyBarsRequestSchema>;
 export type GetDailyBarsResponse = z.infer<typeof getDailyBarsResponseSchema>;

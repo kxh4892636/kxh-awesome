@@ -1,12 +1,7 @@
 import { HTTPException } from "hono/http-exception";
+import type { AdjType, Security } from "../common/schema";
 import type { SecurityConfig } from "../config/securities";
-import type {
-  AdjType,
-  DailyBar,
-  GetDailyBarsRequest,
-  GetDailyBarsResponse,
-  Security,
-} from "../routes/market/schema";
+import type { DailyBar, GetDailyBarsRequest, GetDailyBarsResponse } from "../routes/market/schema";
 import { addDays, compareDate, isWeekend, listDates, maxDate, minDate } from "../utils/date";
 
 export interface MarketSecurityRecord {
