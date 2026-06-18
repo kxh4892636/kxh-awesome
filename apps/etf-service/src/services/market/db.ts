@@ -1,17 +1,8 @@
 import { and, asc, desc, eq, gte, lte, sql } from "drizzle-orm";
-import { SECURITIES } from "../config/securities";
-import { db } from "../db/client";
-import {
-  dailyBars,
-  securities,
-  tradingCalendar,
-  type DailyBarRow,
-  type NewTradingCalendarRow,
-} from "../db/schema";
-import { fetchRemoteKlineBars } from "../libs/hongsehuojian";
-import type { DailyBar, GetDailyBarsRequest } from "../routes/market/schema";
-import { getTMinusOneDate } from "../utils/date";
-import { createMarketService, type MarketBarInput, type MarketDataStore } from "./market-service";
+import { db } from "../../db/client";
+import { dailyBars, securities, tradingCalendar, type DailyBarRow } from "../../db/schema";
+import type { DailyBar } from "../../routes/market/schema";
+import type { MarketCalendarInput, MarketDataStore } from "./service";
 
 const INSERT_CHUNK_SIZE = 250;
 
@@ -38,7 +29,7 @@ const toDailyBar = (row: DailyBarRow): DailyBar => ({
   rawWeekday: row.rawWeekday ?? "",
 });
 
-const upsertCalendarRows = async (rows: NewTradingCalendarRow[]): Promise<void> => {
+const upsertCalendarRows = async (rows: MarketCalendarInput[]): Promise<void> => {
   for (const values of chunk({ values: rows, size: INSERT_CHUNK_SIZE })) {
     await db
       .insert(tradingCalendar)
@@ -52,7 +43,7 @@ const upsertCalendarRows = async (rows: NewTradingCalendarRow[]): Promise<void> 
   }
 };
 
-const marketStore = {
+export const marketDataStore = {
   upsertSecurity: async (params) => {
     await db
       .insert(securities)
@@ -153,21 +144,3 @@ const marketStore = {
     return new Map(rows.map((row) => [row.tradeDate, row.isOpen]));
   },
 } satisfies MarketDataStore;
-
-export const marketService = createMarketService({
-  securities: SECURITIES,
-  store: marketStore,
-  fetchRemoteKlineBars,
-  getTMinusOneDate,
-});
-
-export const upsertSecurity = marketService.upsertSecurity;
-
-export const upsertDailyBars = (params: {
-  bars: MarketBarInput[];
-  exchange: string;
-}): Promise<void> => marketService.upsertDailyBars(params);
-
-export const listSecurities = marketService.listSecurities;
-
-export const getDailyBars = (params: GetDailyBarsRequest) => marketService.getDailyBars(params);

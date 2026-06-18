@@ -1,5 +1,4 @@
-import { listSecurities } from "./market";
-import type { SecuritiesService } from "../routes/securities/types";
+import { listSecurities } from "../market";
 
 export const securitiesService = {
   listSecurities: async () => {
@@ -12,4 +11,4 @@ export const securitiesService = {
       throw error;
     }
   },
-} satisfies SecuritiesService;
+};
