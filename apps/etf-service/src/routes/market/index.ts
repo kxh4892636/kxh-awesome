@@ -1,7 +1,7 @@
 import { Hono } from "hono";
 import { zValidator } from "@hono/zod-validator";
-import { getDailyBarsRequestSchema, getDailyBarsResponseSchema } from "./schema";
-import type { CreateMarketRoutesParams } from "./types";
+import { getDailyBarsRequestSchema, getDailyBarsResponseSchema } from "./market-schema";
+import type { CreateMarketRoutesParams } from "./market-types";
 
 export const createMarketRoutes = (params: CreateMarketRoutesParams) => {
   const { marketService } = params;

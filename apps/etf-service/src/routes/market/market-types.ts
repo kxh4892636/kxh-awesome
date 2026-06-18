@@ -1,4 +1,4 @@
-import type { GetDailyBarsRequest, GetDailyBarsResponse } from "./schema";
+import type { GetDailyBarsRequest, GetDailyBarsResponse } from "./market-schema";
 
 export interface MarketService {
   getDailyBars: (params: GetDailyBarsRequest) => Promise<GetDailyBarsResponse>;
