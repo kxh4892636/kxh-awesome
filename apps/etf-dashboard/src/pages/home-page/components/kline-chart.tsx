@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Empty } from "antd";
 import {
   getChartLayout,
@@ -6,8 +6,9 @@ import {
   isPointInPlot,
   renderKlineCanvas,
 } from "./chart-renderer";
-import { calculateMaSeries, parseMaPeriods, type ChartBar } from "../../../utils/chart-data";
+import { type ChartBar } from "../../../utils/chart-data";
 import { formatLargeNumber, formatNumber, formatPercent } from "../../../utils/format";
+import { useMaSeries } from "../hooks/use-ma-series";
 
 const MIN_VISIBLE_CANDLES = 20;
 const WHEEL_ZOOM_IN_RATE = 0.82;
@@ -64,27 +65,6 @@ const normalizeZoom = (params: { zoom: ZoomWindow | null; totalCount: number }):
   );
 
   return { start, end: start + visibleCount };
-};
-
-const getMaStartIndex = (params: { bars: ChartBar[]; maBars: ChartBar[] }): number => {
-  const firstBar = params.bars[0];
-  if (!firstBar) {
-    return 0;
-  }
-
-  // maBars 保留完整日线基准，bars 可能已按周期或范围聚合；先找可见数据在 MA 源里的起点。
-  const identityIndex = params.maBars.indexOf(firstBar);
-  if (identityIndex >= 0) {
-    return identityIndex;
-  }
-
-  const matchedIndex = params.maBars.findIndex(
-    (record) =>
-      record.startDate === firstBar.startDate &&
-      record.endDate === firstBar.endDate &&
-      record.label === firstBar.label,
-  );
-  return Math.max(matchedIndex, 0);
 };
 
 const buildTooltipRows = (
@@ -144,28 +124,15 @@ export const KlineChart = (props: KlineChartProps) => {
   const [tooltip, setTooltip] = useState<TooltipState | null>(null);
   const [hiddenPeriods, setHiddenPeriods] = useState<Set<number>>(new Set());
 
-  const maPeriods = useMemo(() => parseMaPeriods(maText), [maText]);
   const zoomWindow = normalizeZoom({ zoom, totalCount: bars.length });
   const visibleBars = bars.slice(zoomWindow.start, zoomWindow.end);
-  const maStartIndex = useMemo(() => getMaStartIndex({ bars, maBars }), [bars, maBars]);
-  const maSourceSeries = useMemo(
-    () => calculateMaSeries({ bars: maBars, periods: maPeriods }),
-    [maBars, maPeriods],
-  );
-  const maSeries = useMemo(
-    () =>
-      maSourceSeries
-        .filter((series) => !hiddenPeriods.has(series.period))
-        .map((series) => ({
-          ...series,
-          // MA 数组跟随可见窗口切片，保证 tooltip、hover index 和蜡烛索引始终一一对应。
-          values: series.values.slice(
-            maStartIndex + zoomWindow.start,
-            maStartIndex + zoomWindow.end,
-          ),
-        })),
-    [hiddenPeriods, maSourceSeries, maStartIndex, zoomWindow.end, zoomWindow.start],
-  );
+  const { maSourceSeries, maSeries } = useMaSeries({
+    maText,
+    maBars,
+    bars,
+    zoomWindow,
+    hiddenPeriods,
+  });
 
   useEffect(() => {
     setZoom(null);
