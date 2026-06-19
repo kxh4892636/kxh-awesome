@@ -1,22 +1,9 @@
+import type { DailyBar } from "@kxh-awesome/etf-service/rpc";
+
 export type ChartPeriod = "day" | "week" | "month" | "quarter" | "year";
 export type ChartRange = "1y" | "3y" | "5y" | "10y" | "all";
 
-export interface MarketBar {
-  symbol: string;
-  adjType: "none" | "qfq" | "hfq";
-  tradeDate: string;
-  open: number;
-  high: number;
-  low: number;
-  close: number;
-  volume: number;
-  amount: number;
-  changeAmount: number;
-  changePercent: number;
-  rawWeekday: string;
-}
-
-export interface ChartBar extends MarketBar {
+export interface ChartBar extends DailyBar {
   dateMs: number;
   year: number;
   month: number;
@@ -101,7 +88,7 @@ const getPeriodKey = (record: ChartBar, period: ChartPeriod): string => {
   return record.tradeDate;
 };
 
-export const normalizeBars = (bars: MarketBar[]): ChartBar[] =>
+export const normalizeBars = (bars: DailyBar[]): ChartBar[] =>
   bars.map((bar) => {
     const dateParts = parseDateParts(bar.tradeDate);
     return {
@@ -113,7 +100,7 @@ export const normalizeBars = (bars: MarketBar[]): ChartBar[] =>
     };
   });
 
-export const aggregateBars = (params: { bars: MarketBar[]; period: ChartPeriod }): ChartBar[] => {
+export const aggregateBars = (params: { bars: DailyBar[]; period: ChartPeriod }): ChartBar[] => {
   const normalized = normalizeBars(params.bars);
   if (params.period === "day") {
     return normalized;
