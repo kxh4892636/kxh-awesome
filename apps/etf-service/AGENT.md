@@ -31,7 +31,6 @@ vp run test
 ## 数据库
 
 SQLite 文件默认保存到 `apps/etf-service/data/etf-service.sqlite`。
-启动服务或运行测试时会自动创建 `data/` 目录、初始化 ETF 行情表并导入历史全量数据。
 
 ## RPC 类型优化
 
