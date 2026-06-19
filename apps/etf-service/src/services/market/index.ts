@@ -1,9 +1,9 @@
 import { SECURITIES } from "../../config/securities";
 import { fetchRemoteKlineBars } from "../../libs/hongsehuojian";
-import { marketRepository } from "../../repositories/market/market-repository";
-import type { GetDailyBarsRequest } from "../../routes/market/market-schema";
+import { marketRepository } from "../../repositories/market-repository";
+import type { GetDailyBarsRequest } from "../../routes/market/schema";
 import { getTMinusOneDate } from "../../utils/date";
-import { createMarketService, type MarketBarInput } from "./market-service";
+import { createMarketService, type MarketBarInput } from "./service";
 
 export const marketService = createMarketService({
   securities: SECURITIES,

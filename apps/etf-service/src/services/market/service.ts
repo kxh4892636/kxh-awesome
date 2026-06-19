@@ -5,7 +5,7 @@ import type {
   DailyBar,
   GetDailyBarsRequest,
   GetDailyBarsResponse,
-} from "../../routes/market/market-schema";
+} from "../../routes/market/schema";
 import { addDays, compareDate, isWeekend, listDates, maxDate, minDate } from "../../utils/date";
 
 export interface MarketSecurityRecord {
