@@ -1,9 +1,7 @@
-import type { GetDailyBarsRequest, GetDailyBarsResponse } from "./schema";
+import type { MarketService } from "../../services/market/types";
 
-export interface MarketService {
-  getDailyBars: (params: GetDailyBarsRequest) => Promise<GetDailyBarsResponse>;
-}
+export type MarketRoutesService = Pick<MarketService, "getDailyBars">;
 
 export interface CreateMarketRoutesParams {
-  marketService: MarketService;
+  marketService: MarketRoutesService;
 }

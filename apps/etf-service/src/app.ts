@@ -2,9 +2,10 @@ import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { logger } from "hono/logger";
 import { HTTPException } from "hono/http-exception";
-import { apiRoutes } from "./routes";
+import { createApiRoutes } from "./routes";
 
 const baseApp = new Hono();
+const apiRoutes = createApiRoutes();
 
 baseApp.use("*", logger());
 baseApp.use(

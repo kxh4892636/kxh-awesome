@@ -1,9 +1,7 @@
-import type { ListSecuritiesRequest, ListSecuritiesResponse } from "./schema";
+import type { SecuritiesService } from "../../services/securities/types";
 
-export interface SecuritiesService {
-  listSecurities: (params: ListSecuritiesRequest) => Promise<ListSecuritiesResponse>;
-}
+export type SecuritiesRoutesService = Pick<SecuritiesService, "listSecurities">;
 
 export interface CreateSecuritiesRoutesParams {
-  securitiesService: SecuritiesService;
+  securitiesService: SecuritiesRoutesService;
 }

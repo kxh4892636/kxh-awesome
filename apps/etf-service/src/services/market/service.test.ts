@@ -1,14 +1,14 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { SECURITIES } from "../../config/securities";
-import type { DailyBar } from "../../routes/market/schema";
-import {
-  createMarketService,
-  type MarketBarInput,
-  type MarketCalendarInput,
-  type MarketDataStore,
-  type MarketSecurityRecord,
-} from "./service";
+import { createMarketService } from "./service";
+import type {
+  DailyBar,
+  MarketBarInput,
+  MarketCalendarInput,
+  MarketDataStore,
+  MarketSecurityRecord,
+} from "./types";
 
 const securityConfig = SECURITIES[0]!;
 

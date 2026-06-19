@@ -1,11 +1,14 @@
 import { z } from "zod";
 import { securitySchema } from "../../common/schema";
+import type {
+  ListSecuritiesRequest,
+  ListSecuritiesResponse,
+} from "../../services/securities/types";
 
-export const listSecuritiesRequestSchema = z.object({});
+export const listSecuritiesRequestSchema = z.object({}) satisfies z.ZodType<ListSecuritiesRequest>;
 
 export const listSecuritiesResponseSchema = z.object({
   securities: z.array(securitySchema),
-});
+}) satisfies z.ZodType<ListSecuritiesResponse>;
 
-export type ListSecuritiesRequest = z.infer<typeof listSecuritiesRequestSchema>;
-export type ListSecuritiesResponse = z.infer<typeof listSecuritiesResponseSchema>;
+export type { ListSecuritiesRequest, ListSecuritiesResponse };
