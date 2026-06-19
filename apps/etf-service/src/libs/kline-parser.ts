@@ -63,6 +63,7 @@ export const parseKlineJson = (params: {
 
   const root = asRecord(payload);
   const dataNode = asRecord(root?.data);
+  // 离线 fixture 和远端响应兼容两种形态：根节点直出，或包在 data 节点下。
   const indexPayload = dataNode ?? root;
   const columnsText = indexPayload?.columns;
   const itemsText = indexPayload?.items;
@@ -87,6 +88,7 @@ export const parseKlineJson = (params: {
     typeof indexPayload?.securityCode === "string" && indexPayload.securityCode.length > 0
       ? indexPayload.securityCode
       : params.fallbackSymbol;
+  // 红色火箭接口用 columns 定义字段顺序、items 用分号分隔行；解析时不能假定固定列位置。
   const lines = itemsText.split(";").filter((line) => line.trim().length > 0);
   const bars = lines.map((line, index) => {
     const rowNumber = index + 1;
@@ -115,6 +117,7 @@ export const parseKlineJson = (params: {
       rowNumber,
       fallback: 0,
     });
+    // 部分历史行缺少涨跌字段，兜底只用于可视化展示，不反向修正行情源原始口径。
     const changeAmount = readOptionalNumber({
       value: record.change,
       fieldName: "change",
@@ -144,6 +147,7 @@ export const parseKlineJson = (params: {
     };
   });
 
+  // 源数据不保证按日期升序；下游 earliest/latest 和区间查询都依赖排序后的顺序。
   bars.sort((left, right) => compareDate(left.tradeDate, right.tradeDate));
 
   if (bars.length === 0 || !bars[0] || !bars[bars.length - 1]) {

@@ -24,6 +24,7 @@ interface ChartGeometry extends ChartLayout {
 
 export const getChartLayout = (params: { width: number; height: number }): ChartLayout => {
   const margin = { top: 24, right: 78, bottom: 30, left: 18 };
+  // 成交量区高度跟随画布变化但限制上下界，防止窄高图里价格区被挤压。
   const volumeHeight = Math.max(86, Math.min(122, params.height * 0.2));
   const gap = 22;
   const priceTop = margin.top;
@@ -260,6 +261,7 @@ export const renderKlineCanvas = (params: {
   const dpr = window.devicePixelRatio || 1;
   const width = Math.max(320, rect.width);
   const height = Math.max(360, rect.height);
+  // canvas 物理像素按 DPR 放大，但后续绘制仍使用 CSS 像素坐标，保证高清屏不糊。
   params.canvas.width = Math.floor(width * dpr);
   params.canvas.height = Math.floor(height * dpr);
 
@@ -280,6 +282,7 @@ export const renderKlineCanvas = (params: {
   const maValues = params.maSeries.flatMap((series) =>
     series.values.filter((value): value is number => Number.isFinite(value)),
   );
+  // 价格轴同时纳入蜡烛和 MA，避免均线超出当前 K 线高低点时被裁剪。
   const priceMin = Math.min(...params.bars.map((record) => record.low), ...maValues);
   const priceMax = Math.max(...params.bars.map((record) => record.high), ...maValues);
   const padded = getPaddedRange({ min: priceMin, max: priceMax });

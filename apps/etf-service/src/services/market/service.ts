@@ -46,6 +46,7 @@ const getLatestRequiredOpenDate = async (params: {
   const calendar = await params.store.getCalendarMap(params);
   const dates = listDates({ startDate: params.startDate, endDate: params.endDate }).reverse();
 
+  // 只要求补齐“确认开市或未知”的最近交易日；已标记休市和周末不应触发远端刷新。
   for (const date of dates) {
     const calendarValue = calendar.get(date);
     if (calendarValue === 0 || isWeekend(date)) {
@@ -65,6 +66,7 @@ const markClosedMissingDates = async (params: {
   bars: DailyBar[];
 }): Promise<void> => {
   const openDates = new Set(params.bars.map((bar) => bar.tradeDate));
+  // 远端刷新后仍缺失的工作日按休市记录，避免下次请求同一区间时重复拉取。
   const rows = listDates({ startDate: params.startDate, endDate: params.endDate })
     .filter((date) => !isWeekend(date) && !openDates.has(date))
     .map((tradeDate) => ({ exchange: params.exchange, tradeDate, isOpen: 0 }));
@@ -100,6 +102,7 @@ export const createMarketService = (params: CreateMarketServiceParams): MarketSe
     const tMinusOne = getTMinusOneDate();
     const requestedStartDate = request.startDate ?? securityRow.earliestTradeDate;
     const requestedEndDate = request.endDate ?? tMinusOne;
+    // 行情源可能返回当天未收盘数据，对外查询统一裁剪到 T-1，保证 K 线都是完整交易日。
     const effectiveStartDate = maxDate(requestedStartDate, securityRow.earliestTradeDate);
     const effectiveEndDate = minDate(requestedEndDate, tMinusOne);
     const latestCachedBefore = await store.getLatestCachedTradeDate(request);
@@ -129,12 +132,14 @@ export const createMarketService = (params: CreateMarketServiceParams): MarketSe
       startDate: effectiveStartDate,
       endDate: effectiveEndDate,
     });
+    // 刷新判断以最近“应开市”的日期为准，休市日缺口不会把缓存状态误判为过期。
     const shouldRefresh =
       requiredOpenDate !== null &&
       (latestCachedBefore === null || compareDate(latestCachedBefore, requiredOpenDate) < 0);
 
     if (shouldRefresh) {
       const parsed = await fetchRemoteKlineBars({ security: securityConfig });
+      // 再次过滤 T-1 之后的数据，防止远端接口返回盘中或未来占位行污染缓存。
       const eligibleBars = parsed.bars.filter((bar) => compareDate(bar.tradeDate, tMinusOne) <= 0);
       await store.upsertDailyBars({ bars: eligibleBars, exchange: securityConfig.exchange });
     }

@@ -80,6 +80,7 @@ const formatDateMs = (dateMs: number): string => {
 const getWeekKey = (record: ChartBar): string => {
   const date = new Date(record.dateMs);
   const day = date.getUTCDay();
+  // 周线按自然周一归组，避免周末和跨年边界让同一交易周拆成两段。
   const offset = day === 0 ? -6 : 1 - day;
   return formatDateMs(record.dateMs + offset * 86_400_000);
 };
@@ -138,6 +139,7 @@ export const aggregateBars = (params: { bars: MarketBar[]; period: ChartPeriod }
     const amount = group.records.reduce((sum, record) => sum + record.amount, 0);
     const previousGroup = groups[index - 1];
     const previousClose = previousGroup?.records.at(-1)?.close;
+    // 周/月/季/年 K 线涨跌幅以“上一周期收盘价”为基准，首个周期退回用本期开盘价。
     const baseClose = previousClose ?? first.open;
     const changeAmount = last.close - baseClose;
     const changePercent = baseClose === 0 ? 0 : (changeAmount / baseClose) * 100;
@@ -194,6 +196,7 @@ export const calculateMaSeries = (params: { bars: ChartBar[]; periods: number[] 
   params.periods.map((period, periodIndex) => {
     const values: Array<number | null> = [];
     let rollingSum = 0;
+    // MA 用滚动和滑动窗口，前 period - 1 个点保留 null，让渲染层自然跳过未成形均线。
     params.bars.forEach((record, index) => {
       rollingSum += record.close;
       if (index >= period) {

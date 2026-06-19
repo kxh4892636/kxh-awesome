@@ -3,6 +3,7 @@ import { db } from "../db/client";
 import { dailyBars, securities, tradingCalendar, type DailyBarRow } from "../db/schema";
 import type { DailyBar, MarketCalendarInput, MarketDataStore } from "../services/market/types";
 
+// SQLite 参数数量有限，行情批量导入保持分片，避免一次 upsert 过大导致驱动报错。
 const INSERT_CHUNK_SIZE = 250;
 
 const chunk = <T>(params: { values: T[]; size: number }): T[][] => {
@@ -89,6 +90,7 @@ export const marketRepository = {
         });
     }
 
+    // 只要有 K 线落库，就同时把对应日期标记为开市，供后续缓存刷新判断复用。
     const calendarRows = [...new Set(params.bars.map((bar) => bar.tradeDate))].map((tradeDate) => ({
       exchange: params.exchange,
       tradeDate,

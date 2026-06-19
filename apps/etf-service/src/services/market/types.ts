@@ -28,10 +28,12 @@ export interface GetDailyBarsRequest {
 export interface GetDailyBarsResponse {
   security: Security;
   bars: DailyBar[];
+  // meta 面向前端展示和排查缓存行为，字段名保持业务语义，避免前端反推服务端裁剪逻辑。
   meta: {
     cacheStatus: MarketCacheStatus;
     requestedStartDate: string | null;
     requestedEndDate: string | null;
+    // effective* 已按最早上市日和 T-1 收盘日裁剪；为 null 表示请求区间没有可用交集。
     effectiveStartDate: string | null;
     effectiveEndDate: string | null;
     earliestTradeDate: string;

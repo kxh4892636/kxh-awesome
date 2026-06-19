@@ -72,6 +72,7 @@ const getMaStartIndex = (params: { bars: ChartBar[]; maBars: ChartBar[] }): numb
     return 0;
   }
 
+  // maBars 保留完整日线基准，bars 可能已按周期或范围聚合；先找可见数据在 MA 源里的起点。
   const identityIndex = params.maBars.indexOf(firstBar);
   if (identityIndex >= 0) {
     return identityIndex;
@@ -157,6 +158,7 @@ export const KlineChart = (props: KlineChartProps) => {
         .filter((series) => !hiddenPeriods.has(series.period))
         .map((series) => ({
           ...series,
+          // MA 数组跟随可见窗口切片，保证 tooltip、hover index 和蜡烛索引始终一一对应。
           values: series.values.slice(
             maStartIndex + zoomWindow.start,
             maStartIndex + zoomWindow.end,
@@ -217,6 +219,7 @@ export const KlineChart = (props: KlineChartProps) => {
     const visibleIndex = getVisibleIndexFromX({ x, layout, visibleLength: visibleBars.length });
     const anchorIndex = zoomWindow.start + visibleIndex;
     const anchorRatio = visibleBars.length <= 1 ? 0 : visibleIndex / (visibleBars.length - 1);
+    // 缩放围绕鼠标所在 K 线展开，避免滚轮后用户关注的蜡烛跳到画布另一侧。
     const rate = event.deltaY < 0 ? WHEEL_ZOOM_IN_RATE : WHEEL_ZOOM_OUT_RATE;
     const minVisible = Math.min(MIN_VISIBLE_CANDLES, bars.length);
     const nextVisible = Math.min(
@@ -252,6 +255,7 @@ export const KlineChart = (props: KlineChartProps) => {
       zoomStart: zoomWindow.start,
       visibleCount: visibleBars.length,
       totalCount: bars.length,
+      // 拖拽按单根 K 线宽度换算为索引位移，避免不同画布宽度下手感不一致。
       step: layout.plotWidth / Math.max(visibleBars.length, 1),
     };
     setTooltip(null);
