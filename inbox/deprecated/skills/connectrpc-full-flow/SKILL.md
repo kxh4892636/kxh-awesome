@@ -33,11 +33,11 @@ description: ConnectRPC 全栈开发流程。涵盖 Go 后端 + TypeScript 前�
 
 ## 代码生成
 
-| 侧 | 命令 | 详情 |
-|---|------|------|
-| Go | `cd <backend> && ./generate.sh` | `references/codegen.md` |
-| TS | `cd <frontend> && <pm> run gen:api <project-name>` | `references/codegen.md` |
-| API 文档 | `cd <backend> && ./generate.sh` | `references/codegen.md` |
+| 侧       | 命令                                               | 详情                    |
+| -------- | -------------------------------------------------- | ----------------------- |
+| Go       | `cd <backend> && ./generate.sh`                    | `references/codegen.md` |
+| TS       | `cd <frontend> && <pm> run gen:api <project-name>` | `references/codegen.md` |
+| API 文档 | `cd <backend> && ./generate.sh`                    | `references/codegen.md` |
 
 **gen/ 永远只读**，修改接口的流程是：改 proto → 重新生成 → 手写代码适配。
 

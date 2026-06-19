@@ -5,6 +5,7 @@
 ### 配置文件
 
 `buf.yaml` 声明 proto 模块位置：
+
 ```yaml
 version: v2
 modules:
@@ -12,6 +13,7 @@ modules:
 ```
 
 `buf.gen.yaml` 配置 Go 代码生成：
+
 ```yaml
 version: v2
 plugins:
@@ -60,10 +62,12 @@ echo "Done."
 ### 手动运行
 
 如果不用 generate.sh，手动执行：
+
 ```bash
 cd <backend-dir>
 buf generate
 ```
+
 前提：`protoc-gen-go`、`protoc-gen-connect-go`、`buf` 已在 PATH 中（可通过 `go install` 安装）。
 
 ## TypeScript 前端生成
@@ -72,14 +76,15 @@ buf generate
 
 两种方式：
 
-| 方式 | 命令 | 适用场景 |
-|------|------|---------|
-| CLI 工具 | `<pm> run gen:api <project-name>` | 推荐，配置驱动 |
+| 方式     | 命令                                      | 适用场景        |
+| -------- | ----------------------------------------- | --------------- |
+| CLI 工具 | `<pm> run gen:api <project-name>`         | 推荐，配置驱动  |
 | 直接 buf | `buf generate --template buf.gen.ts.yaml` | 无 CLI 时的备选 |
 
 ### buf 配置
 
 `buf.gen.ts.yaml`（由 CLI 动态生成，或手动维护）：
+
 ```yaml
 version: v2
 plugins:
@@ -96,6 +101,7 @@ plugins:
 ### 生成代码是只读的
 
 永远不要手动编辑 gen/ 下的文件。修改接口的流程是：
+
 1. 改 proto
 2. 重新运行 generate.sh / gen:api
 3. 如果编译报错，说明手写代码需要适配新接口——这正是类型安全的价值
@@ -145,13 +151,14 @@ buf generate --template buf.gen.doc.yaml
 ### proto 注释即文档
 
 生成的 HTML 会包含 proto 文件中所有注释（`//` 和 `/* */`），因此：
+
 - Message、Field、Service、Method 上方的注释会出现在文档对应条目中
 - 包级别的注释（`package` 声明上方）会成为包概述
 - 写好注释 = 写好文档，无需额外维护
 
 ### 与 BSR 文档站点的区别
 
-| 方式 | 产物 | 适用场景 |
-|------|------|---------|
+| 方式                    | 产物                  | 适用场景               |
+| ----------------------- | --------------------- | ---------------------- |
 | `protoc-gen-doc` (本地) | 静态 HTML，可自行部署 | 团队内部文档、离线查看 |
-| BSR Docs (云端) | buf.build 在线文档站 | 公开 API、跨团队共享 |
+| BSR Docs (云端)         | buf.build 在线文档站  | 公开 API、跨团队共享   |

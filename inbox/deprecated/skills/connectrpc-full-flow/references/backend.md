@@ -23,6 +23,7 @@ message <Method>Response {
 ```
 
 **关键字段：**
+
 - `package`：决定 URL 路径 `/<package>.<Service>/<Method>`
 - `go_package`：格式为 `<module-path>;<go-package-name>`，`;<name>` 是 Go 代码中的包别名
 
@@ -31,6 +32,7 @@ message <Method>Response {
 proto 中的注释会携带到前后端生成的代码中，支持两种形式：
 
 **1. 行尾注释**
+
 ```protobuf
 message User {
   int32 id = 1;       // 用户ID
@@ -39,6 +41,7 @@ message User {
 ```
 
 **2. 前置注释**（message 和 field 均支持）
+
 ```protobuf
 /**
  * This is a leading comment for a message.
@@ -102,6 +105,7 @@ func main() {
 ```
 
 CORS 中间件至少需要允许以下请求头：
+
 ```go
 w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Connect-Protocol-Version")
 ```
