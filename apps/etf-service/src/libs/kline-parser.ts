@@ -3,9 +3,13 @@ import type { NewDailyBarRow } from "../db/schema";
 import { compareDate, parseDateMs } from "../utils/date";
 
 export interface ParsedKlineData {
+  /** 远端返回的证券代码（验证用） */
   securityCode: string;
+  /** K 线数据的最早交易日 */
   earliestTradeDate: string;
+  /** K 线数据的最新交易日 */
   latestTradeDate: string;
+  /** 已按交易日升序排列的 K 线条数 */
   bars: NewDailyBarRow[];
 }
 
@@ -14,6 +18,7 @@ const asRecord = (value: unknown): Record<string, unknown> | null =>
     ? (value as Record<string, unknown>)
     : null;
 
+/** 将 unknown 转为有限数字，失败抛出明确错误 */
 const toFiniteNumber = (params: {
   value: unknown;
   fieldName: string;
@@ -48,6 +53,15 @@ const parseDate = (params: { value: unknown; rowNumber: number }): string => {
   return text;
 };
 
+/**
+ * 解析红色火箭 API 返回的 K 线 JSON。
+ *
+ * 数据格式：columns 定义字段顺序（逗号分隔），items 用分号分隔行、逗号分隔列。
+ * 容错策略：
+ * - 根节点可能直接包含数据，也可能嵌套在 data 节点下
+ * - 可选字段（volume、amount、change、changePercent、week）缺失时使用默认值
+ * - 涨跌额/涨跌幅缺失时退回 close-open / (close-open)/open 作为近似
+ */
 export const parseKlineJson = (params: {
   text: string;
   fileName: string;

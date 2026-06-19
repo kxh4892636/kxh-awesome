@@ -3,9 +3,10 @@ import { db } from "../db/client";
 import { dailyBars, securities, tradingCalendar, type DailyBarRow } from "../db/schema";
 import type { DailyBar, MarketCalendarInput, MarketDataStore } from "../services/market/types";
 
-// SQLite 参数数量有限，行情批量导入保持分片，避免一次 upsert 过大导致驱动报错。
+// SQLite 参数数量有限（默认 999），行情批量导入保持分片，避免一次 upsert 过大导致驱动报错。
 const INSERT_CHUNK_SIZE = 250;
 
+/** 将数组按固定大小分片，用于 SQLite 批量插入 */
 const chunk = <T>(params: { values: T[]; size: number }): T[][] => {
   const chunks: T[][] = [];
   for (let index = 0; index < params.values.length; index += params.size) {
@@ -14,6 +15,7 @@ const chunk = <T>(params: { values: T[]; size: number }): T[][] => {
   return chunks;
 };
 
+/** 将数据库行映射为 DailyBar 领域对象，可选字段回退默认值 */
 const toDailyBar = (row: DailyBarRow): DailyBar => ({
   symbol: row.symbol,
   adjType: row.adjType,
@@ -43,6 +45,15 @@ const upsertCalendarRows = async (rows: MarketCalendarInput[]): Promise<void> =>
   }
 };
 
+/**
+ * 行情数据 SQLite 存储适配器。
+ *
+ * 实现 MarketDataStore 接口，是当前唯一的存储适配器。
+ * 关键设计：
+ * - upsertDailyBars 在写入 K 线后自动标记对应日期为开市（isOpen=1），无需调用方额外维护 calendar
+ * - 批量 upsert 按 INSERT_CHUNK_SIZE=250 分片，避免 SQLite 参数上限
+ * - onConflictDoUpdate 确保重复插入时更新价格数据而非报错
+ */
 export const marketRepository = {
   upsertSecurity: async (params) => {
     await db
