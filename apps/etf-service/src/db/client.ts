@@ -5,9 +5,9 @@ import { drizzle } from "drizzle-orm/libsql";
 import { config } from "../config/env";
 import * as schema from "./schema";
 
-mkdirSync(dirname(config.databaseFile), { recursive: true });
+mkdirSync(dirname(config.databaseUrl), { recursive: true });
 
-const databaseUrl = `file:${config.databaseFile.replaceAll("\\", "/")}`;
+const databaseUrl = `file:${config.databaseUrl.replaceAll("\\", "/")}`;
 
 const client = createClient({
   url: databaseUrl,
