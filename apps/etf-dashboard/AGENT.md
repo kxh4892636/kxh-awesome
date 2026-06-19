@@ -37,3 +37,18 @@ vp dev
 
 前端 `tsconfig.json` 通过 `references` 指向 `../etf-service`，直接拿到后端 TS 类型。
 Hono RPC 类型入口在后端按 `ReturnType<typeof hc<typeof app>>` 预计算，前端构建使用 `tsc -b`。
+
+## 验证方法
+
+开发完成后，通过构建命令验证前端无错误：
+
+```bash
+cd apps/etf-dashboard
+vp run build
+```
+
+构建必须零错误完成：
+
+- exit code 为 0；
+- 输出中无 `error`、`ERROR` 或 TypeScript 编译错误（`TS*`）；
+- 如果后端 RPC 类型有变更，需先在 `etf-service` 执行 `vp run build` 确保类型可用，再验证前端构建。
