@@ -9,4 +9,4 @@ Ask the questions one at a time, waiting for feedback on each question before co
 
 If a question can be answered by exploring the codebase, explore the codebase instead.
 
-Constraint: after dependencies are resolved, create a TaskList based on dependency relationships. Order prerequisite tasks before dependent tasks, keep each task independently verifiable, and use only `pending`, `in_progress`, `completed`, or `blocked` when task status is needed.
+Constraint: after dependencies are resolved, create a TaskList based on dependency relationships. Order prerequisite tasks before dependent tasks, keep each task independently verifiable;

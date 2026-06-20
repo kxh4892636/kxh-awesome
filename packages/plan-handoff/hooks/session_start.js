@@ -39,13 +39,10 @@ const projectRoot = (cwd) => {
 const handoffPath = ({ cwd, sessionId }) =>
   path.join(projectRoot(cwd), "docs", "handoff", `${sessionId}.md`);
 
-const startupContext = ({ cwd, sessionId }) => {
-  const currentHandoffPath = handoffPath({ cwd, sessionId });
-
+const startupContext = ({ sessionId }) => {
   return [
     "Plan Handoff plugin context:",
     `- Current Codex session_id: ${sessionId}`,
-    `- Current handoff document path: ${currentHandoffPath}`,
     "- If the user invokes the to-plan skill, you must generate a TaskList based on task dependencies.",
     "- When the handoff skill is used, create or update the handoff document at the path above.",
   ].join("\n");
