@@ -6,8 +6,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 ${PLUGIN_ROOT}/hooks/session_start.py",
-            "commandWindows": "python \"${PLUGIN_ROOT}\\hooks\\session_start.py\"",
+            "command": "node ${PLUGIN_ROOT}/hooks/session_start.js",
+            "commandWindows": "node \"${PLUGIN_ROOT}\\hooks\\session_start.js\"",
             "statusMessage": "Loading plan handoff context"
           }
         ]
@@ -17,8 +17,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 ${PLUGIN_ROOT}/hooks/session_start.py",
-            "commandWindows": "python \"${PLUGIN_ROOT}\\hooks\\session_start.py\"",
+            "command": "node ${PLUGIN_ROOT}/hooks/session_start.js",
+            "commandWindows": "node \"${PLUGIN_ROOT}\\hooks\\session_start.js\"",
             "statusMessage": "Loading compact handoff context"
           }
         ]
