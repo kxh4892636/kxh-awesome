@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "anki": {
+      "command": "npx",
+      "args": ["mcp-remote", "http://127.0.0.1:3141"]
+    },
+    "chrome-devtools": {
+      "command": "npx",
+      "args": ["-y", "chrome-devtools-mcp@latest", "--autoConnect"]
+    }
+  }
+}

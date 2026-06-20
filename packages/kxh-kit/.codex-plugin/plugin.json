@@ -1,0 +1,19 @@
+{
+  "name": "kxh-kit",
+  "version": "0.1.0",
+  "description": "Kxh local Codex toolkit",
+  "author": {
+    "name": "kxh-awesome"
+  },
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "Kxh Kit",
+    "shortDescription": "Local skills, MCP servers, and handoff context.",
+    "longDescription": "Kxh Kit bundles local Codex skills, Anki and Chrome DevTools MCP servers, and SessionStart context hooks for Codex handoff documents.",
+    "developerName": "kxh-awesome",
+    "category": "Productivity",
+    "capabilities": ["Read", "Write"],
+    "defaultPrompt": ["Use grilling for this design.", "Create a handoff document."]
+  }
+}

@@ -5,10 +5,10 @@
   },
   "plugins": [
     {
-      "name": "plan-handoff",
+      "name": "kxh-kit",
       "source": {
         "source": "local",
-        "path": "./packages/plan-handoff"
+        "path": "./packages/kxh-kit"
       },
       "policy": {
         "installation": "AVAILABLE",
