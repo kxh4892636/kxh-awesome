@@ -1,0 +1,20 @@
+{
+  "name": "kxh-awesome-local",
+  "interface": {
+    "displayName": "kxh-awesome Local"
+  },
+  "plugins": [
+    {
+      "name": "plan-handoff",
+      "source": {
+        "source": "local",
+        "path": "./packages/plan-handoff"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}
