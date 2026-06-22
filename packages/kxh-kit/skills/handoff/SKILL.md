@@ -1,6 +1,6 @@
 ---
 name: handoff
-description: 创建或更新当前 Codex 会话的交接文档，保存到当前项目的 docs/handoff/{sessionID}.md。用户要求 handoff、交接、交接文档、会话交接、更新上下文文档，或 compact 注入提示要求立刻使用 handoff skill 时，必须使用本 skill。
+description: 创建或更新当前会话的交接文档，保存到当前项目的 docs/handoff/{sessionID}.md。用户要求 handoff、交接、交接文档、会话交接、更新上下文文档，或 compact 注入提示要求立刻使用 handoff skill 时，必须使用本 skill。
 ---
 
 # Handoff
@@ -24,7 +24,7 @@ description: 创建或更新当前 Codex 会话的交接文档，保存到当前
 3. 梳理最新用户意图、已验证事实、假设、决策、状态、TaskList、验证结果、风险和下一步。
 4. 事实和假设必须分开写。无法验证但影响执行的内容，使用 `未确认` 标记。
 5. 更新或创建 `docs/handoff/{sessionID}.md`。目录不存在时先创建目录。
-6. 如果存在 TaskList，后续每完成任一 TaskList 任务，都把交接文档更新作为该任务完成前的最后一步。
+6. 如果存在 TaskList，后续每完成任一 TaskList 任务，都把交接文档更新作为该任务完成前的最后一步，更新包含对应任务改动涉及的所有内容。
 
 ## 内容约束
 
