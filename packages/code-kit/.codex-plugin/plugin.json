@@ -1,0 +1,19 @@
+{
+  "name": "code-kit",
+  "version": "0.1.0",
+  "description": "Codebase engineering skills and developer MCP tools",
+  "author": {
+    "name": "kxh-awesome"
+  },
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "Code Kit",
+    "shortDescription": "Code, architecture, testing, and document quality workflows.",
+    "longDescription": "Code Kit bundles engineering skills, architecture review, testing workflows, frontend and backend guidance, Lark document quality guidance, update guidance, and Chrome DevTools MCP integration.",
+    "developerName": "kxh-awesome",
+    "category": "Developer Tools",
+    "capabilities": ["Read", "Write"],
+    "defaultPrompt": ["Diagnose this bug.", "Review this architecture."]
+  }
+}

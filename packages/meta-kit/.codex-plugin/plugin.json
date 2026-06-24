@@ -1,0 +1,18 @@
+{
+  "name": "meta-kit",
+  "version": "0.1.0",
+  "description": "Meta workflow skills and session context hooks",
+  "author": {
+    "name": "kxh-awesome"
+  },
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Meta Kit",
+    "shortDescription": "Planning, handoff, and skill authoring workflows.",
+    "longDescription": "Meta Kit bundles planning, handoff, skill creation, skill extraction, update guidance, and SessionStart context hooks for Codex workflows.",
+    "developerName": "kxh-awesome",
+    "category": "Productivity",
+    "capabilities": ["Read", "Write"],
+    "defaultPrompt": ["Use grilling for this design.", "Create a handoff document."]
+  }
+}

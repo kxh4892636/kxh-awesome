@@ -5,16 +5,40 @@
   },
   "plugins": [
     {
-      "name": "kxh-kit",
+      "name": "meta-kit",
       "source": {
         "source": "local",
-        "path": "./packages/kxh-kit"
+        "path": "./packages/meta-kit"
       },
       "policy": {
         "installation": "AVAILABLE",
         "authentication": "ON_INSTALL"
       },
       "category": "Productivity"
+    },
+    {
+      "name": "wiki-kit",
+      "source": {
+        "source": "local",
+        "path": "./packages/wiki-kit"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    },
+    {
+      "name": "code-kit",
+      "source": {
+        "source": "local",
+        "path": "./packages/code-kit"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Developer Tools"
     }
   ]
 }
