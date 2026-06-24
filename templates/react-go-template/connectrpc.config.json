@@ -1,0 +1,8 @@
+{
+  "backends": {
+    "go-template": {
+      "idl": "../go-template",
+      "out": "src/api/gen/go-template"
+    }
+  }
+}

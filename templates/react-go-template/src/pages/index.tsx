@@ -5,7 +5,7 @@ export const RootLayout = () => (
   <Layout className="min-h-screen bg-[#f5f7fb] text-slate-800">
     <Layout.Header className="flex h-14 items-center gap-4 border-b border-slate-200 bg-white px-6 text-slate-800">
       <Typography.Text strong className="text-lg text-slate-800">
-        React Hono Template
+        React Go Template
       </Typography.Text>
       <Space>
         <Button type="text" className="text-slate-700">

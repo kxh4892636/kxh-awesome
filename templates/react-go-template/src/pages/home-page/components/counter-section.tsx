@@ -1,6 +1,5 @@
-// 计数器组件 - 展示 Zustand 全局状态，通过 props 接收 count 和操作回调
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { MinusOutlined, PlusOutlined } from "@ant-design/icons";
+import { Button, Card, Space, Statistic } from "antd";
 
 interface CounterSectionProps {
   count: number;
@@ -12,19 +11,17 @@ export const CounterSection = (props: CounterSectionProps) => {
   const { count, onIncrement, onDecrement } = props;
 
   return (
-    <Card id="counter">
-      <CardHeader>
-        <CardTitle>Zustand Counter + es-toolkit clamp(0, 100)</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div className="flex items-center gap-4">
-          <Button variant="outline" onClick={onDecrement}>
-            -
-          </Button>
-          <span className="text-2xl font-bold">{count}</span>
-          <Button onClick={onIncrement}>+</Button>
-        </div>
-      </CardContent>
+    <Card id="counter" title="Zustand Counter + es-toolkit clamp(0, 100)">
+      <Space align="center" size="middle">
+        <Button aria-label="Decrement" icon={<MinusOutlined />} onClick={onDecrement} />
+        <Statistic value={count} valueStyle={{ minWidth: 48, textAlign: "center" }} />
+        <Button
+          aria-label="Increment"
+          type="primary"
+          icon={<PlusOutlined />}
+          onClick={onIncrement}
+        />
+      </Space>
     </Card>
   );
 };

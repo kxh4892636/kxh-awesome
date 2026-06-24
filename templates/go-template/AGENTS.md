@@ -26,7 +26,6 @@
 ## 依赖关系
 
 - 被 `templates/react-go-template` 通过生成的 ConnectRPC TypeScript 客户端调用。
-- 前端客户端由 `@kxh-awesome/connectrpc-gen` 从本模板 `proto/` 生成。
 - 不依赖其他 workspace 应用。
 
 ## 项目命令
@@ -43,4 +42,4 @@
 
 - 改 proto 后运行 `./generate.sh`，再运行 `go test ./...`。
 - 改 `internal/` 或 `main.go` 后运行 `go test ./...`。
-- 改 proto 后还要在 `templates/react-go-template` 运行 `vp run gen:api go-template` 并验证前端构建。
+- 改 proto 后还要在 `templates/react-go-template` 运行 `vp run gen` 并验证前端构建。

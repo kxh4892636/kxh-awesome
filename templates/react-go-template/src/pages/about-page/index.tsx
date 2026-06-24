@@ -3,8 +3,8 @@ import { Card, Space, Tag } from "antd";
 const TECH_STACK = [
   { name: "React", version: "19" },
   { name: "Ant Design", version: "6" },
-  { name: "Hono RPC", version: "4" },
-  { name: "Zod", version: "4" },
+  { name: "ConnectRPC", version: "2" },
+  { name: "Protobuf-ES", version: "2" },
   { name: "Zustand", version: "5" },
   { name: "es-toolkit", version: "1" },
   { name: "dayjs", version: "1" },
