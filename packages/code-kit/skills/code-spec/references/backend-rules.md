@@ -1,33 +1,27 @@
 # Backend Rules
 
-读取本文件处理后端架构、Node/TypeScript 后端、API/RPC 路由、service/use case、repository、integration、middleware、数据库访问、后台任务和运行时配置。共享 TypeScript、注释和错误处理规则先读 `common-rules.md`。
+读取本文件处理 Go 后端架构、API/RPC 路由、service/use case、repository、integration、middleware、数据库访问、后台任务和运行时配置。前端 TypeScript 规则不适用于本文件。
 
 ## 项目结构
 
-后端 TypeScript 项目默认组织：
+Go 后端项目默认组织：
 
 ```text
-src/
-├── main.ts           # 服务启动入口，监听端口或导出 runtime handler
-├── app.ts            # 应用装配：全局中间件、路由挂载、错误处理
-├── config/           # 环境变量、运行时配置、常量
-├── common/           # 共享类型、枚举、错误码、响应结构
-├── routes/           # 路由定义，按业务域拆分
-│   └── [domain]/
-│       ├── index.ts
-│       ├── handlers.ts
-│       ├── schema.ts
-│       └── types.ts
-├── middleware/       # 认证、CORS、日志、错误、request id 等中间件
-├── services/         # 业务逻辑，保持与 HTTP 框架解耦
-├── db/               # 数据库连接、schema、migration 辅助
-│   ├── client.ts
-│   ├── schema/
-│   └── queries/
-├── jobs/             # 定时任务、队列消费者、后台处理
-├── libs/             # 外部 API、消息队列、对象存储、第三方 SDK 封装
-├── utils/            # 纯工具函数
-└── tests/            # route、service、db query 测试
+.
+├── main.go           # 实例装配、服务启动、路由/RPC 注册
+├── proto/            # API/RPC 契约源文件，变更先改契约
+├── gen/              # 生成代码，只读，不手写
+├── internal/
+│   ├── config/       # 环境变量、运行时配置、常量
+│   ├── database/     # DB 打开、连接池、迁移辅助、基础设施初始化
+│   ├── model/        # 数据库模型或持久化模型
+│   ├── repository/   # 数据访问实现，封装 ORM/SQL
+│   ├── integration/  # 第三方服务、外部协议、SDK/client 封装
+│   ├── service/      # 业务用例、业务规则、事务边界
+│   ├── middleware/   # 认证、CORS、日志、错误、request id 等中间件
+│   └── job/          # 定时任务、队列消费者、后台处理
+├── script/           # 初始化脚本、运维脚本
+└── data/             # 本地开发数据文件，不放生产数据
 ```
 
 ## 核心模型
@@ -50,38 +44,39 @@ Database / Third-party
 - Service / Use Case 承载业务流程、业务规则、依赖能力定义和事务边界，避免直接依赖具体 HTTP/RPC 框架对象。
 - Repository 封装数据访问、ORM/SQL 查询和数据库模型映射，避免在 handler 或 service 中散落 SQL/ORM 细节。
 - Integration / Client 封装第三方服务调用和外部协议，不承载核心业务规则。
-- middleware 只处理横切关注点，例如认证、CORS、日志、错误、request id。
-- config 负责环境变量解析和默认值，不要在业务函数中散落 `process.env`。
-- App / Main 只做实例创建、依赖装配、服务启动和路由注册，不写业务流程细节。
+- Middleware 只处理横切关注点，例如认证、CORS、日志、错误、request id。
+- Config 负责环境变量解析和默认值，不要在业务函数中散落 `os.Getenv`。
+- Main 只做实例创建、依赖装配、服务启动和路由/RPC 注册，不写业务流程细节。
 
 ## 实例装配
 
 - 实例创建集中在启动层，由外向内装配依赖：config/logger/db/client → repository/integration → service/use case → handler/router。
-- 业务对象通过构造函数或工厂函数接收依赖，不在内部创建数据库连接、repository、logger、第三方 client 等基础设施。
+- 业务对象通过 `NewXxx` 构造函数接收依赖，不在内部创建数据库连接、repository、logger、第三方 client 等基础设施。
 - Service 依赖抽象能力，测试时可以替换 repository 或 integration 实现。
-- 不要在 service 内部直接 `new` repository 或读取全局基础设施；这会隐藏依赖、降低可测试性并扩大变更影响。
-- 小项目可以依赖启动层装配暴露接口不匹配；分层严格或包循环风险高时，把 port/interface 放到独立边界模块。
+- 不要在 service 内部直接创建 repository 或读取全局基础设施；这会隐藏依赖、降低可测试性并扩大变更影响。
+- 小项目可以依赖 `main.go` 装配暴露接口不匹配；分层严格或包循环风险高时，把 port/interface 放到独立边界包。
 
 ## 接口与能力设计
 
-- 接口由使用方定义，结构体或类由实现方提供；service 需要什么能力，就在 service/use case 附近定义最小接口。
-- Repository 方法从业务用例倒推，不预设完整 CRUD；例如列表用例只需要 `list`，按 ID 查询和创建需求出现后再扩展。
+- Go 接口由使用方定义，结构体由实现方提供；service 需要什么能力，就在 service/use case 附近定义最小接口。
+- Repository 方法从业务用例倒推，不预设完整 CRUD；例如列表用例只需要 `List(ctx)`，按 ID 查询和创建需求出现后再扩展。
 - Service 接口只有在上层确实需要替换、mock 或多实现时再定义，不为形式感增加抽象。
-- 实现层可以添加编译期或测试期约束来暴露方法缺失、签名不匹配和依赖装配错误。
+- 实现层可以添加编译期接口断言来暴露方法缺失、签名不匹配和依赖装配错误；如果断言会制造包循环，就依赖启动层装配或抽出 port 包。
 
 ## API 与校验
 
-- 请求体、query、params、headers 和外部 webhook payload 必须在边界校验。
-- Zod 或项目现有 schema 工具的复杂用法读取 `references/zod/README.md`。
+- 请求体、query、params、headers、RPC request 和外部 webhook payload 必须在边界校验。
+- Proto/RPC 变更先改契约源文件，再生成代码，最后更新 service、repository、客户端和文档。
 - 响应结构、错误码和分页格式优先复用项目内约定。
 - 接口兼容性变更先确认调用方、契约文件、生成代码和文档影响。
 
 ## 数据库与副作用
 
-- 数据库方言、driver、连接池、事务和 migration 策略先查现有配置。
+- 数据库方言、driver、连接池、事务和 migration 策略先查现有 Go 配置。
 - `push`、`migrate`、`pull`、seed、truncate、批量更新、批量删除等影响真实数据的操作需要明确目标环境和回滚策略。
 - 写操作优先由 service/use case 协调事务；repository/query 层保持可组合、可测试。
 - 外部 API、消息队列、对象存储、邮件、支付等副作用要有超时、错误记录和幂等策略。
+- 跨请求和外部调用传递 `context.Context`，不要在业务路径中丢失取消、超时和 request id。
 
 ## 后台任务
 
@@ -91,9 +86,10 @@ Database / Third-party
 
 ## 测试与验证
 
-- route 测试覆盖入参校验、错误响应和成功路径。
-- service 测试覆盖核心业务分支和副作用失败。
-- db query 测试使用项目已有测试数据库或 mock 策略，不临时发明生产连接。
+- Handler/RPC 测试覆盖入参校验、错误响应和成功路径。
+- Service 测试覆盖核心业务分支和副作用失败。
+- Repository 测试使用项目已有测试数据库或 mock 策略，不临时发明生产连接。
+- Go 后端验证优先使用项目已有 `go test`、生成脚本和相关 package 级检查。
 
 ## 审查判断
 

@@ -1,6 +1,6 @@
 # Common Rules
 
-读取本文件处理前后端共享的 JavaScript/TypeScript 代码规则：命名、文件大小、函数、模块、注释、错误处理和检查范围。只有涉及 UI、组件、路由页面时再读 `frontend-rules.md`；涉及 API 路由、service、数据库或后台任务时再读 `backend-rules.md`。
+读取本文件处理 JavaScript/TypeScript 代码规则：命名、文件大小、函数、模块、注释、错误处理和检查范围。只有涉及 UI、组件、路由页面时再读 `frontend-rules.md`；涉及 Go API/RPC、service、repository、数据库或后台任务时再读 `backend-rules.md`。
 
 ## 命名规范
 

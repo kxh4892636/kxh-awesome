@@ -1,6 +1,6 @@
 ---
 name: code-spec
-description: 前后端代码规范与专项开发指南。执行 html/css/js/ts/react/vue 前端开发、Node/TypeScript 后端开发、API/接口请求、React 组件、Zod 校验、TanStack Query/react-query、Vite+/vp、Ant Design/antd、第三方依赖或代码注释规范任务时触发；通用规则、前端规则和后端规则分层披露。关键词：代码规范、注释规范、说明性注释、前端、后端、API、React、Vue、TypeScript、Node、接口请求、Zod、zod、TanStack Query、react-query、useQuery、useMutation、Vite+、vp、Ant Design、antd。
+description: 前后端代码规范与专项开发指南。执行 html/css/js/ts/react/vue 前端开发、Go 后端开发、API/接口请求、React 组件、Zod 校验、TanStack Query/react-query、Vite+/vp、Ant Design/antd、第三方依赖或代码注释规范任务时触发；通用规则、前端规则和后端规则分层披露。关键词：代码规范、注释规范、说明性注释、前端、后端、API、React、Vue、TypeScript、Go、接口请求、Zod、zod、TanStack Query、react-query、useQuery、useMutation、Vite+、vp、Ant Design、antd。
 ---
 
 # code-spec
@@ -18,16 +18,18 @@ description: 前后端代码规范与专项开发指南。执行 html/css/js/ts/
 
 | 任务 | 先读 | 继续按需读取 |
 |------|------|--------------|
-| 任意 TypeScript/JavaScript 代码、命名、函数、模块、注释、错误处理、检查范围 | `references/common-rules.md` | 项目内最近规则和现有实现 |
-| 前端目录组织、React/Vue 页面与组件、前端组件库选择 | `references/frontend-rules.md` | `references/react/README.md` 与相关 React 规则 |
-| 后端目录组织、API 路由、service、db、middleware、后台任务、数据库影响操作 | `references/backend-rules.md` | 当前项目后端框架/ORM 官方文档或现有实现 |
-| 接口请求、请求封装、hook 示例、ConnectRPC/BAM/fetch 选择 | `references/http-requests.md` | `references/react-query/README.md` 或后端现有客户端封装 |
-| Vite+/vp、构建、测试、检查、工具链配置 | 本文“Vite+ 最小规则” | `references/vite-plus/README.md` 与 `references/vite-plus/references/source-map.md` |
-| Ant Design/antd 组件、主题、Form/Table、语义化 DOM、`classNames`、`styles` | `references/antd/README.md` | `references/antd/references/component-map.md`、`references/antd/references/semantic-map.md` |
+| 命名、文件组织、TypeScript 类型、函数拆分、模块导入导出、注释、错误处理 | `references/common-rules.md` | 最近项目规则和同目录现有实现 |
+| 小范围 JS/TS 代码修改，不涉及 UI、网络、DB 或框架 API | `references/common-rules.md` | 只搜索受影响文件附近模式 |
+| React/Vue 页面、组件、样式、组件拆分、组件库选择 | `references/frontend-rules.md` | React 任务再读 `references/react/README.md` |
+| React Hook、状态、渲染性能、bundle、首屏、交互性能或 React 代码评审 | `references/react/README.md` | `references/react/rules/*.md` 中相关规则 |
+| Ant Design/antd 组件 API、主题、Form/Table、语义化 DOM、`classNames`、`styles` | `references/antd/README.md` | `references/antd/references/component-map.md`、`references/antd/references/semantic-map.md` |
+| 接口请求、请求函数封装、前端 hook、ConnectRPC/BAM/fetch 选择 | `references/http-requests.md` | 使用 React Query 时再读 `references/react-query/README.md` |
+| TanStack Query / React Query、QueryClient、queryKey、useQuery/useMutation、缓存、失效、SSR/hydration、Suspense、乐观更新 | `references/react-query/README.md` | `references/react-query/references/doc-map.md` |
+| Go 后端架构、API/RPC 路由、handler/controller、service/use case、repository、integration、middleware、后台任务 | `references/backend-rules.md` | 当前项目 Go 框架、ORM/driver、RPC 和现有实现 |
+| Go 数据库连接、事务、migration、seed、批量更新/删除、真实数据影响操作 | `references/backend-rules.md` | 项目数据库配置、迁移脚本和官方 ORM/driver 文档 |
 | Zod schema、运行时校验、parse/safeParse、错误格式化、JSON Schema、codec、transform、迁移 | `references/zod/README.md` | `references/zod/references/doc-map.md` |
-| TanStack Query / React Query、QueryClient、useQuery、useMutation、queryKey、invalidateQueries、SSR/hydration、Suspense、乐观更新 | `references/react-query/README.md` | `references/react-query/references/doc-map.md` |
-| React 组件、Hook、状态、数据请求、bundle、首屏渲染、交互性能或代码评审 | `references/react/README.md` | `references/react/rules/*.md` 中的相关规则 |
-| 第三方依赖官方文档入口、内部依赖查找策略 | 本文“外部文档入口” | 对应官方文档或项目内现有用法 |
+| Vite+/vp、依赖、构建、测试、检查、workspace 命令、工具链配置 | 本文“Vite+ 最小规则” | `references/vite-plus/README.md` 与 `references/vite-plus/references/source-map.md` |
+| 第三方依赖 API 查询、官方文档查证、内部依赖用法查找 | 本文“外部文档入口” | 项目内现有用法或对应官方文档 |
 
 ## Vite+ 最小规则
 
@@ -41,29 +43,9 @@ description: 前后端代码规范与专项开发指南。执行 html/css/js/ts/
 
 优先搜索项目内现有用法；只有 API 不确定、版本差异可能影响实现、或用户明确要求查证时才读取外部官方文档。
 
-| 依赖 | 官方文档 |
-|------|----------|
-| React | https://react.dev/ |
-| TypeScript | https://www.typescriptlang.org/docs/ |
-| Tailwind CSS | https://tailwindcss.com/docs |
-| Ant Design / antd | 先看 `references/antd/README.md` 和本地中文官方文档快照，再查 https://ant.design/components/overview-cn/ |
-| Zustand | https://zustand.docs.pmnd.rs/ |
-| Zod | 先看 `references/zod/README.md` 和本地 docs 快照，再查 https://zod.dev/ |
-| @tanstack/react-query | 先看 `references/react-query/README.md` 和本地 React docs 快照，再查 https://tanstack.com/query/latest/docs |
-| @tanstack/react-router | https://tanstack.com/router/latest/docs |
-| dayjs | https://day.js.org/ |
-| es-toolkit | https://es-toolkit.slash.page/ |
-| ahooks | https://ahooks.js.org/ |
-| @arco-design/mobile-react | https://arco.design/mobile/react |
-| Vite | https://vite.dev/ |
-| Vitest | https://vitest.dev/ |
-| Vite+ (vp) | 先看 `references/vite-plus/README.md`，再查 `node_modules/vite-plus/docs` 或 https://viteplus.dev/guide/ |
-| Docusaurus | https://docusaurus.io/docs |
-| ConnectRPC | https://connectrpc.com/docs/web/getting-started |
-| @connectrpc/connect | https://www.npmjs.com/package/@connectrpc/connect |
-| @bufbuild/protobuf | https://buf.build/docs/protobuf-es |
-
-内部依赖无公开文档，遇到 `@ecom/auxo`、`@ecom/auxo-mobile`、`@ecom/auxo-pro-table`、`@ecom/auxo-pro-form` 或 BAM 问题时，搜索项目内现有用法作为参考。
+- 已有本地参考的依赖先读本地参考：Ant Design / antd、Zod、TanStack Query / React Query、Vite+。
+- 公开依赖按需查官方文档：Go、React、TypeScript、Tailwind CSS、Zustand、TanStack Router、dayjs、es-toolkit、ahooks、Arco Mobile、Vite、Vitest、Docusaurus、ConnectRPC、protobuf-es。
+- 内部依赖无公开文档，遇到 `@ecom/auxo`、`@ecom/auxo-mobile`、`@ecom/auxo-pro-table`、`@ecom/auxo-pro-form` 或 BAM 问题时，搜索项目内现有用法作为参考。
 
 ## 核心完成检查
 
@@ -77,9 +59,9 @@ description: 前后端代码规范与专项开发指南。执行 html/css/js/ts/
 
 ## 参考模块
 
-- `references/common-rules.md`：前后端共享的命名、TypeScript、函数、模块、注释、错误处理和检查规则。
+- `references/common-rules.md`：JavaScript/TypeScript 命名、类型、函数、模块、注释、错误处理和检查规则。
 - `references/frontend-rules.md`：前端目录、React/Vue 组件和组件库选择规则。
-- `references/backend-rules.md`：后端目录、API 路由、service、db、middleware、后台任务和数据库操作边界规则。
+- `references/backend-rules.md`：Go 后端目录、API/RPC、service/use case、repository、integration、后台任务和数据库操作边界规则。
 - `references/http-requests.md`：接口请求选择、hook 封装和示例。
 - `references/antd/`：Ant Design 中文官方文档快照和路由索引。
 - `references/react/`：React 性能与评审规则。

@@ -34,7 +34,7 @@ src/
 - 使用 Tailwind CSS 或 CSS Modules；先查 `package.json` 确认是否引入 Tailwind CSS，优先使用已有方案。
 - 单个组件不超过 377 行，超过时拆分。
 - 使用函数组件和命名导出，组件最外层目录使用 `index.ts` 统一导出。
-- 组件内部按功能逻辑块组织，最后返回 UI：
+- 组件内部按功能逻辑块组织，最后返回 UI，通用功能逻辑放置于顶部：
 
 ```typescript
 interface MyComponentProps {prop1: string; prop2: number;}
@@ -43,7 +43,7 @@ export const MyComponent: React.FC<MyComponentProps> = (props: MyComponentProps)
   const { prop1, prop2 } = props;
   // 通用状态、自定义 hook、依赖函数、副作用。
   // 功能逻辑块 1：状态、自定义 hook、依赖函数、副作用。
-  // 功能逻辑块 2：其他业务逻辑。
+  // 功能逻辑块 2：。。。
 
   return (<div></div>);
 };
