@@ -39,14 +39,6 @@ description: 前后端代码规范与专项开发指南。执行 html/css/js/ts/
 - Vite+ 配置统一放在 `vite.config.ts` 的 `defineConfig` 中；不要新增 `vitest.config.ts`、`oxlintrc.json`、`oxfmtrc.json` 或 `tsdown.config.ts` 分散配置。
 - 测试工具从 `vite-plus/test` 导入，除非当前项目明确不是 Vite+ 项目。
 
-## 外部文档入口
-
-优先搜索项目内现有用法；只有 API 不确定、版本差异可能影响实现、或用户明确要求查证时才读取外部官方文档。
-
-- 已有本地参考的依赖先读本地参考：Ant Design / antd、Zod、TanStack Query / React Query、Vite+。
-- 公开依赖按需查官方文档：Go、React、TypeScript、Tailwind CSS、Zustand、TanStack Router、dayjs、es-toolkit、ahooks、Arco Mobile、Vite、Vitest、Docusaurus、ConnectRPC、protobuf-es。
-- 内部依赖无公开文档，遇到 `@ecom/auxo`、`@ecom/auxo-mobile`、`@ecom/auxo-pro-table`、`@ecom/auxo-pro-form` 或 BAM 问题时，搜索项目内现有用法作为参考。
-
 ## 核心完成检查
 
 - 变更直接对应用户需求，没有顺手改无关模块。
