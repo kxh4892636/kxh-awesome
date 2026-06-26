@@ -16,6 +16,8 @@ import (
 	"golang.org/x/net/http2/h2c"
 
 	"kxh-awesome/go-template/gen/posts/v1/postsv1connect"
+	"kxh-awesome/go-template/internal/database"
+	"kxh-awesome/go-template/internal/repository"
 	"kxh-awesome/go-template/internal/service"
 )
 
@@ -23,7 +25,20 @@ import (
 var docsDir embed.FS
 
 func main() {
-	postsService := &service.PostsService{}
+	dbPath := database.PathFromEnv()
+	db, err := database.Open(dbPath)
+	if err != nil {
+		log.Fatalf("open database: %v", err)
+	}
+
+	sqlDB, err := db.DB()
+	if err != nil {
+		log.Fatalf("get database handle: %v", err)
+	}
+	defer sqlDB.Close()
+
+	postsRepository := repository.NewPostsRepository(db)
+	postsService := service.NewPostsService(postsRepository)
 	mux := http.NewServeMux()
 	// 注册 ConnectRPC 服务处理器
 	mux.Handle(postsv1connect.NewPostsServiceHandler(postsService))
@@ -40,6 +55,7 @@ func main() {
 	}
 
 	go func() {
+		log.Printf("SQLite database opened at %s", dbPath)
 		log.Println("ConnectRPC server listening on http://localhost:8080")
 		if err := server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 			log.Fatalf("server error: %v", err)
