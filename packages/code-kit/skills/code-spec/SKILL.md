@@ -1,6 +1,6 @@
 ---
 name: code-spec
-description: 全栈代码规范与专项开发指南。执行 html/css/js/ts/react/vue 前端开发、React 组件、接口请求、Zod 校验、TanStack Query/react-query、Vite+/vp、shadcn/ui、Ant Design/antd、第三方依赖、Hono API/中间件/部署、Drizzle ORM/Drizzle Kit/schema/migration/query 等代码任务时触发；当前通用规范以前端为主，专项规范通过 references 下的参考模块渐进披露。关键词：代码规范、前端、后端、React、Vue、TypeScript、接口请求、Zod、zod、TanStack Query、react-query、useQuery、useMutation、Vite+、vp、shadcn、Ant Design、antd、Hono、Drizzle、ORM、migration。
+description: 全栈代码规范与专项开发指南。执行 html/css/js/ts/react/vue 前端开发、React 组件、接口请求、Zod 校验、TanStack Query/react-query、Vite+/vp、shadcn/ui、Ant Design/antd、第三方依赖、Hono API/中间件/部署、Drizzle ORM/Drizzle Kit/schema/migration/query 或代码注释规范任务时触发；当前通用规范以前端为主，包含增量代码说明性注释比例约束，专项规范通过 references 下的参考模块渐进披露。关键词：代码规范、注释规范、说明性注释、前端、后端、React、Vue、TypeScript、接口请求、Zod、zod、TanStack Query、react-query、useQuery、useMutation、Vite+、vp、shadcn、Ant Design、antd、Hono、Drizzle、ORM、migration。
 ---
 
 # code-spec
@@ -115,6 +115,16 @@ type ISafeAny = any;
 - 函数只能使用箭头函数, 不能使用普通函数;
 - 函数参数和返回值必须使用类型注解, 函数参数统一定义为 `params`, 并在函数参数中使用解构赋值;
 - 单个函数不超过 89 行, 超过 89 行进行代码拆分;
+
+### 注释规范
+
+- 注释只写说明性注释, 解释代码背后的原因、约束、取舍和风险, 即说明 Why;
+- 禁止用注释复述代码正在做什么或如何执行, 即不写 What 和 How 类型的功能性注释;
+- 注释比例只约束本次新增或修改的增量代码, 存量代码不受限制;
+- 增量代码的注释行数占代码行数比例必须在 13% 到 21% 之间, 不需要为了接近上限而补注释;
+- 计算比例时不统计空行、纯括号/分隔符行、import/export 声明和仅格式化导致的行变化;
+- 注释行只统计本次新增或修改的说明性代码注释, 不统计文档块、TODO、lint 禁用指令或生成代码注释;
+- 小于 8 行的增量代码允许不强制满足注释比例, 但仍禁止冗余功能性注释;
 
 ### 杂项
 
