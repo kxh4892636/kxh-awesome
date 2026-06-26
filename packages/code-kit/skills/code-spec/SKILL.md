@@ -27,7 +27,7 @@ description: 前后端代码规范与专项开发指南。执行 html/css/js/ts/
 | Zod schema、运行时校验、parse/safeParse、错误格式化、JSON Schema、codec、transform、迁移 | `references/zod/README.md` | `references/zod/references/doc-map.md` |
 | TanStack Query / React Query、QueryClient、useQuery、useMutation、queryKey、invalidateQueries、SSR/hydration、Suspense、乐观更新 | `references/react-query/README.md` | `references/react-query/references/doc-map.md` |
 | React 组件、Hook、状态、数据请求、bundle、首屏渲染、交互性能或代码评审 | `references/react/README.md` | `references/react/rules/*.md` 中的相关规则 |
-| 第三方依赖官方文档入口、内部依赖查找策略 | `references/external-docs.md` | 对应官方文档或项目内现有用法 |
+| 第三方依赖官方文档入口、内部依赖查找策略 | 本文“外部文档入口” | 对应官方文档或项目内现有用法 |
 
 ## Vite+ 最小规则
 
@@ -36,6 +36,34 @@ description: 前后端代码规范与专项开发指南。执行 html/css/js/ts/
 - 运行 package script 使用 `vp run <script>` 或 `vpr <script>`；不要直接调用 `pnpm`、`npm`、`yarn`、`vite`、`vitest`、`oxlint` 或 `oxfmt`。
 - Vite+ 配置统一放在 `vite.config.ts` 的 `defineConfig` 中；不要新增 `vitest.config.ts`、`oxlintrc.json`、`oxfmtrc.json` 或 `tsdown.config.ts` 分散配置。
 - 测试工具从 `vite-plus/test` 导入，除非当前项目明确不是 Vite+ 项目。
+
+## 外部文档入口
+
+优先搜索项目内现有用法；只有 API 不确定、版本差异可能影响实现、或用户明确要求查证时才读取外部官方文档。
+
+| 依赖 | 官方文档 |
+|------|----------|
+| React | https://react.dev/ |
+| TypeScript | https://www.typescriptlang.org/docs/ |
+| Tailwind CSS | https://tailwindcss.com/docs |
+| Ant Design / antd | 先看 `references/antd/README.md` 和本地中文官方文档快照，再查 https://ant.design/components/overview-cn/ |
+| Zustand | https://zustand.docs.pmnd.rs/ |
+| Zod | 先看 `references/zod/README.md` 和本地 docs 快照，再查 https://zod.dev/ |
+| @tanstack/react-query | 先看 `references/react-query/README.md` 和本地 React docs 快照，再查 https://tanstack.com/query/latest/docs |
+| @tanstack/react-router | https://tanstack.com/router/latest/docs |
+| dayjs | https://day.js.org/ |
+| es-toolkit | https://es-toolkit.slash.page/ |
+| ahooks | https://ahooks.js.org/ |
+| @arco-design/mobile-react | https://arco.design/mobile/react |
+| Vite | https://vite.dev/ |
+| Vitest | https://vitest.dev/ |
+| Vite+ (vp) | 先看 `references/vite-plus/README.md`，再查 `node_modules/vite-plus/docs` 或 https://viteplus.dev/guide/ |
+| Docusaurus | https://docusaurus.io/docs |
+| ConnectRPC | https://connectrpc.com/docs/web/getting-started |
+| @connectrpc/connect | https://www.npmjs.com/package/@connectrpc/connect |
+| @bufbuild/protobuf | https://buf.build/docs/protobuf-es |
+
+内部依赖无公开文档，遇到 `@ecom/auxo`、`@ecom/auxo-mobile`、`@ecom/auxo-pro-table`、`@ecom/auxo-pro-form` 或 BAM 问题时，搜索项目内现有用法作为参考。
 
 ## 核心完成检查
 
@@ -53,7 +81,6 @@ description: 前后端代码规范与专项开发指南。执行 html/css/js/ts/
 - `references/frontend-rules.md`：前端目录、React/Vue 组件和组件库选择规则。
 - `references/backend-rules.md`：后端目录、API 路由、service、db、middleware、后台任务和数据库操作边界规则。
 - `references/http-requests.md`：接口请求选择、hook 封装和示例。
-- `references/external-docs.md`：官方文档入口和内部依赖查找规则。
 - `references/antd/`：Ant Design 中文官方文档快照和路由索引。
 - `references/react/`：React 性能与评审规则。
 - `references/react-query/`：TanStack Query React 官方文档快照。
