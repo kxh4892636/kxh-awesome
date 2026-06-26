@@ -11,6 +11,9 @@ import {
   type ChartRange,
 } from "../../utils/chart-data";
 
+/**
+ * 首页负责串起标的选择、行情查询和图表视图，是 ETF 看板的主要用户工作流入口。
+ */
 export const HomePage = () => {
   const [selectedSymbol, setSelectedSymbol] = useState<string | null>(null);
   const [period, setPeriod] = useState<ChartPeriod>("day");
@@ -20,6 +23,7 @@ export const HomePage = () => {
   const dailyBarsQuery = useDailyBars(selectedSymbol);
 
   useEffect(() => {
+    // 首屏自动选择第一个可用标的，让看板在证券列表返回后立即形成有效查询。
     if (!selectedSymbol && securitiesQuery.data.length > 0) {
       setSelectedSymbol(securitiesQuery.data[0]?.symbol ?? null);
     }

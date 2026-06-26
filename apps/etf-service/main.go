@@ -68,6 +68,7 @@ func main() {
 	server := &http.Server{
 		Addr: fmt.Sprintf(":%d", cfg.Port),
 		Handler: corsMiddleware(
+			// 本地 dashboard 直接从浏览器调用 ConnectRPC，h2c 避免开发环境为 HTTP/2 额外配置证书。
 			h2c.NewHandler(mux, &http2.Server{}),
 		),
 	}
@@ -106,6 +107,7 @@ func healthHandler(w http.ResponseWriter, r *http.Request) {
 
 func corsMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		// dashboard 和 service 通常分端口启动，预检请求必须先放行才能进入 ConnectRPC handler。
 		w.Header().Set("Access-Control-Allow-Origin", "*")
 		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
 		w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Connect-Protocol-Version")

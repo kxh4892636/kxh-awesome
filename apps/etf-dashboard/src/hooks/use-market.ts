@@ -38,6 +38,7 @@ export const useDailyBars = (symbol: string | null): UseDailyBarsResult => {
     },
     {
       enabled: Boolean(symbol),
+      // 标的列表加载完成前不发空 symbol 请求，避免后端记录无意义错误。
     },
   );
 

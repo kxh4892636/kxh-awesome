@@ -10,11 +10,15 @@ const queryClient = new QueryClient();
 
 const router = createRouter({ routeTree });
 
+// 默认指向本地 etf-service，方便 dashboard 在没有额外环境变量时独立启动调试。
 const apiBaseUrl = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:8080";
 const transport = createConnectTransport({
   baseUrl: apiBaseUrl,
 });
 
+/**
+ * 应用根组件集中装配跨页面 Provider，避免路由页面重复关心主题、请求和缓存上下文。
+ */
 export const App = () => (
   <StyleProvider layer>
     <ConfigProvider>

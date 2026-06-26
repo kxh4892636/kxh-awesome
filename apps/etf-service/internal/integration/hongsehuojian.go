@@ -52,6 +52,7 @@ func (c *HongsehuojianClient) FetchRemoteKlineBars(ctx context.Context, security
 
 func BuildKlineURL(security config.SecurityConfig, now time.Time) *url.URL {
 	requestURL, _ := url.Parse(config.KlineEndpoint)
+	// 行情源按国内交易日组织数据，用上海日期和时间戳降低取到旧缓存的概率。
 	today := marketdata.ShanghaiToday(now)
 	query := url.Values{}
 	query.Set("securityCode", security.Symbol)

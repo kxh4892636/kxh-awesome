@@ -86,6 +86,7 @@ func (r *MarketRepository) UpsertDailyBars(ctx context.Context, bars []domain.Ma
 		}
 	}
 
+	// K 线入库时同步标记开市日，缓存刷新判断才能复用同一套交易日事实。
 	seen := map[string]struct{}{}
 	calendarRows := make([]domain.CalendarInput, 0, len(bars))
 	for _, bar := range bars {

@@ -22,6 +22,9 @@ interface DashboardToolbarProps {
   onRefresh: () => void;
 }
 
+/**
+ * 工具栏集中承载图表筛选条件，避免主页面混入控件细节而削弱数据流可读性。
+ */
 export const DashboardToolbar = (props: DashboardToolbarProps) => {
   const {
     securities,

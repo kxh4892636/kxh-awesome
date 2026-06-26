@@ -116,6 +116,9 @@ const buildTooltipRows = (
   );
 };
 
+/**
+ * K 线组件独立管理画布渲染、缩放和悬浮信息，保证行情分析交互不会污染页面状态。
+ */
 export const KlineChart = (props: KlineChartProps) => {
   const { bars, maBars, maText } = props;
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -229,6 +232,7 @@ export const KlineChart = (props: KlineChartProps) => {
   };
 
   useEffect(() => {
+    // 画布缩放需要阻止页面滚动抢占滚轮事件，所以监听必须显式关闭 passive。
     window.addEventListener("wheel", handleWheel, { passive: false, capture: true });
     return () => {
       window.removeEventListener("wheel", handleWheel, true);

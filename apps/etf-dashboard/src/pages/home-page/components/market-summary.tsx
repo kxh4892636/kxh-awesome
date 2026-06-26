@@ -5,6 +5,9 @@ interface MarketSummaryProps {
   data: GetDailyBarsResponse | undefined;
 }
 
+/**
+ * 摘要卡片把最新行情和数据覆盖范围前置，帮助用户先判断当前图表是否值得继续分析。
+ */
 export const MarketSummary = (props: MarketSummaryProps) => {
   const latest = props.data?.bars.at(-1);
   const security = props.data?.security;

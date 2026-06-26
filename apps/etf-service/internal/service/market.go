@@ -84,6 +84,7 @@ func (s *MarketService) GetDailyBars(ctx context.Context, request domain.GetDail
 		return nil, fmt.Errorf("%w: %s", ErrUnknownSecurity, request.Symbol)
 	}
 
+	// 行情源在交易日盘中可能返回未定稿数据，本地缓存只认 T-1 以保持图表口径稳定。
 	tMinusOne, err := marketdata.TMinusOne(s.now())
 	if err != nil {
 		return nil, err
@@ -98,6 +99,7 @@ func (s *MarketService) GetDailyBars(ctx context.Context, request domain.GetDail
 		requestedEndDate = *request.EndDate
 	}
 
+	// 请求范围裁剪到已知历史和已完成交易日，避免返回无意义空洞或半日数据。
 	effectiveStartDate := marketdata.Max(requestedStartDate, securityRow.EarliestTradeDate)
 	effectiveEndDate := marketdata.Min(requestedEndDate, tMinusOne)
 	latestCachedBefore, err := s.store.GetLatestCachedTradeDate(ctx, request.Symbol, request.AdjType)
@@ -124,6 +126,7 @@ func (s *MarketService) GetDailyBars(ctx context.Context, request domain.GetDail
 		}, nil
 	}
 
+	// 刷新判断基于最近应开市日，防止周末和节假日把缓存误判为落后。
 	requiredOpenDate, err := s.getLatestRequiredOpenDate(ctx, securityConfig.Exchange, effectiveStartDate, effectiveEndDate)
 	if err != nil {
 		return nil, err
@@ -140,6 +143,7 @@ func (s *MarketService) GetDailyBars(ctx context.Context, request domain.GetDail
 
 		eligibleBars := make([]domain.MarketBarInput, 0, len(parsed.Bars))
 		for _, bar := range parsed.Bars {
+			// 远端可能带出当天或未来占位数据，入库前再次拦截以保护缓存口径。
 			if marketdata.Compare(bar.TradeDate, tMinusOne) <= 0 {
 				eligibleBars = append(eligibleBars, bar)
 			}
@@ -162,6 +166,7 @@ func (s *MarketService) GetDailyBars(ctx context.Context, request domain.GetDail
 				return nil, err
 			}
 		}
+		// 刷新后把无 K 线的工作日记为休市，后续请求才能跳过已验证的缺口。
 		if err := s.markClosedMissingDates(ctx, securityConfig.Exchange, startDate, effectiveEndDate, bars); err != nil {
 			return nil, err
 		}
