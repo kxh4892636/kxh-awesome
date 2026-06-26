@@ -39,6 +39,6 @@ var Securities = []SecurityConfig{
 		Source:            "hongsehuojian",
 		AdjType:           "qfq",
 		Adjust:            "1",
-		EarliestTradeDate: "2013-12-31",
+		EarliestTradeDate: "2005-12-30",
 	},
 }
