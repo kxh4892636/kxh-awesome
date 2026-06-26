@@ -2,53 +2,50 @@
 
 ## 技术栈与架构入口
 
-- Node.js Hono 后端，使用 TypeScript 6、Zod、Drizzle ORM、SQLite/libsql 和 tsdown。
-- `src/main.ts` 启动 Node server。
-- `src/app.ts` 创建 Hono app、挂载 CORS/logger/error handler，并把 API 挂到 `/api`。
-- `src/routes/index.ts` 组装服务实例并注入到路由。
-- `package.json#exports["./rpc"]` 是前端依赖的类型安全入口。
+- Go 1.23+ ConnectRPC 后端，使用 GORM 和 SQLite。
+- `main.go` 启动 HTTP server，注册 ConnectRPC handler、CORS、h2c、健康检查和内嵌 API 文档。
+- `proto/etf/v1/etf.proto` 是 API 契约唯一源头。
+- `internal/service/market.go` 是行情业务用例实现，负责缓存刷新、日期裁剪、休市标记和查询编排。
 
 ## 关键模块
 
-- `src/routes/`：对外 API 路由，只负责请求校验、调用服务和响应校验。
-- `src/routes/*/schema.ts`：请求与响应 Zod schema，是前后端共享契约的一部分。
-- `src/services/market/`：行情服务接口和实现，负责缓存刷新、日期裁剪、休市标记和查询编排。
-- `src/services/securities/`：证券查询服务，当前适配 `marketService.listSecurities`。
-- `src/repositories/market-repository.ts`：行情持久化访问边界。
-- `src/db/schema/`：Drizzle schema 源头。
-- `src/libs/hongsehuojian.ts`、`src/libs/kline-parser.ts`：外部行情源和 K 线解析封装。
-- `src/config/env.ts`、`src/config/securities.ts`：环境变量和支持证券配置。
-- `src/rpc/`：导出 Hono RPC client 类型和 schema，前端不要直接 import `src/app.ts`。
+- `proto/`：Protocol Buffers 契约，先改 proto，再生成代码。
+- `internal/config/`：环境变量和支持证券配置。
+- `internal/database/`：SQLite/GORM 打开逻辑。
+- `internal/model/`：GORM 表模型，映射 `securities`、`daily_bars`、`trading_calendar`。
+- `internal/repository/`：行情持久化访问边界。
+- `internal/service/`：业务逻辑，与 ConnectRPC 和 GORM 细节解耦。
+- `internal/integration/`：外部行情源封装。
+- `internal/marketdata/`：行情日期工具和红色火箭 K 线 JSON 解析。
+- `internal/rpc/`：ConnectRPC handler 适配层。
+- `gen/` 和 `docs/`：生成物，只读。
 
 ## 对外接口
 
 - `GET /`：健康信息。
-- `POST /api/securities/list`：列出支持的证券。
-- `POST /api/market/getDailyBars`：查询日线 K 线数据。
-- `@kxh-awesome/etf-service/rpc`：workspace 内前端使用的 Hono RPC 类型和 schema 入口。
+- `EtfService.ListSecurities`：列出支持的证券。
+- `EtfService.GetDailyBars`：查询日线 K 线数据，必要时刷新本地缓存。
+- `/doc/`：内嵌 HTML API 文档。
 
 ## 依赖关系
 
-- 被 `apps/etf-dashboard` 通过 `@kxh-awesome/etf-service/rpc` 依赖。
-- 不依赖其他 workspace 应用。
-- 运行时依赖本地 SQLite 数据文件和外部行情源封装。
+- 被 `apps/etf-dashboard` 通过生成的 ConnectRPC TypeScript 客户端调用。
+- 不再作为 pnpm workspace package 暴露。
+- 运行时依赖本地 SQLite 数据文件和红色火箭行情源。
 
 ## 项目命令
 
-- `vp run dev`：监听启动 `src/main.ts`。
-- `vp run build`：类型检查、tsdown 打包并生成声明文件。
-- `vp run start`：运行 `dist/main.mjs`。
-- `vp run test`：运行 `src/**/*.test.ts`。
-- `vp run check`：运行 Vite+ 检查。
-- `vp run db:generate`、`vp run db:migrate`：Drizzle 迁移相关命令。
+- `./generate.sh`：生成 Go 代码和 API 文档。
+- `go run .`：启动服务。
+- `go test ./...`：运行 Go 测试/编译检查。
 
 ## 生成物
 
-- `dist/`、`logs/`、`node_modules/` 和 `*.tsbuildinfo` 不手动编辑。
+- `gen/` 和 `docs/index.html` 是生成物，不手动编辑。
 - `data/` 下 SQLite 文件是运行数据，不把手工编辑作为常规开发路径。
 
 ## 验证方式
 
-- 普通后端改动运行 `vp run build`。
-- 改 `src/libs/`、`src/services/` 或测试覆盖的逻辑时运行 `vp run test`。
-- 改 schema、RPC 导出或路由时，同时验证依赖方 `apps/etf-dashboard` 的 `vp run build`。
+- 改 proto 后运行 `./generate.sh`，再运行 `go test ./...`。
+- 改 `internal/` 或 `main.go` 后运行 `go test ./...`。
+- 改 proto 后还要在 `apps/etf-dashboard` 运行 `vp run gen` 并验证前端构建。

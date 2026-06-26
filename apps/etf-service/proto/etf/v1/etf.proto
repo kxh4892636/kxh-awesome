@@ -1,0 +1,72 @@
+syntax = "proto3";
+
+package etf.v1;
+
+option go_package = "kxh-awesome/etf-service/gen/etf/v1;etfv1";
+
+// EtfService 提供 ETF/指数证券列表和日线 K 线查询。
+service EtfService {
+  // ListSecurities 列出系统支持的证券。
+  rpc ListSecurities(ListSecuritiesRequest) returns (ListSecuritiesResponse);
+  // GetDailyBars 查询日线 K 线数据，必要时刷新本地缓存。
+  rpc GetDailyBars(GetDailyBarsRequest) returns (GetDailyBarsResponse);
+}
+
+// Security 证券基础信息。
+message Security {
+  string symbol = 1;
+  string name = 2;
+  string asset_type = 3;
+  optional string exchange = 4;
+  string currency = 5;
+  optional string source = 6;
+  string earliest_trade_date = 7;
+  optional string latest_cached_trade_date = 8;
+}
+
+// DailyBar 单根日线 K 线。
+message DailyBar {
+  string symbol = 1;
+  string adj_type = 2;
+  string trade_date = 3;
+  double open = 4;
+  double high = 5;
+  double low = 6;
+  double close = 7;
+  double volume = 8;
+  double amount = 9;
+  double change_amount = 10;
+  double change_percent = 11;
+  string raw_weekday = 12;
+}
+
+message ListSecuritiesRequest {}
+
+message ListSecuritiesResponse {
+  repeated Security securities = 1;
+}
+
+message GetDailyBarsRequest {
+  string symbol = 1;
+  string adj_type = 2;
+  optional string start_date = 3;
+  optional string end_date = 4;
+}
+
+message GetDailyBarsMeta {
+  string cache_status = 1;
+  optional string requested_start_date = 2;
+  optional string requested_end_date = 3;
+  optional string effective_start_date = 4;
+  optional string effective_end_date = 5;
+  string earliest_trade_date = 6;
+  optional string latest_cached_trade_date = 7;
+  bool refreshed = 8;
+  int32 rows = 9;
+}
+
+message GetDailyBarsResponse {
+  Security security = 1;
+  repeated DailyBar bars = 2;
+  GetDailyBarsMeta meta = 3;
+}

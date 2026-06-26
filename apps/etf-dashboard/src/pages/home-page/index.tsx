@@ -78,7 +78,7 @@ export const HomePage = () => {
       <Card
         title="K 线"
         extra={
-          dailyBarsQuery.data ? (
+          dailyBarsQuery.data?.meta ? (
             <Typography.Text type="secondary">
               {dailyBarsQuery.data.meta.cacheStatus} · {dailyBarsQuery.data.meta.rows} 条
             </Typography.Text>

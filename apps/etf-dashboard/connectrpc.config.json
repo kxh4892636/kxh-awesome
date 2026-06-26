@@ -1,0 +1,8 @@
+{
+  "backends": {
+    "etf-service": {
+      "idl": "../etf-service",
+      "out": "src/api/gen/etf-service"
+    }
+  }
+}

@@ -1,0 +1,36 @@
+#!/bin/bash
+set -e
+
+if ! command -v go &>/dev/null; then
+  for dir in /usr/local/go/bin "$HOME/go-local/bin" "$HOME/sdk/go"*"/bin"; do
+    if [ -x "$dir/go" ]; then
+      export PATH="$dir:${PATH}"
+      break
+    fi
+  done
+fi
+
+GO_BIN="${HOME}/go/bin"
+export PATH="${GO_BIN}:${PATH}"
+
+install_if_missing() {
+  local bin="$1"
+  local pkg="$2"
+  if ! command -v "$bin" &>/dev/null; then
+    echo "Installing $pkg..."
+    go install "$pkg@latest"
+  fi
+}
+
+install_if_missing protoc-gen-go google.golang.org/protobuf/cmd/protoc-gen-go
+install_if_missing protoc-gen-connect-go connectrpc.com/connect/cmd/protoc-gen-connect-go
+install_if_missing buf github.com/bufbuild/buf/cmd/buf
+install_if_missing protoc-gen-doc github.com/pseudomuto/protoc-gen-doc/cmd/protoc-gen-doc
+
+echo "Generating Go code..."
+buf generate
+
+echo "Generating documentation..."
+buf generate --template buf.gen.doc.yaml
+
+echo "Done."

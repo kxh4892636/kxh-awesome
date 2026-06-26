@@ -1,6 +1,6 @@
 import { Button, Input, Segmented, Select, Space } from "antd";
 import { ReloadOutlined } from "@ant-design/icons";
-import type { Security } from "@kxh-awesome/etf-service/rpc";
+import type { Security } from "../../../api/gen/etf-service/etf/v1/etf_pb";
 import {
   PERIOD_OPTIONS,
   RANGE_OPTIONS,

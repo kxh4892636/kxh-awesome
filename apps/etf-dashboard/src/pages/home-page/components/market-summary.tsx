@@ -1,4 +1,4 @@
-import type { GetDailyBarsResponse } from "@kxh-awesome/etf-service/rpc";
+import type { GetDailyBarsResponse } from "../../../api/gen/etf-service/etf/v1/etf_pb";
 import { formatLargeNumber, formatNumber, formatPercent } from "../../../utils/format";
 
 interface MarketSummaryProps {

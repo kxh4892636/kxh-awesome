@@ -25,6 +25,5 @@
     "noFallthroughCasesInSwitch": true
   },
   "include": ["src"],
-  "exclude": ["src/**/*.test.ts"],
-  "references": [{ "path": "../etf-service/tsconfig.build.json" }]
+  "exclude": ["src/**/*.test.ts"]
 }
