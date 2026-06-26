@@ -1,4 +1,4 @@
-package rpc
+package market
 
 import (
 	"context"
@@ -8,22 +8,20 @@ import (
 
 	etfv1 "kxh-awesome/etf-service/gen/etf/v1"
 	"kxh-awesome/etf-service/gen/etf/v1/etfv1connect"
-	"kxh-awesome/etf-service/internal/domain"
-	"kxh-awesome/etf-service/internal/service"
 )
 
-type MarketService interface {
-	ListSecurities(ctx context.Context) ([]domain.Security, error)
-	GetDailyBars(ctx context.Context, request domain.GetDailyBarsRequest) (*domain.GetDailyBarsResponse, error)
+type MarketUsecase interface {
+	ListSecurities(ctx context.Context) ([]Security, error)
+	GetDailyBars(ctx context.Context, request GetDailyBarsRequest) (*GetDailyBarsResponse, error)
 }
 
 type EtfHandler struct {
-	marketService MarketService
+	marketService MarketUsecase
 }
 
 var _ etfv1connect.EtfServiceHandler = (*EtfHandler)(nil)
 
-func NewEtfHandler(marketService MarketService) *EtfHandler {
+func NewEtfHandler(marketService MarketUsecase) *EtfHandler {
 	return &EtfHandler{marketService: marketService}
 }
 
@@ -43,14 +41,14 @@ func (h *EtfHandler) ListSecurities(ctx context.Context, _ *connect.Request[etfv
 }
 
 func (h *EtfHandler) GetDailyBars(ctx context.Context, req *connect.Request[etfv1.GetDailyBarsRequest]) (*connect.Response[etfv1.GetDailyBarsResponse], error) {
-	response, err := h.marketService.GetDailyBars(ctx, domain.GetDailyBarsRequest{
+	response, err := h.marketService.GetDailyBars(ctx, GetDailyBarsRequest{
 		Symbol:    req.Msg.GetSymbol(),
 		AdjType:   req.Msg.GetAdjType(),
 		StartDate: req.Msg.StartDate,
 		EndDate:   req.Msg.EndDate,
 	})
 	if err != nil {
-		if errors.Is(err, service.ErrUnknownSecurity) {
+		if errors.Is(err, ErrUnknownSecurity) {
 			return nil, connect.NewError(connect.CodeNotFound, err)
 		}
 		return nil, connect.NewError(connect.CodeInternal, err)
@@ -59,7 +57,7 @@ func (h *EtfHandler) GetDailyBars(ctx context.Context, req *connect.Request[etfv
 	return connect.NewResponse(toProtoGetDailyBarsResponse(response)), nil
 }
 
-func toProtoGetDailyBarsResponse(response *domain.GetDailyBarsResponse) *etfv1.GetDailyBarsResponse {
+func toProtoGetDailyBarsResponse(response *GetDailyBarsResponse) *etfv1.GetDailyBarsResponse {
 	result := &etfv1.GetDailyBarsResponse{
 		Security: toProtoSecurity(response.Security),
 		Bars:     make([]*etfv1.DailyBar, 0, len(response.Bars)),
@@ -95,7 +93,7 @@ func toProtoGetDailyBarsResponse(response *domain.GetDailyBarsResponse) *etfv1.G
 	return result
 }
 
-func toProtoSecurity(security domain.Security) *etfv1.Security {
+func toProtoSecurity(security Security) *etfv1.Security {
 	return &etfv1.Security{
 		Symbol:                security.Symbol,
 		Name:                  security.Name,

@@ -1,4 +1,4 @@
-package integration
+package hongsehuojian
 
 import (
 	"context"
@@ -9,8 +9,9 @@ import (
 	"strconv"
 	"time"
 
-	"kxh-awesome/etf-service/internal/config"
-	"kxh-awesome/etf-service/internal/marketdata"
+	"kxh-awesome/etf-service/internal/modules/market"
+	"kxh-awesome/etf-service/internal/shared/config"
+	"kxh-awesome/etf-service/internal/shared/utils"
 )
 
 type HongsehuojianClient struct {
@@ -24,7 +25,7 @@ func NewHongsehuojianClient(httpClient *http.Client) *HongsehuojianClient {
 	return &HongsehuojianClient{httpClient: httpClient}
 }
 
-func (c *HongsehuojianClient) FetchRemoteKlineBars(ctx context.Context, security config.SecurityConfig) (*marketdata.ParsedKlineData, error) {
+func (c *HongsehuojianClient) FetchRemoteKlineBars(ctx context.Context, security config.SecurityConfig) ([]market.MarketBarInput, error) {
 	requestURL := BuildKlineURL(security, time.Now())
 	request, err := http.NewRequestWithContext(ctx, http.MethodGet, requestURL.String(), nil)
 	if err != nil {
@@ -47,18 +48,22 @@ func (c *HongsehuojianClient) FetchRemoteKlineBars(ctx context.Context, security
 		return nil, err
 	}
 
-	return marketdata.ParseKlineJSON(string(body), requestURL.String(), security.Symbol, security.AdjType)
+	parsed, err := ParseKlineJSON(string(body), requestURL.String(), security.Symbol, security.AdjType)
+	if err != nil {
+		return nil, err
+	}
+	return parsed.Bars, nil
 }
 
 func BuildKlineURL(security config.SecurityConfig, now time.Time) *url.URL {
 	requestURL, _ := url.Parse(config.KlineEndpoint)
 	// 行情源按国内交易日组织数据，用上海日期和时间戳降低取到旧缓存的概率。
-	today := marketdata.ShanghaiToday(now)
+	today := utils.ShanghaiToday(now)
 	query := url.Values{}
 	query.Set("securityCode", security.Symbol)
 	query.Set("period", config.PeriodDay)
 	query.Set("count", config.KlineCount)
-	query.Set("begin", marketdata.ToURLDate(today))
+	query.Set("begin", utils.ToURLDate(today))
 	query.Set("adjust", security.Adjust)
 	query.Set("ts", strconv.FormatInt(now.UnixMilli(), 10))
 	requestURL.RawQuery = query.Encode()

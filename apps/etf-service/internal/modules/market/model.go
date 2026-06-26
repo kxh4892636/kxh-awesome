@@ -1,6 +1,6 @@
-package model
+package market
 
-type Security struct {
+type SecurityModel struct {
 	Symbol            string  `gorm:"primaryKey;column:symbol"`
 	Name              string  `gorm:"column:name;not null"`
 	AssetType         string  `gorm:"column:asset_type;not null"`
@@ -12,11 +12,11 @@ type Security struct {
 	UpdatedAt         string  `gorm:"column:updated_at;not null;default:CURRENT_TIMESTAMP"`
 }
 
-func (Security) TableName() string {
+func (SecurityModel) TableName() string {
 	return "securities"
 }
 
-type DailyBar struct {
+type DailyBarModel struct {
 	Symbol        string   `gorm:"primaryKey;column:symbol"`
 	AdjType       string   `gorm:"primaryKey;column:adj_type;not null;default:none"`
 	TradeDate     string   `gorm:"primaryKey;column:trade_date"`
@@ -31,16 +31,16 @@ type DailyBar struct {
 	RawWeekday    *string  `gorm:"column:raw_weekday"`
 }
 
-func (DailyBar) TableName() string {
+func (DailyBarModel) TableName() string {
 	return "daily_bars"
 }
 
-type TradingCalendar struct {
+type TradingCalendarModel struct {
 	Exchange  string `gorm:"primaryKey;column:exchange"`
 	TradeDate string `gorm:"primaryKey;column:trade_date"`
 	IsOpen    int    `gorm:"column:is_open;not null"`
 }
 
-func (TradingCalendar) TableName() string {
+func (TradingCalendarModel) TableName() string {
 	return "trading_calendar"
 }

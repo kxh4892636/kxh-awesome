@@ -1,4 +1,4 @@
-package repository
+package market
 
 import (
 	"context"
@@ -6,9 +6,7 @@ import (
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 
-	"kxh-awesome/etf-service/internal/config"
-	"kxh-awesome/etf-service/internal/domain"
-	"kxh-awesome/etf-service/internal/model"
+	"kxh-awesome/etf-service/internal/shared/config"
 )
 
 const insertChunkSize = 250
@@ -22,7 +20,7 @@ func NewMarketRepository(db *gorm.DB) *MarketRepository {
 }
 
 func (r *MarketRepository) AutoMigrate() error {
-	return r.db.AutoMigrate(&model.Security{}, &model.DailyBar{}, &model.TradingCalendar{})
+	return r.db.AutoMigrate(&SecurityModel{}, &DailyBarModel{}, &TradingCalendarModel{})
 }
 
 func (r *MarketRepository) SeedSecurities(ctx context.Context, securities []config.SecurityConfig) error {
@@ -37,7 +35,7 @@ func (r *MarketRepository) SeedSecurities(ctx context.Context, securities []conf
 func (r *MarketRepository) UpsertSecurity(ctx context.Context, security config.SecurityConfig) error {
 	exchange := nullableString(security.Exchange)
 	source := nullableString(security.Source)
-	row := model.Security{
+	row := SecurityModel{
 		Symbol:            security.Symbol,
 		Name:              security.Name,
 		AssetType:         security.AssetType,
@@ -61,9 +59,9 @@ func (r *MarketRepository) UpsertSecurity(ctx context.Context, security config.S
 	}).Create(&row).Error
 }
 
-func (r *MarketRepository) UpsertDailyBars(ctx context.Context, bars []domain.MarketBarInput, exchange string) error {
+func (r *MarketRepository) UpsertDailyBars(ctx context.Context, bars []MarketBarInput, exchange string) error {
 	for _, values := range chunk(bars, insertChunkSize) {
-		rows := make([]model.DailyBar, 0, len(values))
+		rows := make([]DailyBarModel, 0, len(values))
 		for _, bar := range values {
 			rows = append(rows, toDailyBarRow(bar))
 		}
@@ -88,13 +86,13 @@ func (r *MarketRepository) UpsertDailyBars(ctx context.Context, bars []domain.Ma
 
 	// K 线入库时同步标记开市日，缓存刷新判断才能复用同一套交易日事实。
 	seen := map[string]struct{}{}
-	calendarRows := make([]domain.CalendarInput, 0, len(bars))
+	calendarRows := make([]CalendarInput, 0, len(bars))
 	for _, bar := range bars {
 		if _, ok := seen[bar.TradeDate]; ok {
 			continue
 		}
 		seen[bar.TradeDate] = struct{}{}
-		calendarRows = append(calendarRows, domain.CalendarInput{
+		calendarRows = append(calendarRows, CalendarInput{
 			Exchange:  exchange,
 			TradeDate: bar.TradeDate,
 			IsOpen:    1,
@@ -103,11 +101,11 @@ func (r *MarketRepository) UpsertDailyBars(ctx context.Context, bars []domain.Ma
 	return r.UpsertCalendarRows(ctx, calendarRows)
 }
 
-func (r *MarketRepository) UpsertCalendarRows(ctx context.Context, rows []domain.CalendarInput) error {
+func (r *MarketRepository) UpsertCalendarRows(ctx context.Context, rows []CalendarInput) error {
 	for _, values := range chunk(rows, insertChunkSize) {
-		modelRows := make([]model.TradingCalendar, 0, len(values))
+		modelRows := make([]TradingCalendarModel, 0, len(values))
 		for _, row := range values {
-			modelRows = append(modelRows, model.TradingCalendar{
+			modelRows = append(modelRows, TradingCalendarModel{
 				Exchange:  row.Exchange,
 				TradeDate: row.TradeDate,
 				IsOpen:    row.IsOpen,
@@ -128,15 +126,15 @@ func (r *MarketRepository) UpsertCalendarRows(ctx context.Context, rows []domain
 	return nil
 }
 
-func (r *MarketRepository) ListSecuritiesRows(ctx context.Context) ([]domain.SecurityRecord, error) {
-	var rows []model.Security
+func (r *MarketRepository) ListSecuritiesRows(ctx context.Context) ([]SecurityRecord, error) {
+	var rows []SecurityModel
 	if err := r.db.WithContext(ctx).Order("symbol ASC").Find(&rows).Error; err != nil {
 		return nil, err
 	}
 
-	result := make([]domain.SecurityRecord, 0, len(rows))
+	result := make([]SecurityRecord, 0, len(rows))
 	for _, row := range rows {
-		result = append(result, domain.SecurityRecord{
+		result = append(result, SecurityRecord{
 			Symbol:            row.Symbol,
 			Name:              row.Name,
 			AssetType:         row.AssetType,
@@ -149,8 +147,8 @@ func (r *MarketRepository) ListSecuritiesRows(ctx context.Context) ([]domain.Sec
 	return result, nil
 }
 
-func (r *MarketRepository) GetSecurityRow(ctx context.Context, symbol string) (*domain.SecurityRecord, error) {
-	var row model.Security
+func (r *MarketRepository) GetSecurityRow(ctx context.Context, symbol string) (*SecurityRecord, error) {
+	var row SecurityModel
 	err := r.db.WithContext(ctx).Where("symbol = ?", symbol).First(&row).Error
 	if err == gorm.ErrRecordNotFound {
 		return nil, nil
@@ -159,7 +157,7 @@ func (r *MarketRepository) GetSecurityRow(ctx context.Context, symbol string) (*
 		return nil, err
 	}
 
-	return &domain.SecurityRecord{
+	return &SecurityRecord{
 		Symbol:            row.Symbol,
 		Name:              row.Name,
 		AssetType:         row.AssetType,
@@ -171,7 +169,7 @@ func (r *MarketRepository) GetSecurityRow(ctx context.Context, symbol string) (*
 }
 
 func (r *MarketRepository) GetLatestCachedTradeDate(ctx context.Context, symbol string, adjType string) (*string, error) {
-	var row model.DailyBar
+	var row DailyBarModel
 	err := r.db.WithContext(ctx).
 		Where("symbol = ? AND adj_type = ?", symbol, adjType).
 		Order("trade_date DESC").
@@ -185,8 +183,8 @@ func (r *MarketRepository) GetLatestCachedTradeDate(ctx context.Context, symbol 
 	return &row.TradeDate, nil
 }
 
-func (r *MarketRepository) ListBars(ctx context.Context, symbol string, adjType string, startDate string, endDate string) ([]domain.DailyBar, error) {
-	var rows []model.DailyBar
+func (r *MarketRepository) ListBars(ctx context.Context, symbol string, adjType string, startDate string, endDate string) ([]DailyBar, error) {
+	var rows []DailyBarModel
 	if err := r.db.WithContext(ctx).
 		Where("symbol = ? AND adj_type = ? AND trade_date >= ? AND trade_date <= ?", symbol, adjType, startDate, endDate).
 		Order("trade_date ASC").
@@ -194,7 +192,7 @@ func (r *MarketRepository) ListBars(ctx context.Context, symbol string, adjType 
 		return nil, err
 	}
 
-	bars := make([]domain.DailyBar, 0, len(rows))
+	bars := make([]DailyBar, 0, len(rows))
 	for _, row := range rows {
 		bars = append(bars, toDailyBar(row))
 	}
@@ -202,7 +200,7 @@ func (r *MarketRepository) ListBars(ctx context.Context, symbol string, adjType 
 }
 
 func (r *MarketRepository) GetCalendarMap(ctx context.Context, exchange string, startDate string, endDate string) (map[string]int, error) {
-	var rows []model.TradingCalendar
+	var rows []TradingCalendarModel
 	if err := r.db.WithContext(ctx).
 		Where("exchange = ? AND trade_date >= ? AND trade_date <= ?", exchange, startDate, endDate).
 		Find(&rows).Error; err != nil {
@@ -216,8 +214,8 @@ func (r *MarketRepository) GetCalendarMap(ctx context.Context, exchange string, 
 	return result, nil
 }
 
-func toDailyBar(row model.DailyBar) domain.DailyBar {
-	return domain.DailyBar{
+func toDailyBar(row DailyBarModel) DailyBar {
+	return DailyBar{
 		Symbol:        row.Symbol,
 		AdjType:       row.AdjType,
 		TradeDate:     row.TradeDate,
@@ -233,12 +231,12 @@ func toDailyBar(row model.DailyBar) domain.DailyBar {
 	}
 }
 
-func toDailyBarRow(bar domain.MarketBarInput) model.DailyBar {
+func toDailyBarRow(bar MarketBarInput) DailyBarModel {
 	adjType := bar.AdjType
 	if adjType == "" {
 		adjType = "none"
 	}
-	return model.DailyBar{
+	return DailyBarModel{
 		Symbol:        bar.Symbol,
 		AdjType:       adjType,
 		TradeDate:     bar.TradeDate,

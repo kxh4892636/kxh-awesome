@@ -1,30 +1,26 @@
-package service
+package market
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"time"
 
-	"kxh-awesome/etf-service/internal/config"
-	"kxh-awesome/etf-service/internal/domain"
-	"kxh-awesome/etf-service/internal/marketdata"
+	"kxh-awesome/etf-service/internal/shared/config"
+	"kxh-awesome/etf-service/internal/shared/utils"
 )
 
-var ErrUnknownSecurity = errors.New("unknown security")
-
 type MarketStore interface {
-	UpsertDailyBars(ctx context.Context, bars []domain.MarketBarInput, exchange string) error
-	UpsertCalendarRows(ctx context.Context, rows []domain.CalendarInput) error
-	ListSecuritiesRows(ctx context.Context) ([]domain.SecurityRecord, error)
-	GetSecurityRow(ctx context.Context, symbol string) (*domain.SecurityRecord, error)
+	UpsertDailyBars(ctx context.Context, bars []MarketBarInput, exchange string) error
+	UpsertCalendarRows(ctx context.Context, rows []CalendarInput) error
+	ListSecuritiesRows(ctx context.Context) ([]SecurityRecord, error)
+	GetSecurityRow(ctx context.Context, symbol string) (*SecurityRecord, error)
 	GetLatestCachedTradeDate(ctx context.Context, symbol string, adjType string) (*string, error)
-	ListBars(ctx context.Context, symbol string, adjType string, startDate string, endDate string) ([]domain.DailyBar, error)
+	ListBars(ctx context.Context, symbol string, adjType string, startDate string, endDate string) ([]DailyBar, error)
 	GetCalendarMap(ctx context.Context, exchange string, startDate string, endDate string) (map[string]int, error)
 }
 
 type RemoteFetcher interface {
-	FetchRemoteKlineBars(ctx context.Context, security config.SecurityConfig) (*marketdata.ParsedKlineData, error)
+	FetchRemoteKlineBars(ctx context.Context, security config.SecurityConfig) ([]MarketBarInput, error)
 }
 
 type MarketService struct {
@@ -49,13 +45,13 @@ func NewMarketServiceWithNow(securities []config.SecurityConfig, store MarketSto
 	return service
 }
 
-func (s *MarketService) ListSecurities(ctx context.Context) ([]domain.Security, error) {
+func (s *MarketService) ListSecurities(ctx context.Context) ([]Security, error) {
 	rows, err := s.store.ListSecuritiesRows(ctx)
 	if err != nil {
 		return nil, err
 	}
 
-	result := make([]domain.Security, 0, len(rows))
+	result := make([]Security, 0, len(rows))
 	for _, row := range rows {
 		latestCachedTradeDate, err := s.store.GetLatestCachedTradeDate(ctx, row.Symbol, "qfq")
 		if err != nil {
@@ -66,7 +62,7 @@ func (s *MarketService) ListSecurities(ctx context.Context) ([]domain.Security, 
 	return result, nil
 }
 
-func (s *MarketService) GetDailyBars(ctx context.Context, request domain.GetDailyBarsRequest) (*domain.GetDailyBarsResponse, error) {
+func (s *MarketService) GetDailyBars(ctx context.Context, request GetDailyBarsRequest) (*GetDailyBarsResponse, error) {
 	if request.AdjType == "" {
 		request.AdjType = "qfq"
 	}
@@ -85,7 +81,7 @@ func (s *MarketService) GetDailyBars(ctx context.Context, request domain.GetDail
 	}
 
 	// 行情源在交易日盘中可能返回未定稿数据，本地缓存只认 T-1 以保持图表口径稳定。
-	tMinusOne, err := marketdata.TMinusOne(s.now())
+	tMinusOne, err := utils.TMinusOne(s.now())
 	if err != nil {
 		return nil, err
 	}
@@ -100,19 +96,19 @@ func (s *MarketService) GetDailyBars(ctx context.Context, request domain.GetDail
 	}
 
 	// 请求范围裁剪到已知历史和已完成交易日，避免返回无意义空洞或半日数据。
-	effectiveStartDate := marketdata.Max(requestedStartDate, securityRow.EarliestTradeDate)
-	effectiveEndDate := marketdata.Min(requestedEndDate, tMinusOne)
+	effectiveStartDate := utils.Max(requestedStartDate, securityRow.EarliestTradeDate)
+	effectiveEndDate := utils.Min(requestedEndDate, tMinusOne)
 	latestCachedBefore, err := s.store.GetLatestCachedTradeDate(ctx, request.Symbol, request.AdjType)
 	if err != nil {
 		return nil, err
 	}
 	security := toSecurity(*securityRow, latestCachedBefore)
 
-	if marketdata.Compare(effectiveEndDate, effectiveStartDate) < 0 {
-		return &domain.GetDailyBarsResponse{
+	if utils.Compare(effectiveEndDate, effectiveStartDate) < 0 {
+		return &GetDailyBarsResponse{
 			Security: security,
-			Bars:     []domain.DailyBar{},
-			Meta: domain.GetDailyBarsMeta{
+			Bars:     []DailyBar{},
+			Meta: GetDailyBarsMeta{
 				CacheStatus:           "invalid",
 				RequestedStartDate:    &requestedStartDate,
 				RequestedEndDate:      &requestedEndDate,
@@ -133,18 +129,18 @@ func (s *MarketService) GetDailyBars(ctx context.Context, request domain.GetDail
 	}
 
 	shouldRefresh := requiredOpenDate != nil &&
-		(latestCachedBefore == nil || marketdata.Compare(*latestCachedBefore, *requiredOpenDate) < 0)
+		(latestCachedBefore == nil || utils.Compare(*latestCachedBefore, *requiredOpenDate) < 0)
 
 	if shouldRefresh {
-		parsed, err := s.fetcher.FetchRemoteKlineBars(ctx, securityConfig)
+		remoteBars, err := s.fetcher.FetchRemoteKlineBars(ctx, securityConfig)
 		if err != nil {
 			return nil, err
 		}
 
-		eligibleBars := make([]domain.MarketBarInput, 0, len(parsed.Bars))
-		for _, bar := range parsed.Bars {
+		eligibleBars := make([]MarketBarInput, 0, len(remoteBars))
+		for _, bar := range remoteBars {
 			// 远端可能带出当天或未来占位数据，入库前再次拦截以保护缓存口径。
-			if marketdata.Compare(bar.TradeDate, tMinusOne) <= 0 {
+			if utils.Compare(bar.TradeDate, tMinusOne) <= 0 {
 				eligibleBars = append(eligibleBars, bar)
 			}
 		}
@@ -161,7 +157,7 @@ func (s *MarketService) GetDailyBars(ctx context.Context, request domain.GetDail
 	if shouldRefresh {
 		startDate := effectiveStartDate
 		if latestCachedBefore != nil {
-			startDate, err = marketdata.AddDays(*latestCachedBefore, 1)
+			startDate, err = utils.AddDays(*latestCachedBefore, 1)
 			if err != nil {
 				return nil, err
 			}
@@ -177,10 +173,10 @@ func (s *MarketService) GetDailyBars(ctx context.Context, request domain.GetDail
 		return nil, err
 	}
 
-	return &domain.GetDailyBarsResponse{
+	return &GetDailyBarsResponse{
 		Security: toSecurity(*securityRow, latestCachedTradeDate),
 		Bars:     bars,
-		Meta: domain.GetDailyBarsMeta{
+		Meta: GetDailyBarsMeta{
 			CacheStatus:           cacheStatus(shouldRefresh),
 			RequestedStartDate:    &requestedStartDate,
 			RequestedEndDate:      &requestedEndDate,
@@ -209,7 +205,7 @@ func (s *MarketService) getLatestRequiredOpenDate(ctx context.Context, exchange 
 		return nil, err
 	}
 
-	dates, err := marketdata.ListDates(startDate, endDate)
+	dates, err := utils.ListDates(startDate, endDate)
 	if err != nil {
 		return nil, err
 	}
@@ -219,7 +215,7 @@ func (s *MarketService) getLatestRequiredOpenDate(ctx context.Context, exchange 
 		if value, ok := calendar[date]; ok && value == 0 {
 			continue
 		}
-		isWeekend, err := marketdata.IsWeekend(date)
+		isWeekend, err := utils.IsWeekend(date)
 		if err != nil {
 			return nil, err
 		}
@@ -231,30 +227,30 @@ func (s *MarketService) getLatestRequiredOpenDate(ctx context.Context, exchange 
 	return nil, nil
 }
 
-func (s *MarketService) markClosedMissingDates(ctx context.Context, exchange string, startDate string, endDate string, bars []domain.DailyBar) error {
+func (s *MarketService) markClosedMissingDates(ctx context.Context, exchange string, startDate string, endDate string, bars []DailyBar) error {
 	openDates := map[string]struct{}{}
 	for _, bar := range bars {
 		openDates[bar.TradeDate] = struct{}{}
 	}
 
-	dates, err := marketdata.ListDates(startDate, endDate)
+	dates, err := utils.ListDates(startDate, endDate)
 	if err != nil {
 		return err
 	}
 
-	rows := make([]domain.CalendarInput, 0, len(dates))
+	rows := make([]CalendarInput, 0, len(dates))
 	for _, tradeDate := range dates {
 		if _, ok := openDates[tradeDate]; ok {
 			continue
 		}
-		isWeekend, err := marketdata.IsWeekend(tradeDate)
+		isWeekend, err := utils.IsWeekend(tradeDate)
 		if err != nil {
 			return err
 		}
 		if isWeekend {
 			continue
 		}
-		rows = append(rows, domain.CalendarInput{
+		rows = append(rows, CalendarInput{
 			Exchange:  exchange,
 			TradeDate: tradeDate,
 			IsOpen:    0,
@@ -264,8 +260,8 @@ func (s *MarketService) markClosedMissingDates(ctx context.Context, exchange str
 	return s.store.UpsertCalendarRows(ctx, rows)
 }
 
-func toSecurity(row domain.SecurityRecord, latestCachedTradeDate *string) domain.Security {
-	return domain.Security{
+func toSecurity(row SecurityRecord, latestCachedTradeDate *string) Security {
+	return Security{
 		Symbol:                row.Symbol,
 		Name:                  row.Name,
 		AssetType:             row.AssetType,

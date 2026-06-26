@@ -1,4 +1,4 @@
-package domain
+package market
 
 type Security struct {
 	Symbol                string

@@ -1,18 +1,16 @@
-package service
+package market
 
 import (
 	"context"
 	"testing"
 	"time"
 
-	"kxh-awesome/etf-service/internal/config"
-	"kxh-awesome/etf-service/internal/domain"
-	"kxh-awesome/etf-service/internal/marketdata"
+	"kxh-awesome/etf-service/internal/shared/config"
 )
 
 var testSecurity = config.Securities[0]
 
-var testSecurityRow = domain.SecurityRecord{
+var testSecurityRow = SecurityRecord{
 	Symbol:            testSecurity.Symbol,
 	Name:              testSecurity.Name,
 	AssetType:         testSecurity.AssetType,
@@ -23,24 +21,24 @@ var testSecurityRow = domain.SecurityRecord{
 }
 
 type fakeStore struct {
-	bars                  []domain.DailyBar
+	bars                  []DailyBar
 	latestCachedTradeDate *string
 	calendar              map[string]int
-	upsertDailyBarsCalls  [][]domain.MarketBarInput
-	upsertCalendarCalls   [][]domain.CalendarInput
+	upsertDailyBarsCalls  [][]MarketBarInput
+	upsertCalendarCalls   [][]CalendarInput
 	getCalendarMapCalls   int
 }
 
-func (s *fakeStore) UpsertDailyBars(_ context.Context, bars []domain.MarketBarInput, _ string) error {
+func (s *fakeStore) UpsertDailyBars(_ context.Context, bars []MarketBarInput, _ string) error {
 	s.upsertDailyBarsCalls = append(s.upsertDailyBarsCalls, bars)
 	for _, bar := range bars {
-		s.bars = append(s.bars, domain.DailyBar(bar))
+		s.bars = append(s.bars, DailyBar(bar))
 	}
 	s.latestCachedTradeDate = nil
 	return nil
 }
 
-func (s *fakeStore) UpsertCalendarRows(_ context.Context, rows []domain.CalendarInput) error {
+func (s *fakeStore) UpsertCalendarRows(_ context.Context, rows []CalendarInput) error {
 	s.upsertCalendarCalls = append(s.upsertCalendarCalls, rows)
 	if s.calendar == nil {
 		s.calendar = map[string]int{}
@@ -51,11 +49,11 @@ func (s *fakeStore) UpsertCalendarRows(_ context.Context, rows []domain.Calendar
 	return nil
 }
 
-func (s *fakeStore) ListSecuritiesRows(_ context.Context) ([]domain.SecurityRecord, error) {
-	return []domain.SecurityRecord{testSecurityRow}, nil
+func (s *fakeStore) ListSecuritiesRows(_ context.Context) ([]SecurityRecord, error) {
+	return []SecurityRecord{testSecurityRow}, nil
 }
 
-func (s *fakeStore) GetSecurityRow(_ context.Context, symbol string) (*domain.SecurityRecord, error) {
+func (s *fakeStore) GetSecurityRow(_ context.Context, symbol string) (*SecurityRecord, error) {
 	if symbol != testSecurity.Symbol {
 		return nil, nil
 	}
@@ -77,8 +75,8 @@ func (s *fakeStore) GetLatestCachedTradeDate(_ context.Context, _ string, _ stri
 	return latest, nil
 }
 
-func (s *fakeStore) ListBars(_ context.Context, symbol string, adjType string, startDate string, endDate string) ([]domain.DailyBar, error) {
-	var result []domain.DailyBar
+func (s *fakeStore) ListBars(_ context.Context, symbol string, adjType string, startDate string, endDate string) ([]DailyBar, error) {
+	var result []DailyBar
 	for _, bar := range s.bars {
 		if bar.Symbol == symbol && bar.AdjType == adjType && bar.TradeDate >= startDate && bar.TradeDate <= endDate {
 			result = append(result, bar)
@@ -96,13 +94,13 @@ func (s *fakeStore) GetCalendarMap(_ context.Context, _ string, _ string, _ stri
 }
 
 type fakeFetcher struct {
-	bars  []domain.MarketBarInput
+	bars  []MarketBarInput
 	calls int
 }
 
-func (f *fakeFetcher) FetchRemoteKlineBars(_ context.Context, _ config.SecurityConfig) (*marketdata.ParsedKlineData, error) {
+func (f *fakeFetcher) FetchRemoteKlineBars(_ context.Context, _ config.SecurityConfig) ([]MarketBarInput, error) {
 	f.calls++
-	return &marketdata.ParsedKlineData{Bars: f.bars}, nil
+	return f.bars, nil
 }
 
 func TestGetDailyBarsInvalidRangeDoesNotFetch(t *testing.T) {
@@ -110,7 +108,7 @@ func TestGetDailyBarsInvalidRangeDoesNotFetch(t *testing.T) {
 	fetcher := &fakeFetcher{}
 	service := NewMarketServiceWithNow(config.Securities, store, fetcher, fixedNow)
 
-	response, err := service.GetDailyBars(context.Background(), domain.GetDailyBarsRequest{
+	response, err := service.GetDailyBars(context.Background(), GetDailyBarsRequest{
 		Symbol:    testSecurity.Symbol,
 		AdjType:   "qfq",
 		StartDate: strPtr("2012-01-01"),
@@ -139,13 +137,13 @@ func TestGetDailyBarsInvalidRangeDoesNotFetch(t *testing.T) {
 func TestGetDailyBarsReturnsCacheWhenCovered(t *testing.T) {
 	latest := "2026-05-29"
 	store := &fakeStore{
-		bars:                  []domain.DailyBar{createBar("2026-05-29", 101)},
+		bars:                  []DailyBar{createBar("2026-05-29", 101)},
 		latestCachedTradeDate: &latest,
 	}
 	fetcher := &fakeFetcher{}
 	service := NewMarketServiceWithNow(config.Securities, store, fetcher, fixedNow)
 
-	response, err := service.GetDailyBars(context.Background(), domain.GetDailyBarsRequest{
+	response, err := service.GetDailyBars(context.Background(), GetDailyBarsRequest{
 		Symbol:    testSecurity.Symbol,
 		AdjType:   "qfq",
 		StartDate: strPtr("2026-05-29"),
@@ -168,18 +166,18 @@ func TestGetDailyBarsReturnsCacheWhenCovered(t *testing.T) {
 func TestGetDailyBarsRefreshesAndFiltersAfterTMinusOne(t *testing.T) {
 	latest := "2026-05-28"
 	store := &fakeStore{
-		bars:                  []domain.DailyBar{createBar("2026-05-28", 100)},
+		bars:                  []DailyBar{createBar("2026-05-28", 100)},
 		latestCachedTradeDate: &latest,
 	}
 	fetcher := &fakeFetcher{
-		bars: []domain.MarketBarInput{
+		bars: []MarketBarInput{
 			createBar("2026-05-29", 101),
 			createBar("2026-05-31", 102),
 		},
 	}
 	service := NewMarketServiceWithNow(config.Securities, store, fetcher, fixedNow)
 
-	response, err := service.GetDailyBars(context.Background(), domain.GetDailyBarsRequest{
+	response, err := service.GetDailyBars(context.Background(), GetDailyBarsRequest{
 		Symbol:    testSecurity.Symbol,
 		AdjType:   "qfq",
 		StartDate: strPtr("2026-05-28"),
@@ -209,7 +207,7 @@ func TestGetDailyBarsRefreshesAndFiltersAfterTMinusOne(t *testing.T) {
 }
 
 func TestListSecuritiesIncludesLatestCachedTradeDate(t *testing.T) {
-	store := &fakeStore{bars: []domain.DailyBar{createBar("2026-05-29", 101)}}
+	store := &fakeStore{bars: []DailyBar{createBar("2026-05-29", 101)}}
 	service := NewMarketServiceWithNow(config.Securities, store, &fakeFetcher{}, fixedNow)
 
 	securities, err := service.ListSecurities(context.Background())
@@ -234,8 +232,8 @@ func fixedNow() time.Time {
 	return time.Date(2026, 5, 31, 12, 0, 0, 0, time.UTC)
 }
 
-func createBar(tradeDate string, closeValue float64) domain.DailyBar {
-	return domain.DailyBar{
+func createBar(tradeDate string, closeValue float64) DailyBar {
+	return DailyBar{
 		Symbol:        testSecurity.Symbol,
 		AdjType:       "qfq",
 		TradeDate:     tradeDate,

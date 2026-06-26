@@ -1,4 +1,4 @@
-package marketdata
+package hongsehuojian
 
 import (
 	"encoding/json"
@@ -8,14 +8,15 @@ import (
 	"strconv"
 	"strings"
 
-	"kxh-awesome/etf-service/internal/domain"
+	"kxh-awesome/etf-service/internal/modules/market"
+	"kxh-awesome/etf-service/internal/shared/utils"
 )
 
 type ParsedKlineData struct {
 	SecurityCode      string
 	EarliestTradeDate string
 	LatestTradeDate   string
-	Bars              []domain.MarketBarInput
+	Bars              []market.MarketBarInput
 }
 
 func ParseKlineJSON(text string, fileName string, fallbackSymbol string, adjType string) (*ParsedKlineData, error) {
@@ -50,7 +51,7 @@ func ParseKlineJSON(text string, fileName string, fallbackSymbol string, adjType
 	}
 
 	lines := splitNonEmpty(itemsText, ";")
-	bars := make([]domain.MarketBarInput, 0, len(lines))
+	bars := make([]market.MarketBarInput, 0, len(lines))
 	for index, line := range lines {
 		rowNumber := index + 1
 		values := strings.Split(line, ",")
@@ -107,7 +108,7 @@ func ParseKlineJSON(text string, fileName string, fallbackSymbol string, adjType
 			return nil, err
 		}
 
-		bars = append(bars, domain.MarketBarInput{
+		bars = append(bars, market.MarketBarInput{
 			Symbol:        fallbackSymbol,
 			AdjType:       adjType,
 			TradeDate:     tradeDate,
@@ -124,7 +125,7 @@ func ParseKlineJSON(text string, fileName string, fallbackSymbol string, adjType
 	}
 
 	sort.Slice(bars, func(i, j int) bool {
-		return Compare(bars[i].TradeDate, bars[j].TradeDate) < 0
+		return utils.Compare(bars[i].TradeDate, bars[j].TradeDate) < 0
 	})
 
 	if len(bars) == 0 {
@@ -167,7 +168,7 @@ func missingRequired(columns []string, required []string) []string {
 }
 
 func parseDate(value string, rowNumber int) (string, error) {
-	if _, err := Parse(value); err != nil {
+	if _, err := utils.Parse(value); err != nil {
 		return "", fmt.Errorf("第 %d 行的 tradeDate 不是 YYYY-MM-DD", rowNumber)
 	}
 	return value, nil
