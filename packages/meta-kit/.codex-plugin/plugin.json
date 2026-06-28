@@ -1,6 +1,6 @@
 {
   "name": "meta-kit",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Meta workflow skills and session context hooks",
   "author": {
     "name": "kxh-awesome"
