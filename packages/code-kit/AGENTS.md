@@ -9,6 +9,7 @@
 ## 关键模块
 
 - `.codex-plugin/plugin.json`：插件名称、版本、skills 目录和界面元信息。
+- `skills/agent-browser/SKILL.md`：agent-browser CLI 的浏览器自动化入口。
 - `skills/code-spec/SKILL.md`：全栈代码规范与专项开发指南。
 - `skills/diagnosing-bugs/SKILL.md`：诊断复杂 bug 和性能退化的流程。
 - `skills/lark-doc-quality/SKILL.md`：Lark 文档和画板质量规范。
