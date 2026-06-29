@@ -1,16 +1,15 @@
 {
   "name": "code-kit",
-  "version": "0.1.1",
-  "description": "Codebase engineering skills, code standards, and developer MCP tools",
+  "version": "0.1.2",
+  "description": "Codebase engineering skills, code standards, and developer workflows",
   "author": {
     "name": "kxh-awesome"
   },
   "skills": "./skills/",
-  "mcpServers": "./.mcp.json",
   "interface": {
     "displayName": "Code Kit",
     "shortDescription": "Code, comments, architecture, testing, and document quality workflows.",
-    "longDescription": "Code Kit bundles engineering skills, code standards with explanatory comment guidance, architecture review, testing workflows, frontend and backend guidance, Lark document quality guidance, update guidance, and Chrome DevTools MCP integration.",
+    "longDescription": "Code Kit bundles engineering skills, code standards with explanatory comment guidance, architecture review, testing workflows, frontend and backend guidance, Lark document quality guidance, and update guidance.",
     "developerName": "kxh-awesome",
     "category": "Developer Tools",
     "capabilities": ["Read", "Write"],
