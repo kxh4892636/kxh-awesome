@@ -16,10 +16,10 @@
 
 ## 8. TaskList
 
-| ID  | 任务 | 状态    | 验证方式 |
-| --- | ---- | ------- | -------- |
-| T1  |      | pending |          |
-| T2  |      | pending |          |
+| ID  | 任务 | 状态    | 验证方式 | 验证结果 |
+| --- | ---- | ------- | -------- | -------- |
+| T1  |      | pending |          | 未验证   |
+| T2  |      | pending |          | 未验证   |
 
 状态只使用：`pending` / `in_progress` / `completed` / `blocked`。
 
