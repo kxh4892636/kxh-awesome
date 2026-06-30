@@ -11,9 +11,9 @@
 
 - `.codex-plugin/plugin.json`：插件名称、版本、skills 目录和界面元信息。
 - `hooks/hooks.json`：startup/compact 的 hook 注册。
-- `hooks/session_start.js`：注入 session id、handoff 路径和 compact 上下文。
+- `hooks/session_start.js`：注入 session id、计划文档路径和 compact 上下文。
 - `skills/grilling/SKILL.md`：计划或设计的逐问追问规则。
-- `skills/handoff/SKILL.md`：交接文档创建、更新和 TaskList 状态维护规则。
+- `skills/to-plan/SKILL.md`：计划文档创建、更新和 TaskList 状态维护规则。
 - `skills/meta-kit-update/SKILL.md`：meta-kit 内远程来源 skill 的更新登记。
 
 ## 验证方式

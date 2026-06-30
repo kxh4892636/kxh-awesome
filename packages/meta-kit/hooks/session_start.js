@@ -24,7 +24,7 @@ const projectRoot = (cwd) => {
   const resolved = path.resolve(cwd);
 
   try {
-    // 优先通过版本库解析项目根目录，确保从子目录启动的会话仍写入项目根的交接文档。
+    // 优先通过版本库解析项目根目录，确保从子目录启动的会话仍写入项目根的计划文档。
     const root = execFileSync("git", ["-C", resolved, "rev-parse", "--show-toplevel"], {
       encoding: "utf8",
       stdio: ["ignore", "pipe", "ignore"],
@@ -36,30 +36,32 @@ const projectRoot = (cwd) => {
   }
 };
 
-const handoffPath = ({ cwd, sessionId }) =>
-  path.join(projectRoot(cwd), "docs", "handoff", `${sessionId}.md`);
+const planDocumentPath = ({ cwd, sessionId }) =>
+  path.join(projectRoot(cwd), "docs", "plan", `${sessionId}.md`);
 
-const startupContext = ({ sessionId }) => {
+const startupContext = ({ cwd, sessionId }) => {
+  const currentPlanDocumentPath = planDocumentPath({ cwd, sessionId });
   return [
     "<meta-context>",
     `- Current session_id: ${sessionId}`,
+    `- Plan document path: ${currentPlanDocumentPath}`,
     "- If the user invokes the grilling skill for planning, resolve decision dependencies before creating a TaskList.",
-    "- When the handoff skill is used, create or update the handoff document at the path above.",
+    "- When the to-plan skill is used, create or update the plan document at the path above.",
     "</meta-context>",
   ].join("\n");
 };
 
 const compactContext = ({ cwd, sessionId }) => {
-  const currentHandoffPath = handoffPath({ cwd, sessionId });
-  if (!fs.existsSync(currentHandoffPath)) {
-    // 压缩恢复是可选增强；没有既有交接文档时不注入额外上下文，
+  const currentPlanDocumentPath = planDocumentPath({ cwd, sessionId });
+  if (!fs.existsSync(currentPlanDocumentPath)) {
+    // 压缩恢复是可选增强；没有既有计划文档时不注入额外上下文，
     // 也不把会话启动钩子视为失败。
     return undefined;
   }
 
   let document;
   try {
-    document = fs.readFileSync(currentHandoffPath, "utf8").replace(/^\uFEFF/, "");
+    document = fs.readFileSync(currentPlanDocumentPath, "utf8").replace(/^\uFEFF/, "");
   } catch {
     return undefined;
   }
@@ -67,14 +69,14 @@ const compactContext = ({ cwd, sessionId }) => {
   return [
     "<meta-context>",
     `- Current session_id: ${sessionId}`,
+    `- Plan document path: ${currentPlanDocumentPath}`,
     "- If the user invokes the grilling skill for planning, resolve decision dependencies before creating a TaskList.",
-    "- When the handoff skill is used, create or update the handoff document at the path above.",
-    "You must immediately use the handoff skill and read the handoff document.",
-    "After any TaskList task is completed, update the corresponding changes chapter in the handoff document.",
-    `Handoff document path: ${currentHandoffPath}`,
-    "<handoff_document>",
+    "- When the to-plan skill is used, create or update the plan document at the path above.",
+    "You must immediately use the to-plan skill and read the plan document.",
+    "After any TaskList task is completed, update the corresponding plan document sections.",
+    "<plan_document>",
     document.trimEnd(),
-    "</handoff_document>",
+    "</plan_document>",
     "</meta-context>",
   ].join("\n");
 };
