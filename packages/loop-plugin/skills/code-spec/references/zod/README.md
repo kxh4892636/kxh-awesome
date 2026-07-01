@@ -37,41 +37,41 @@ references/source-docs/
 
 Important entry points:
 
-| Topic | Read |
-| --- | --- |
-| Official sidebar / route order | `references/source-docs/meta.json` |
-| Fast routing index | `references/doc-map.md` |
-| Intro, install, requirements | `references/source-docs/index.mdx` |
-| Defining schemas, parsing, errors, inference | `references/source-docs/basics.mdx` |
-| Full API surface | `references/source-docs/api.mdx` |
-| Error customization | `references/source-docs/error-customization.mdx` |
-| Error formatting helpers | `references/source-docs/error-formatting.mdx` |
-| Metadata and registries | `references/source-docs/metadata.mdx` |
-| JSON Schema conversion | `references/source-docs/json-schema.mdx` |
-| Codecs and bidirectional transforms | `references/source-docs/codecs.mdx` |
-| Package variants | `references/source-docs/packages/*.mdx` |
-| Zod 4 release and migration | `references/source-docs/v4/*.mdx` |
+| Topic                                        | Read                                             |
+| -------------------------------------------- | ------------------------------------------------ |
+| Official sidebar / route order               | `references/source-docs/meta.json`               |
+| Fast routing index                           | `references/doc-map.md`                          |
+| Intro, install, requirements                 | `references/source-docs/index.mdx`               |
+| Defining schemas, parsing, errors, inference | `references/source-docs/basics.mdx`              |
+| Full API surface                             | `references/source-docs/api.mdx`                 |
+| Error customization                          | `references/source-docs/error-customization.mdx` |
+| Error formatting helpers                     | `references/source-docs/error-formatting.mdx`    |
+| Metadata and registries                      | `references/source-docs/metadata.mdx`            |
+| JSON Schema conversion                       | `references/source-docs/json-schema.mdx`         |
+| Codecs and bidirectional transforms          | `references/source-docs/codecs.mdx`              |
+| Package variants                             | `references/source-docs/packages/*.mdx`          |
+| Zod 4 release and migration                  | `references/source-docs/v4/*.mdx`                |
 
 Use `rg` over `references/source-docs` when a user names a specific method, option, issue code, package subpath, or migration concern.
 
 ## Task Routing
 
-| User asks about | Read these docs first |
-| --- | --- |
-| Install, setup, requirements, Zod 4 status | `index.mdx`, `v4/index.mdx` |
-| Basic schema declaration, parsing, type inference | `basics.mdx` |
-| Primitive types, objects, arrays, unions, records, maps, sets, files | `api.mdx` |
-| Object composition, strict/loose objects, extend, pick, omit, partial | `api.mdx` |
-| Refinements, `refine`, `superRefine`, `check` | `api.mdx` |
-| Transforms, pipes, defaults, prefaults, catch, branded, readonly | `api.mdx` |
-| Codecs, encode/decode, built-in codecs | `codecs.mdx`, `api.mdx` |
-| Error messages, locales, global/per-parse customization | `error-customization.mdx` |
-| `treeifyError`, `prettifyError`, `flattenError`, `formatError` | `error-formatting.mdx` |
-| Metadata, registries, `meta`, `describe` | `metadata.mdx` |
-| `z.toJSONSchema`, `z.fromJSONSchema`, representability rules | `json-schema.mdx` |
-| Library author integration and peer dependency strategy | `library-authors.mdx`, `packages/core.mdx` |
-| Zod Mini and tree-shaking | `packages/mini.mdx` |
-| Zod 3 to Zod 4 migration | `v4/changelog.mdx`, `v4/versioning.mdx` |
+| User asks about                                                       | Read these docs first                      |
+| --------------------------------------------------------------------- | ------------------------------------------ |
+| Install, setup, requirements, Zod 4 status                            | `index.mdx`, `v4/index.mdx`                |
+| Basic schema declaration, parsing, type inference                     | `basics.mdx`                               |
+| Primitive types, objects, arrays, unions, records, maps, sets, files  | `api.mdx`                                  |
+| Object composition, strict/loose objects, extend, pick, omit, partial | `api.mdx`                                  |
+| Refinements, `refine`, `superRefine`, `check`                         | `api.mdx`                                  |
+| Transforms, pipes, defaults, prefaults, catch, branded, readonly      | `api.mdx`                                  |
+| Codecs, encode/decode, built-in codecs                                | `codecs.mdx`, `api.mdx`                    |
+| Error messages, locales, global/per-parse customization               | `error-customization.mdx`                  |
+| `treeifyError`, `prettifyError`, `flattenError`, `formatError`        | `error-formatting.mdx`                     |
+| Metadata, registries, `meta`, `describe`                              | `metadata.mdx`                             |
+| `z.toJSONSchema`, `z.fromJSONSchema`, representability rules          | `json-schema.mdx`                          |
+| Library author integration and peer dependency strategy               | `library-authors.mdx`, `packages/core.mdx` |
+| Zod Mini and tree-shaking                                             | `packages/mini.mdx`                        |
+| Zod 3 to Zod 4 migration                                              | `v4/changelog.mdx`, `v4/versioning.mdx`    |
 
 ## Implementation Workflow
 
@@ -99,7 +99,7 @@ For repo changes:
 The bundled source docs are refreshed from the GitHub docs repository with a cross-platform Node.js script:
 
 ```bash
-node packages/code-kit/skills/code-spec/references/zod/scripts/update-source-docs.mjs
+node packages/loop-plugin/skills/code-spec/references/zod/scripts/update-source-docs.mjs
 ```
 
 The script uses git sparse checkout for `packages/docs/content`, then replaces `references/source-docs/` and updates `references/snapshot.json`. Then review `references/source-docs/`, `references/doc-map.md`, `references/snapshot.json`, and this `README.md` against upstream changes. If new major topics appear in `meta.json`, update the routing tables and the parent `code-spec` routing entry.

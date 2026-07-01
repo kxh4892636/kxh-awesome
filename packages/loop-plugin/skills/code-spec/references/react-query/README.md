@@ -38,46 +38,46 @@ references/source-docs/
 
 Important entry points:
 
-| Topic | Read |
-| --- | --- |
-| Fast routing index | `references/doc-map.md` |
-| Overview and motivation | `references/source-docs/overview.md` |
-| Install and requirements | `references/source-docs/installation.md` |
-| Quick start | `references/source-docs/quick-start.md` |
-| Core guides | `references/source-docs/guides/*.md` |
-| Hook and API references | `references/source-docs/reference/*.md` |
-| TypeScript guide | `references/source-docs/typescript.md` |
-| Devtools | `references/source-docs/devtools.md` |
-| Plugins and persistence | `references/source-docs/plugins/*.md` |
-| Migration guides | `references/source-docs/guides/migrating-to-*.md` |
+| Topic                    | Read                                              |
+| ------------------------ | ------------------------------------------------- |
+| Fast routing index       | `references/doc-map.md`                           |
+| Overview and motivation  | `references/source-docs/overview.md`              |
+| Install and requirements | `references/source-docs/installation.md`          |
+| Quick start              | `references/source-docs/quick-start.md`           |
+| Core guides              | `references/source-docs/guides/*.md`              |
+| Hook and API references  | `references/source-docs/reference/*.md`           |
+| TypeScript guide         | `references/source-docs/typescript.md`            |
+| Devtools                 | `references/source-docs/devtools.md`              |
+| Plugins and persistence  | `references/source-docs/plugins/*.md`             |
+| Migration guides         | `references/source-docs/guides/migrating-to-*.md` |
 
 Use `rg` over `references/source-docs` when a user names a specific hook, option, status field, cache method, plugin, or migration concern.
 
 ## Task Routing
 
-| User asks about | Read these docs first |
-| --- | --- |
-| Install, provider setup, first query/mutation | `installation.md`, `quick-start.md`, `reference/QueryClientProvider.md` |
-| Query basics, status flags, fetching state | `guides/queries.md`, `reference/useQuery.md` |
-| Query keys and query functions | `guides/query-keys.md`, `guides/query-functions.md` |
-| Type-safe query options and reusable options | `guides/query-options.md`, `reference/queryOptions.md`, `typescript.md` |
-| Mutations and mutation options | `guides/mutations.md`, `reference/useMutation.md`, `reference/mutationOptions.md` |
-| Invalidation after mutations | `guides/query-invalidation.md`, `guides/invalidations-from-mutations.md` |
-| Updating cache from mutation responses | `guides/updates-from-mutation-responses.md` |
-| Optimistic updates | `guides/optimistic-updates.md` |
-| Infinite queries and pagination | `guides/infinite-queries.md`, `guides/paginated-queries.md`, `reference/useInfiniteQuery.md` |
-| Parallel/dependent queries | `guides/parallel-queries.md`, `guides/dependent-queries.md`, `reference/useQueries.md` |
-| Disabled/lazy queries and `skipToken` | `guides/disabling-queries.md`, `typescript.md` |
-| Prefetching and request waterfalls | `guides/prefetching.md`, `guides/request-waterfalls.md` |
-| SSR, hydration, Next.js app router, streaming | `guides/ssr.md`, `guides/advanced-ssr.md`, `reference/hydration.md` |
-| Suspense and error boundaries | `guides/suspense.md`, `reference/QueryErrorResetBoundary.md` |
+| User asks about                                    | Read these docs first                                                                                                    |
+| -------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| Install, provider setup, first query/mutation      | `installation.md`, `quick-start.md`, `reference/QueryClientProvider.md`                                                  |
+| Query basics, status flags, fetching state         | `guides/queries.md`, `reference/useQuery.md`                                                                             |
+| Query keys and query functions                     | `guides/query-keys.md`, `guides/query-functions.md`                                                                      |
+| Type-safe query options and reusable options       | `guides/query-options.md`, `reference/queryOptions.md`, `typescript.md`                                                  |
+| Mutations and mutation options                     | `guides/mutations.md`, `reference/useMutation.md`, `reference/mutationOptions.md`                                        |
+| Invalidation after mutations                       | `guides/query-invalidation.md`, `guides/invalidations-from-mutations.md`                                                 |
+| Updating cache from mutation responses             | `guides/updates-from-mutation-responses.md`                                                                              |
+| Optimistic updates                                 | `guides/optimistic-updates.md`                                                                                           |
+| Infinite queries and pagination                    | `guides/infinite-queries.md`, `guides/paginated-queries.md`, `reference/useInfiniteQuery.md`                             |
+| Parallel/dependent queries                         | `guides/parallel-queries.md`, `guides/dependent-queries.md`, `reference/useQueries.md`                                   |
+| Disabled/lazy queries and `skipToken`              | `guides/disabling-queries.md`, `typescript.md`                                                                           |
+| Prefetching and request waterfalls                 | `guides/prefetching.md`, `guides/request-waterfalls.md`                                                                  |
+| SSR, hydration, Next.js app router, streaming      | `guides/ssr.md`, `guides/advanced-ssr.md`, `reference/hydration.md`                                                      |
+| Suspense and error boundaries                      | `guides/suspense.md`, `reference/QueryErrorResetBoundary.md`                                                             |
 | Cancellation, retries, focus/refetch, network mode | `guides/query-cancellation.md`, `guides/query-retries.md`, `guides/window-focus-refetching.md`, `guides/network-mode.md` |
-| Render optimization and selectors | `guides/render-optimizations.md` |
-| Testing | `guides/testing.md` |
-| Devtools | `devtools.md` |
-| Persistence and broadcast plugins | `plugins/*.md` |
-| React Native | `react-native.md` |
-| Migrating v3/v4/v5 | `guides/migrating-to-react-query-3.md`, `guides/migrating-to-react-query-4.md`, `guides/migrating-to-v5.md` |
+| Render optimization and selectors                  | `guides/render-optimizations.md`                                                                                         |
+| Testing                                            | `guides/testing.md`                                                                                                      |
+| Devtools                                           | `devtools.md`                                                                                                            |
+| Persistence and broadcast plugins                  | `plugins/*.md`                                                                                                           |
+| React Native                                       | `react-native.md`                                                                                                        |
+| Migrating v3/v4/v5                                 | `guides/migrating-to-react-query-3.md`, `guides/migrating-to-react-query-4.md`, `guides/migrating-to-v5.md`              |
 
 ## Implementation Workflow
 
@@ -107,7 +107,7 @@ For repo changes:
 The bundled source docs are refreshed from the GitHub docs directory with a cross-platform Node.js script:
 
 ```bash
-node packages/code-kit/skills/code-spec/references/react-query/scripts/update-source-docs.mjs
+node packages/loop-plugin/skills/code-spec/references/react-query/scripts/update-source-docs.mjs
 ```
 
 The script uses git sparse checkout for `docs/framework/react`, then replaces `references/source-docs/` and updates `references/snapshot.json`. Then review `references/source-docs/`, `references/doc-map.md`, `references/snapshot.json`, and this `README.md` against upstream changes. If new guides, hooks, plugins, or migration topics appear, update the routing tables and the parent `code-spec` routing entry.

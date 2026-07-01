@@ -1,18 +1,18 @@
 {
   "name": "meta-kit",
   "version": "0.1.3",
-  "description": "Meta workflow skills and session context hooks",
+  "description": "Meta workflow skills",
   "author": {
     "name": "kxh-awesome"
   },
   "skills": "./skills/",
   "interface": {
     "displayName": "Meta Kit",
-    "shortDescription": "Planning, plan documents, and skill authoring workflows.",
-    "longDescription": "Meta Kit bundles planning, plan document creation, skill creation, skill extraction, update guidance, and SessionStart context hooks for Codex workflows.",
+    "shortDescription": "Skill authoring, extraction, and personal refinement workflows.",
+    "longDescription": "Meta Kit bundles skill creation, skill extraction, personal refinement, and update guidance for Codex workflows.",
     "developerName": "kxh-awesome",
     "category": "Productivity",
     "capabilities": ["Read", "Write"],
-    "defaultPrompt": ["Use grilling for this design.", "Create a plan document."]
+    "defaultPrompt": ["Create a skill from this workflow.", "Analyze my patterns from this context."]
   }
 }

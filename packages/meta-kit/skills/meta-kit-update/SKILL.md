@@ -33,7 +33,6 @@ description: 维护 meta-kit 内远程来源 skill 的登记与更新流程。�
 
 | skill-name | 远程来源 | 本地路径 | 更新方式 |
 | --- | --- | --- | --- |
-| `grilling` | `https://github.com/mattpocock/skills/tree/main/skills/productivity/grilling` | `packages/meta-kit/skills/grilling` | 使用 sparse checkout 克隆 `https://github.com/mattpocock/skills` 的 `skills/productivity/grilling`，比较远程目录与本地目录后同步有意义变更。保留本地 overlay：`SKILL.md` 末尾必须包含 `Grilling skill is read-only. Write operations are prohibited unless the user grants permission.`。该 skill 当前没有 `setup-matt-pocock-skills` 基础配置依赖；若上游以后新增相关表述，同步后删除这些硬性假设。 |
 | `skill-creator` | `https://github.com/anthropics/skills/tree/main/skills/skill-creator` | `packages/meta-kit/skills/skill-creator` | 使用 sparse checkout 克隆 `https://github.com/anthropics/skills` 的 `skills/skill-creator`，然后在审阅 diff 后将该子目录同步到本地路径。保留本地 eval、validator 和 meta-kit 适配说明；不要求创建新 skill 后自动调用 update skill。 |
 
 ## 更新方式细节

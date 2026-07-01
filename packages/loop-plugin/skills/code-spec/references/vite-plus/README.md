@@ -46,21 +46,21 @@ vp build                # Build for production
 
 ## Command Categories
 
-| Category | Commands |
-|----------|----------|
-| **Start** | `vp create`, `vp migrate`, `vp config`, `vp staged`, `vp install`, `vp env` |
-| **Develop** | `vp dev`, `vp check`, `vp lint`, `vp fmt`, `vp test` |
-| **Execute** | `vp run` / `vpr`, `vp cache clean`, `vpx`, `vp exec`, `vp dlx` |
-| **Build** | `vp build`, `vp pack`, `vp preview` |
+| Category         | Commands                                                                                                                                      |
+| ---------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Start**        | `vp create`, `vp migrate`, `vp config`, `vp staged`, `vp install`, `vp env`                                                                   |
+| **Develop**      | `vp dev`, `vp check`, `vp lint`, `vp fmt`, `vp test`                                                                                          |
+| **Execute**      | `vp run` / `vpr`, `vp cache clean`, `vpx`, `vp exec`, `vp dlx`                                                                                |
+| **Build**        | `vp build`, `vp pack`, `vp preview`                                                                                                           |
 | **Dependencies** | `vp add`, `vp remove`, `vp update`, `vp dedupe`, `vp outdated`, `vp list`, `vp why`, `vp info`, `vp rebuild`, `vp link`, `vp unlink`, `vp pm` |
-| **Maintain** | `vp upgrade`, `vp implode` |
+| **Maintain**     | `vp upgrade`, `vp implode`                                                                                                                    |
 
 ## Configuration
 
 All configuration lives in `vite.config.ts` using `defineConfig` from `vite-plus`:
 
 ```ts
-import { defineConfig } from 'vite-plus';
+import { defineConfig } from "vite-plus";
 
 export default defineConfig({
   server: {},
@@ -97,12 +97,12 @@ export default defineConfig({
 
 For detailed information, start with [references/source-map.md](references/source-map.md), then read the matching upstream snapshot under `references/source-docs/`.
 
-| Need | Read |
-| --- | --- |
-| Getting started, why Vite+, project creation, migration, monorepos | `references/source-docs/guide/index.md`, `why.md`, `create.md`, `migrate.md`, `monorepo.md` |
-| Commands such as dev, build, check, lint, fmt, test, run, pack, install, env, vpx, cache, hooks, upgrade, implode | `references/source-docs/guide/<topic>.md` |
-| Config blocks such as build, create, fmt, lint, pack, run, staged, test | `references/source-docs/config/<topic>.md` |
-| CI, IDE integration, troubleshooting | `references/source-docs/guide/ci.md`, `ide-integration.md`, `troubleshooting.md` |
+| Need                                                                                                              | Read                                                                                        |
+| ----------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
+| Getting started, why Vite+, project creation, migration, monorepos                                                | `references/source-docs/guide/index.md`, `why.md`, `create.md`, `migrate.md`, `monorepo.md` |
+| Commands such as dev, build, check, lint, fmt, test, run, pack, install, env, vpx, cache, hooks, upgrade, implode | `references/source-docs/guide/<topic>.md`                                                   |
+| Config blocks such as build, create, fmt, lint, pack, run, staged, test                                           | `references/source-docs/config/<topic>.md`                                                  |
+| CI, IDE integration, troubleshooting                                                                              | `references/source-docs/guide/ci.md`, `ide-integration.md`, `troubleshooting.md`            |
 
 Do not rely on the deleted summary markdown files for command or config details. Use the mirrored upstream docs when exact wording, options, examples, or changed behavior matter.
 
@@ -111,7 +111,7 @@ Do not rely on the deleted summary markdown files for command or config details.
 The upstream docs are refreshed with the same git-based workflow used by the other `code-spec` reference modules:
 
 ```bash
-node packages/code-kit/skills/code-spec/references/vite-plus/scripts/update-source-docs.mjs
+node packages/loop-plugin/skills/code-spec/references/vite-plus/scripts/update-source-docs.mjs
 ```
 
 The script uses git sparse checkout against:
