@@ -1,0 +1,18 @@
+{
+  "name": "loop-kit",
+  "version": "0.1.0",
+  "description": "Loop workflow skills and session context hooks",
+  "author": {
+    "name": "kxh-awesome"
+  },
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Loop Kit",
+    "shortDescription": "Planning, plan documents, and skill authoring workflows.",
+    "longDescription": "Loop Kit bundles planning, plan document creation, skill creation, skill extraction, update guidance, and SessionStart context hooks for Codex workflows.",
+    "developerName": "kxh-awesome",
+    "category": "Productivity",
+    "capabilities": ["Read", "Write"],
+    "defaultPrompt": ["Use grilling for this design.", "Create a plan document."]
+  }
+}
