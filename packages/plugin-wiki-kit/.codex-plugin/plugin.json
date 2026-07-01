@@ -1,0 +1,19 @@
+{
+  "name": "plugin-wiki-kit",
+  "version": "0.1.0",
+  "description": "Knowledge note and Anki workflows",
+  "author": {
+    "name": "kxh-awesome"
+  },
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "Plugin Wiki Kit",
+    "shortDescription": "Knowledge notes and Anki card creation.",
+    "longDescription": "Plugin Wiki Kit bundles note creation, knowledge-card workflows, update guidance, and Anki MCP integration.",
+    "developerName": "kxh-awesome",
+    "category": "Productivity",
+    "capabilities": ["Read", "Write"],
+    "defaultPrompt": ["Turn these notes into Anki cards.", "Refine this technical note."]
+  }
+}

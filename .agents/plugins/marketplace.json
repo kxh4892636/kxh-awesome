@@ -5,10 +5,10 @@
   },
   "plugins": [
     {
-      "name": "meta-kit",
+      "name": "plugin-meta-kit",
       "source": {
         "source": "local",
-        "path": "./packages/meta-kit"
+        "path": "./packages/plugin-meta-kit"
       },
       "policy": {
         "installation": "AVAILABLE",
@@ -17,10 +17,10 @@
       "category": "Productivity"
     },
     {
-      "name": "wiki-kit",
+      "name": "plugin-wiki-kit",
       "source": {
         "source": "local",
-        "path": "./packages/wiki-kit"
+        "path": "./packages/plugin-wiki-kit"
       },
       "policy": {
         "installation": "AVAILABLE",
@@ -29,16 +29,16 @@
       "category": "Productivity"
     },
     {
-      "name": "code-kit",
+      "name": "plugin-loop-kit",
       "source": {
         "source": "local",
-        "path": "./packages/code-kit"
+        "path": "./packages/plugin-loop-kit"
       },
       "policy": {
         "installation": "AVAILABLE",
         "authentication": "ON_INSTALL"
       },
-      "category": "Developer Tools"
+      "category": "Productivity"
     }
   ]
 }
