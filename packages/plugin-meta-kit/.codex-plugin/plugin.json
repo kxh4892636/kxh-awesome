@@ -9,7 +9,7 @@
   "interface": {
     "displayName": "Plugin Meta Kit",
     "shortDescription": "Skill authoring, extraction, and personal refinement workflows.",
-    "longDescription": "Plugin Meta Kit bundles teaching workflows, skill writing guidance, skill extraction, personal refinement, and update guidance for Codex workflows.",
+    "longDescription": "Plugin Meta Kit bundles teaching workflows, skill cleanup, skill writing guidance, skill extraction, personal refinement, and update guidance for Codex workflows.",
     "developerName": "kxh-awesome",
     "category": "Productivity",
     "capabilities": ["Read", "Write"],

@@ -10,6 +10,7 @@
 
 - `.codex-plugin/plugin.json`：插件名称、版本、skills 目录和界面元信息。
 - `skills/meta-kit-update/SKILL.md`：plugin-meta-kit 内远程来源 skill 的更新登记。
+- `skills/skill-cleanup/SKILL.md`：清理 skill 中失效引用、过期路径和冗余论述。
 - `skills/teach/SKILL.md`：面向长期学习主题的教学工作区流程。
 - `skills/writing-great-skills/SKILL.md`：skill 写作、编辑和精简原则参考。
 - `skills/skill-extractor/SKILL.md`：从 URL、文档或对话提取 skill。
