@@ -17,7 +17,7 @@ description: 检查和清理 skill 的失效引用、错误引用格式、过期
 
    读取目标目录的实际结构：
    - 当前存在的 skill 文件夹和 `SKILL.md`
-   - `agents/openai.yaml`、manifest、update registry、AGENTS.md、plugin 配置等入口文件
+   - manifest、update registry、AGENTS.md、plugin 配置和实际存在的 agent 配置等入口文件
    - 目标 skill 正文和直接引用文件中提到的 skill 名、插件名、相对路径、绝对路径、URL、脚本、命令、工具名和 frontmatter 字段
    - 与执行相关的 `references/`、`assets/`、`scripts/`、`tests/`、`evals/` 文件
 
@@ -28,7 +28,7 @@ description: 检查和清理 skill 的失效引用、错误引用格式、过期
    对 Markdown 链接、图片、内联路径和命令中的路径分别检查：
    - 相对路径必须从包含该引用的文件位置出发能解析到目标；跨目录引用要验证 `../` 层级。
    - skill 内部资源优先使用相对路径；除非明确指向用户环境或外部系统，避免把本机绝对路径写进可复用 skill。
-   - 示例占位路径要写成明显模板；不要让 `images/filename.png` 这类示例被误当成真实依赖。
+   - 示例占位路径要写成明显模板；不要让普通文件名形式的示例被误当成真实依赖。
    - 链接文本、目标文件和触发条件要一致；不要把已改名 skill、旧目录名或历史迁移说明留作运行指引。
    - 工具名和子 agent 类型必须能从当前可用工具或项目入口证明；无法证明时标记为 `uncertain`。
 

@@ -99,7 +99,7 @@ description: |
 - API 签名统一为 TypeScript 风格：`Type.method(param: Type): ReturnType: 描述;`;
 - 每个 Markdown 文件必须以 YAML frontmatter 开头，并包含 `id: <uuid>` 标识；优化已有文件时保留原 `id`，新建文件或缺失时生成 UUID;
 - 代码块添加语言标记;
-- 图片使用相对路径：`![alt](images/filename.png)`;
+- 图片使用相对路径模板：`![alt](images/{image-name}.png)`;
 - 数学公式使用 LaTeX：行间 `$$...$$`，行内 `$...$`;
 
 ### 3. 结构优化
@@ -345,7 +345,7 @@ type ReadonlyPerson = Readonly<Person>;
 使用相对路径引用图片，放在对应标题下方：
 
 ```markdown
-![alt](images/filename.png)
+![alt](images/{image-name}.png)
 ```
 
 ### 数学公式
@@ -442,7 +442,7 @@ const example = 1; // 代码解释（如：行为说明、运行结果）
 
 ##### 图示
 
-![alt](images/filename.png)
+![alt](images/{image-name}.png)
 ```
 
 这些 H5 分组按内容需要选用，不必全部包含；放置位置遵循“文件结构”中的 H2 → H3 → H4 → H5 连续层级。
