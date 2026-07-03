@@ -45,7 +45,6 @@ const startupContext = ({ cwd, sessionId }) => {
     "<!-- LOOP CONTEXT START -->",
     `SESSION_ID: ${sessionId}`,
     `PLAN_DOCUMENT_PATH: ${currentPlanDocumentPath}`,
-    `IS_LOOP: ${false}`,
     "<!-- LOOP CONTEXT END -->",
   ].join("\n");
 };
@@ -58,7 +57,6 @@ const compactContext = ({ cwd, sessionId }) => {
       "<!-- LOOP CONTEXT START -->",
       `SESSION_ID: ${sessionId}`,
       `PLAN_DOCUMENT_PATH: ${currentPlanDocumentPath}`,
-      `IS_LOOP: If loop-boot skill is invoked, set to true and read loop-boot skill again, otherwise false.`,
       "<!-- LOOP CONTEXT END -->",
     ].join("\n");
   }
@@ -74,7 +72,6 @@ const compactContext = ({ cwd, sessionId }) => {
     "<!-- LOOP CONTEXT START -->",
     `SESSION_ID: ${sessionId}`,
     `PLAN_DOCUMENT_PATH: ${currentPlanDocumentPath}`,
-    `IS_LOOP: If loop-boot skill is invoked, set to true and read loop-boot skill again, otherwise false.`,
     document.trimEnd(),
     "<!-- LOOP CONTEXT END -->",
   ].join("\n");
