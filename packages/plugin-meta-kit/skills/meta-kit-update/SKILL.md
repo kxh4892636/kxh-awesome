@@ -15,7 +15,7 @@ description: 维护 plugin-meta-kit 内远程来源 skill 的登记与更新流�
 4. 更新前先比较获取到的远程 skill 内容与本地 skill。如果没有有意义的差异，就停止并报告本地 skill 已是最新。
 5. 只有在比较发现差异时，才应用登记的更新方式。不要盲目覆盖本地变更；先比较来源与目标。
 6. 保留登记项中标明的本地 overlay。
-7. 当运行环境有兼容的 Python 环境时，使用可用的 `skill-creator` validator 验证更新后的 skill。否则，至少检查 `SKILL.md` frontmatter、必需文件和变更文件 diff。
+7. 如果目标 skill 自带 validator，使用其 validator 验证更新后的 skill。否则，至少检查 `SKILL.md` frontmatter、必需文件和变更文件 diff。
 8. 总结已变更文件、已跳过文件、验证状态，以及任何需要跟进的事项。
 
 ## 新登记项
@@ -33,7 +33,8 @@ description: 维护 plugin-meta-kit 内远程来源 skill 的登记与更新流�
 
 | skill-name | 远程来源 | 本地路径 | 更新方式 |
 | --- | --- | --- | --- |
-| `skill-creator` | `https://github.com/anthropics/skills/tree/main/skills/skill-creator` | `packages/plugin-meta-kit/skills/skill-creator` | 使用 sparse checkout 克隆 `https://github.com/anthropics/skills` 的 `skills/skill-creator`，然后在审阅 diff 后将该子目录同步到本地路径。保留本地 eval、validator 和 meta-kit 适配说明；不要求创建新 skill 后自动调用 update skill。 |
+| `teach` | `https://github.com/mattpocock/skills/tree/main/skills/productivity/teach` | `packages/plugin-meta-kit/skills/teach` | 使用 sparse checkout 克隆 `https://github.com/mattpocock/skills` 的 `skills/productivity/teach`，比较远程目录与本地目录后同步有意义变更。同步 `SKILL.md` 时保留同目录格式参考文件：`MISSION-FORMAT.md`、`RESOURCES-FORMAT.md`、`LEARNING-RECORD-FORMAT.md`、`GLOSSARY-FORMAT.md`。保留本地 overlay：删除上游 `disable-model-invocation: true` 和 `argument-hint` frontmatter 字段，因为当前 validator 不接受这些字段。 |
+| `writing-great-skills` | `https://github.com/mattpocock/skills/tree/main/skills/productivity/writing-great-skills` | `packages/plugin-meta-kit/skills/writing-great-skills` | 使用 sparse checkout 克隆 `https://github.com/mattpocock/skills` 的 `skills/productivity/writing-great-skills`，比较远程目录与本地目录后同步有意义变更。同步 `SKILL.md` 时保留同目录 `GLOSSARY.md`，避免正文引用断链。保留本地 overlay：删除上游 `disable-model-invocation: true` frontmatter 字段，因为当前 validator 不接受该字段。 |
 
 ## 更新方式细节
 
@@ -49,7 +50,7 @@ diff -qr <remote-skill-dir> <local-skill-dir>
 
 ### GitHub 子目录
 
-适用于存放在较大仓库内部的 skills，例如 `skill-creator`。
+适用于存放在较大仓库内部的 skills，例如 `teach` 和 `writing-great-skills`。
 
 ```bash
 git clone --depth 1 --filter=blob:none --sparse <repo-url> <tmp-dir>

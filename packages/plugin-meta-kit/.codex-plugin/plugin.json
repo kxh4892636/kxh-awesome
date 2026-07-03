@@ -1,6 +1,6 @@
 {
   "name": "plugin-meta-kit",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "Meta workflow skills",
   "author": {
     "name": "kxh-awesome"
@@ -9,7 +9,7 @@
   "interface": {
     "displayName": "Plugin Meta Kit",
     "shortDescription": "Skill authoring, extraction, and personal refinement workflows.",
-    "longDescription": "Plugin Meta Kit bundles skill creation, skill extraction, personal refinement, and update guidance for Codex workflows.",
+    "longDescription": "Plugin Meta Kit bundles teaching workflows, skill writing guidance, skill extraction, personal refinement, and update guidance for Codex workflows.",
     "developerName": "kxh-awesome",
     "category": "Productivity",
     "capabilities": ["Read", "Write"],

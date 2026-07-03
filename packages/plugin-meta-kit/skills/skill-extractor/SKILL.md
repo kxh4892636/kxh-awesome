@@ -7,8 +7,6 @@ description: 从 git 仓库、网址 URL、markdown 文档、交互对话或历�
 
 本 skill 用于从外部数据源（git 仓库、网址 URL、markdown 文档等）、交互式对话或历史对话复盘中提取生成 AI skill，也可根据复盘结果优化现有 skill。生成的 skill 保存到用户指定的目录下。
 
-> **禁止使用 axiom 技能**：执行本 skill 时不得调用 `skill("axiom")`，仅遵循本文档定义的提取流程。
-
 ## 从 Git 仓库提取 Skill 的流程
 
 1. **克隆仓库**
@@ -27,13 +25,13 @@ description: 从 git 仓库、网址 URL、markdown 文档、交互对话或历�
 
    向用户确认生成的 skill 保存到哪个目录，确认后再执行后续操作。
 
-4. **使用 skill-creator 编写 skill**
+4. **使用 writing-great-skills 编写 skill**
 
-   调用 `skill-creator` skill 完成 skill 的编写、测试和迭代优化。`SKILL.md` 中包含该 skill 如何重新拉取 git 仓库，进行 skill 内容更新的步骤。
+   按 `writing-great-skills` 的写作原则完成 skill 的编写、测试和迭代优化。`SKILL.md` 中包含该 skill 如何重新拉取 git 仓库，进行 skill 内容更新的步骤。
 
 5. **渐进式披露**
 
-   遵循 skill-creator 中定义的渐进式披露原则，采用三级加载结构：
+   遵循 `writing-great-skills` 中定义的信息层级与渐进式披露原则，采用三级加载结构：
    - **元数据层**（name + description）：始终在上下文中，约 100 词以内
    - **SKILL.md 主体**：skill 触发时加载，控制在 500 行以内
    - **按需资源**（scripts/、references/、assets/）：根据实际需要加载，无行数限制
@@ -44,7 +42,7 @@ description: 从 git 仓库、网址 URL、markdown 文档、交互对话或历�
    - 支持多领域/框架时按变体分目录组织（如 references/ 下按 aws.md、gcp.md、azure.md 拆分）
    - 在 SKILL.md 中明确引用资源文件，并说明何时需要读取它们
 
-   参考 skill-creator 的 "Progressive Disclosure" 章节了解完整细节。
+   参考 `writing-great-skills` 的信息层级与渐进式披露相关章节了解完整细节。
 
 6. **数据完整性**
 
@@ -77,13 +75,13 @@ description: 从 git 仓库、网址 URL、markdown 文档、交互对话或历�
 
    向用户确认生成的 skill 保存到哪个目录，确认后再执行后续操作。
 
-4. **使用 skill-creator 编写 skill**
+4. **使用 writing-great-skills 编写 skill**
 
-   调用 `skill-creator` skill 完成 skill 的编写、测试和迭代优化。`SKILL.md` 中包含该 skill 如何重新读取 Markdown 文档，进行 skill 内容更新的步骤。
+   按 `writing-great-skills` 的写作原则完成 skill 的编写、测试和迭代优化。`SKILL.md` 中包含该 skill 如何重新读取 Markdown 文档，进行 skill 内容更新的步骤。
 
 5. **渐进式披露**
 
-   遵循 skill-creator 中定义的渐进式披露原则，采用三级加载结构：
+   遵循 `writing-great-skills` 中定义的信息层级与渐进式披露原则，采用三级加载结构：
    - **元数据层**（name + description）：始终在上下文中，约 100 词以内
    - **SKILL.md 主体**：skill 触发时加载，控制在 500 行以内
    - **按需资源**（scripts/、references/、assets/）：根据实际需要加载，无行数限制
@@ -94,7 +92,7 @@ description: 从 git 仓库、网址 URL、markdown 文档、交互对话或历�
    - 支持多领域/框架时按变体分目录组织（如 references/ 下按主题拆分）
    - 在 SKILL.md 中明确引用资源文件，并说明何时需要读取它们
 
-   参考 skill-creator 的 "Progressive Disclosure" 章节了解完整细节。
+   参考 `writing-great-skills` 的信息层级与渐进式披露相关章节了解完整细节。
 
 6. **数据完整性**
 
@@ -143,9 +141,9 @@ description: 从 git 仓库、网址 URL、markdown 文档、交互对话或历�
    - 临时下载的聚合源文件是否保留由用户要求决定；若用户要求“不保留源文件”，只保留拆分文件和索引
    - 如果内容需要脚本化刷新，可增加 `scripts/`，但脚本必须是可复现、可审查的最小实现
 
-5. **使用 skill-creator 编写 skill**
+5. **使用 writing-great-skills 编写 skill**
 
-   调用 `skill-creator` skill 完成 skill 的编写、测试和迭代优化。`SKILL.md` 必须包含：
+   按 `writing-great-skills` 的写作原则完成 skill 的编写、测试和迭代优化。`SKILL.md` 必须包含：
    - 何时触发该 skill
    - 官方 URL 来源和本地 references 结构
    - 如何按索引读取拆分文档
@@ -154,7 +152,7 @@ description: 从 git 仓库、网址 URL、markdown 文档、交互对话或历�
 
 6. **渐进式披露**
 
-   遵循 skill-creator 中定义的渐进式披露原则。`SKILL.md` 只保留入口、工作流、索引说明和常用规则；完整网页内容放入 `references/`，再通过索引按需读取。
+   遵循 `writing-great-skills` 中定义的信息层级与渐进式披露原则。`SKILL.md` 只保留入口、工作流、索引说明和常用规则；完整网页内容放入 `references/`，再通过索引按需读取。
 
    对多个 URL 或大型文档站，优先建立两层索引：
    - 来源索引：URL、标题、本地文件、字节数、抓取状态
@@ -168,7 +166,7 @@ description: 从 git 仓库、网址 URL、markdown 文档、交互对话或历�
 
 8. **更新登记**
 
-   如果生成的 skill 来自远程 URL，完成后询问用户是否加入对应 kit 的 update skill（`meta-kit-update`、`wiki-kit-update` 或 `loop-kit-update`）。登记项应包含：
+   如果生成的 skill 来自远程 URL，完成后询问用户是否加入 `meta-kit-update`。登记项应包含：
    - skill 名称和本地路径
    - URL 来源列表或入口 URL
    - 抓取范围规则，例如只抓取给定 URL、同域递归、读取 `llms.txt` 等
@@ -200,13 +198,13 @@ description: 从 git 仓库、网址 URL、markdown 文档、交互对话或历�
 
    向用户确认生成的 skill 保存到哪个目录，确认后再执行后续操作。
 
-5. **使用 skill-creator 编写 skill**
+5. **使用 writing-great-skills 编写 skill**
 
-   将对话中梳理出的内容整理为结构化输入，调用 `skill-creator` skill 完成 skill 的编写、测试和迭代优化。
+   将对话中梳理出的内容整理为结构化输入，按 `writing-great-skills` 的写作原则完成 skill 的编写、测试和迭代优化。
 
 6. **渐进式披露**
 
-   遵循 skill-creator 中定义的渐进式披露原则，采用三级加载结构：
+   遵循 `writing-great-skills` 中定义的信息层级与渐进式披露原则，采用三级加载结构：
    - **元数据层**（name + description）：始终在上下文中，约 100 词以内
    - **SKILL.md 主体**：skill 触发时加载，控制在 500 行以内
    - **按需资源**（scripts/、references/、assets/）：根据实际需要加载，无行数限制
@@ -216,7 +214,7 @@ description: 从 git 仓库、网址 URL、markdown 文档、交互对话或历�
    - 大型参考文件（>300 行）应包含目录索引
    - 在 SKILL.md 中明确引用资源文件，并说明何时需要读取它们
 
-   参考 skill-creator 的 "Progressive Disclosure" 章节了解完整细节。
+   参考 `writing-great-skills` 的信息层级与渐进式披露相关章节了解完整细节。
 
 7. **数据完整性**
 
@@ -273,9 +271,9 @@ description: 从 git 仓库、网址 URL、markdown 文档、交互对话或历�
 
    在改写文件前，向用户给出候选清单并说明每个候选的依据、建议动作（新建/优化/暂不处理）和目标保存路径或目标 skill。
 
-6. **使用 skill-creator 编写或优化 skill**
+6. **使用 writing-great-skills 编写或优化 skill**
 
-   对用户确认的新建或优化项，调用 `skill-creator` skill 完成 skill 的编写、测试和迭代优化。
+   对用户确认的新建或优化项，按 `writing-great-skills` 的写作原则完成 skill 的编写、测试和迭代优化。
 
    新建 skill 时，`SKILL.md` 应说明它如何根据后续历史对话或用户反馈持续更新。优化现有 skill 时，保留原 skill 的名称、职责边界和已有有效流程，只补充复盘中证明有价值的触发条件、步骤、质量标准或反模式。
 
@@ -296,4 +294,4 @@ description: 从 git 仓库、网址 URL、markdown 文档、交互对话或历�
 
 ## 示例
 
-参考 `code-spec/references/vite-plus/` 目录，该 reference 模块从 Vite+ 官方文档提取，使用 `skill-creator` 编写，遵循渐进式披露原则组织内容。
+参考 `code-spec/references/vite-plus/` 目录，该 reference 模块从 Vite+ 官方文档提取，并按 `writing-great-skills` 的渐进式披露原则组织内容。
