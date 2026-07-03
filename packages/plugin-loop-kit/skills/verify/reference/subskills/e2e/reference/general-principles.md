@@ -6,7 +6,6 @@
 
 - Codex 自带 Chrome 插件可操作浏览器。
 - 如本轮代码 push 触发 BITS 流水线，或用户提供 develop URL / pipeline ID 并要求等待 PPE / BOE 部署，先完成 [pipeline-guard](../../pipeline-guard/README.md)。默认等待 PPE；只有用户明确 BOE 时才切换 BOE。
-- 如页面需要商家态，先使用 `merchant-auth` skill。
 - 已识别目标 app、workspace、路由和页面 URL。
 
 ## PPE / BOE 部署前置

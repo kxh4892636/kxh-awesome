@@ -1,7 +1,7 @@
 ---
 name: verify
 description: |
-  电商治理前端交付验收 skill。凡是用户要求验证、验收、走查、联调、E2E、检查接口报错、根据 logId 排查后端、确认发布到 PPE、等待 BITS 流水线/PPE 部署完成，或完成代码修改后需要闭环验证时，优先使用本 skill。它统一编排 biome/emo build 静态检查、push 后 BITS 流水线守护、PPE 部署完成确认、商家态准备、Codex 自带 Chrome 插件浏览器 E2E、业务 E2E 流程、接口验证、Argos 后端排障；需要商家登录、测试商家或线上附身时转用 merchant-auth skill。
+  电商治理前端交付验收 skill。凡是用户要求验证、验收、走查、联调、E2E、检查接口报错、根据 logId 排查后端、确认发布到 PPE、等待 BITS 流水线/PPE 部署完成，或完成代码修改后需要闭环验证时，优先使用本 skill。它统一编排 biome/emo build 静态检查、push 后 BITS 流水线守护、PPE 部署完成确认、Codex 自带 Chrome 插件浏览器 E2E、业务 E2E 流程、接口验证、Argos 后端排障。
 ---
 
 # Verify
@@ -32,9 +32,8 @@ description: |
    - `emo build`：只 build 受影响 workspace，命令为 `emo build <workspace-name>`；`workspace-name` 从目标 app/package 的 `package.json.name` 获取。
    - 即使本地已有 `emo start <workspace-name>`，默认仍执行 `emo build <workspace-name>`，除非用户临时要求跳过。
 3. **BITS / PPE 流水线守护**：如果本轮由 agent push 代码，或用户提供 BITS develop URL、dev-id、pipeline ID、要求等待 PPE / BOE 部署完成，读取 [pipeline-guard](reference/subskills/pipeline-guard/README.md)。默认守护 PPE；只有用户明确 BOE 时才切换 BOE。每 30 秒轮询，确认 PPE 部署完成后再进入浏览器验收。
-4. **准备商家态**：需要抖店/罗盘经营商家态时，使用 `merchant-auth` skill。
-5. **浏览器 E2E 验收**：读取 [e2e](reference/subskills/e2e/README.md)，在同一次用户路径中同时验证前端 UI 和后端接口；如果命中治理业务场景，再读取业务流程 reference。发现接口错误时读取 [backend-troubleshooting](reference/subskills/backend-troubleshooting/README.md)。
-6. **报告结论**：结论前置，列出已验证项、证据、问题、阻塞和建议。
+4. **浏览器 E2E 验收**：读取 [e2e](reference/subskills/e2e/README.md)，在同一次用户路径中同时验证前端 UI 和后端接口；如果命中治理业务场景，再读取业务流程 reference。发现接口错误时读取 [backend-troubleshooting](reference/subskills/backend-troubleshooting/README.md)。
+5. **报告结论**：结论前置，列出已验证项、证据、问题、阻塞和建议。
 
 ## 验收循环
 
@@ -51,8 +50,6 @@ description: |
 
 | 场景 | 读取 |
 | --- | --- |
-| 测试 shopId、fake login、抖店测试商家登录 | 使用 `merchant-auth` skill |
-| 线上真实商家、商家附身、附身抖店、附身罗盘经营 | 使用 `merchant-auth` skill |
 | push 后等待流水线、BITS develop URL、pipeline ID、确认 PPE/BOE 部署完成 | [pipeline-guard/README.md](reference/subskills/pipeline-guard/README.md) |
 | 通用浏览器验收、页面验证、截图、交互、HMR、DevServer | [e2e/README.md](reference/subskills/e2e/README.md) |
 | 体验分、奖惩、申诉、资金、举报、资质等治理业务 E2E | [e2e/README.md](reference/subskills/e2e/README.md) |
