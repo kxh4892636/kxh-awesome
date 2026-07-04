@@ -1,6 +1,6 @@
 ---
 name: to-plan
-description: 创建或更新当前会话的计划文档，保存到当前项目的 docs/plan/{sessionID}.md。用户要求 to-plan、计划、计划文档、会话计划、更新上下文文档，或当前对话/计划文档中的 TaskList 任务状态、关键改动、验证结果、commit、阻塞项发生变化时，必须使用本 skill。
+description: 创建或更新当前会话的计划文档；用户要求 to-plan、计划、计划文档、会话计划、更新上下文文档，或当前对话/计划文档中的 TaskList 任务状态、关键改动、验证结果、commit、阻塞项发生变化时，必须使用本 skill。
 ---
 
 # To Plan
@@ -10,11 +10,20 @@ description: 创建或更新当前会话的计划文档，保存到当前项目�
 1. 保证 Agent 能够长时间、不失真地执行当前计划。
 2. 保证其他 Agent 通过计划文档，交接并继续执行当前计划；并通过计划文档实现多个 Agent 之间状态的同步。
 
+计划文档路径为 `docs/plan/{sessionName}.md`。
+
 ## 工作流程
 
-1. 确定当前项目根目录、sessionID 和计划文档绝对路径；如果当前目录在 Git 仓库内，以 Git 根目录作为项目根目录。
+1. 确定当前项目根目录、sessionName 和计划文档绝对路径；如果当前目录在 Git 仓库内，以 Git 根目录作为项目根目录。
 2. 如果计划文档已存在，先读取现有内容，梳理最新上下文，执行增量更新操作，反之则创建计划文档。
 3. 基于「更新触发点」，更新上下文变化涉及的所有内容。
+
+## sessionName 规则
+
+- 优先使用会话上下文中的 `SESSION_NAME` 环境变量。
+- 如果上下文没有 `SESSION_NAME`，根据当前会话目标生成简短、稳定、可作为文件名的 kebab-case `sessionName`，并将其设置为 `SESSION_NAME`。
+- `sessionName` 一旦生成并用于计划文档路径，就不能因为后续目标细化、compact/resume、标题变化或重命名偏好而改动。
+- 不使用运行时 `session_id` 作为计划文档文件名，也不要把 `session_id` 写入计划文档作为会话主标识。
 
 ## 更新触发点
 
@@ -74,7 +83,7 @@ description: 创建或更新当前会话的计划文档，保存到当前项目�
 
 ## 环境变量
 
-sessionID、工作目录、Git 仓库、环境变量和日期等
+sessionName、工作目录、Git 仓库、环境变量和日期等
 
 ## TaskList
 
