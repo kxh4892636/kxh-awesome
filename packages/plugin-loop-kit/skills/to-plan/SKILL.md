@@ -10,7 +10,7 @@ description: 创建或更新当前会话的计划文档；用户要求 to-plan�
 1. 保证 Agent 能够长时间、不失真地执行当前计划。
 2. 保证其他 Agent 通过计划文档，交接并继续执行当前计划；并通过计划文档实现多个 Agent 之间状态的同步。
 
-计划文档路径为 `docs/plan/{sessionName}.md`。
+计划文档路径为 `docs/plan/{yyyy-mm-dd}-{sessionName}.md`，日期使用创建计划当天的本地日期。
 
 ## 工作流程
 
@@ -23,6 +23,7 @@ description: 创建或更新当前会话的计划文档；用户要求 to-plan�
 - 优先使用会话上下文中的 `SESSION_NAME` 环境变量。
 - 如果上下文没有 `SESSION_NAME`，根据当前会话目标生成简短、稳定、可作为文件名的 kebab-case `sessionName`，并将其设置为 `SESSION_NAME`。
 - `sessionName` 一旦生成并用于计划文档路径，就不能因为后续目标细化、compact/resume、标题变化或重命名偏好而改动。
+- 计划文件名前缀日期一旦生成也不能改动；后续跨日期继续同一计划时，继续使用原计划文件。
 - 不使用运行时 `session_id` 作为计划文档文件名，也不要把 `session_id` 写入计划文档作为会话主标识。
 
 ## 更新触发点
