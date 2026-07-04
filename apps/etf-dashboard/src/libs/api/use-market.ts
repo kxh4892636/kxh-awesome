@@ -1,9 +1,6 @@
 import { useQuery } from "@connectrpc/connect-query";
-import { type GetDailyBarsResponse, type Security } from "../api/gen/etf-service/etf/v1/etf_pb";
-import {
-  getDailyBars,
-  listSecurities,
-} from "../api/gen/etf-service/etf/v1/etf-EtfService_connectquery";
+import { type GetDailyBarsResponse, type Security } from "./gen/etf-service/etf/v1/etf_pb";
+import { getDailyBars, listSecurities } from "./gen/etf-service/etf/v1/etf-EtfService_connectquery";
 
 interface UseSecuritiesResult {
   data: Security[];

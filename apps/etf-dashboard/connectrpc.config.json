@@ -2,7 +2,7 @@
   "backends": {
     "etf-service": {
       "idl": "../etf-service",
-      "out": "src/api/gen/etf-service"
+      "out": "src/libs/api/gen/etf-service"
     }
   }
 }

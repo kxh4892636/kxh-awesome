@@ -6,8 +6,8 @@ import {
   isPointInPlot,
   renderKlineCanvas,
 } from "./chart-renderer";
-import { type ChartBar } from "../../../utils/chart-data";
-import { formatLargeNumber, formatNumber, formatPercent } from "../../../utils/format";
+import { type ChartBar } from "../utils/chart-data";
+import { formatLargeNumber, formatNumber, formatPercent } from "@/common/utils/format";
 import { useMaSeries } from "../hooks/use-ma-series";
 
 const MIN_VISIBLE_CANDLES = 20;

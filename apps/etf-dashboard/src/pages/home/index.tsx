@@ -1,6 +1,6 @@
 import { createLazyRoute } from "@tanstack/react-router";
-import { HomePage } from "../../pages/home-page";
+import { MarketDashboard } from "@/features/market-dashboard";
 
 export const Route = createLazyRoute("/")({
-  component: HomePage,
+  component: MarketDashboard,
 });

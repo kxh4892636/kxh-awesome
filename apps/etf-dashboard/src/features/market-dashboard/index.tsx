@@ -1,20 +1,15 @@
 import { useEffect, useMemo, useState } from "react";
 import { Alert, Card, Spin, Typography } from "antd";
-import { useDailyBars, useSecurities } from "../../hooks/use-market";
+import { useDailyBars, useSecurities } from "@/libs/api/use-market";
 import { DashboardToolbar } from "./components/dashboard-toolbar";
 import { KlineChart } from "./components/kline-chart";
 import { MarketSummary } from "./components/market-summary";
-import {
-  aggregateBars,
-  getRangeBars,
-  type ChartPeriod,
-  type ChartRange,
-} from "../../utils/chart-data";
+import { aggregateBars, getRangeBars, type ChartPeriod, type ChartRange } from "./utils/chart-data";
 
 /**
  * 首页负责串起标的选择、行情查询和图表视图，是 ETF 看板的主要用户工作流入口。
  */
-export const HomePage = () => {
+export const MarketDashboard = () => {
   const [selectedSymbol, setSelectedSymbol] = useState<string | null>(null);
   const [period, setPeriod] = useState<ChartPeriod>("day");
   const [range, setRange] = useState<ChartRange>("all");
@@ -75,9 +70,7 @@ export const HomePage = () => {
           }}
         />
       </Card>
-      {hasError && (
-        <Alert type="error" showIcon message="数据加载失败，请确认 etf-service 已启动" />
-      )}
+      {hasError && <Alert type="error" showIcon title="数据加载失败，请确认 etf-service 已启动" />}
       <MarketSummary data={dailyBarsQuery.data} />
       <Card
         title="K 线"

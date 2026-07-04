@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { calculateMaSeries, parseMaPeriods, type ChartBar } from "../../../utils/chart-data.ts";
+import { calculateMaSeries, parseMaPeriods, type ChartBar } from "../utils/chart-data";
 
 interface ZoomWindow {
   start: number;

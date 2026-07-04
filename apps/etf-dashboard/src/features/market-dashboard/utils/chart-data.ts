@@ -1,4 +1,4 @@
-import type { DailyBar } from "../api/gen/etf-service/etf/v1/etf_pb";
+import type { DailyBar } from "@/libs/api/gen/etf-service/etf/v1/etf_pb";
 
 export type ChartPeriod = "day" | "week" | "month" | "quarter" | "year";
 export type ChartRange = "1y" | "3y" | "5y" | "10y" | "all";

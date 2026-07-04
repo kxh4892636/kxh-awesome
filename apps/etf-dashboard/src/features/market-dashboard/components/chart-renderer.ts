@@ -1,5 +1,5 @@
-import { formatLargeNumber, formatNumber } from "../../../utils/format";
-import type { ChartBar, MaSeries } from "../../../utils/chart-data";
+import { formatLargeNumber, formatNumber } from "@/common/utils/format";
+import type { ChartBar, MaSeries } from "../utils/chart-data";
 
 const MIN_X_AXIS_LABEL_GAP = 92;
 

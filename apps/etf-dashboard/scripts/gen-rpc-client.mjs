@@ -45,11 +45,11 @@ const assertSafeBackendId = (backendId) => {
 };
 
 const assertOutputInsideProject = (backendId, outputDir) => {
-  const genRoot = resolve(projectRoot, "src/api/gen");
+  const genRoot = resolve(projectRoot, "src/libs/api/gen");
   const relativeOutput = relative(genRoot, outputDir);
 
   if (relativeOutput.startsWith("..") || resolve(genRoot, relativeOutput) !== outputDir) {
-    throw new Error(`backend "${backendId}" output must stay inside src/api/gen`);
+    throw new Error(`backend "${backendId}" output must stay inside src/libs/api/gen`);
   }
 };
 
@@ -80,7 +80,7 @@ const resolveBackend = ([backendId, entry]) => {
     throw new Error(`backend "${backendId}" must define an idl string`);
   }
 
-  const outputDir = resolve(projectRoot, backend.out ?? `src/api/gen/${backendId}`);
+  const outputDir = resolve(projectRoot, backend.out ?? `src/libs/api/gen/${backendId}`);
   assertOutputInsideProject(backendId, outputDir);
 
   return {

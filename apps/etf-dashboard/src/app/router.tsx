@@ -1,13 +1,13 @@
 import { createRootRoute, createRoute } from "@tanstack/react-router";
-import { RootLayout } from "../pages";
+import { RootLayout } from "@/common/layout/root-layout";
 
-export const rootRoute = createRootRoute({
+const rootRoute = createRootRoute({
   component: RootLayout,
 });
 
-export const indexRoute = createRoute({
+const indexRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "/",
-}).lazy(() => import("./lazy/home.lazy").then((module) => module.Route));
+}).lazy(() => import("@/pages/home").then((module) => module.Route));
 
 export const routeTree = rootRoute.addChildren([indexRoute]);

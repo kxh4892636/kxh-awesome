@@ -1,12 +1,12 @@
 import { Button, Input, Segmented, Select, Space } from "antd";
 import { ReloadOutlined } from "@ant-design/icons";
-import type { Security } from "../../../api/gen/etf-service/etf/v1/etf_pb";
+import type { Security } from "@/libs/api/gen/etf-service/etf/v1/etf_pb";
 import {
   PERIOD_OPTIONS,
   RANGE_OPTIONS,
   type ChartPeriod,
   type ChartRange,
-} from "../../../utils/chart-data";
+} from "../utils/chart-data";
 
 interface DashboardToolbarProps {
   securities: Security[];

@@ -1,5 +1,5 @@
-import type { GetDailyBarsResponse } from "../../../api/gen/etf-service/etf/v1/etf_pb";
-import { formatLargeNumber, formatNumber, formatPercent } from "../../../utils/format";
+import type { GetDailyBarsResponse } from "@/libs/api/gen/etf-service/etf/v1/etf_pb";
+import { formatLargeNumber, formatNumber, formatPercent } from "@/common/utils/format";
 
 interface MarketSummaryProps {
   data: GetDailyBarsResponse | undefined;
