@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 # Loop Boot
 
-用户提供一组 skill 并将其编排成一个新的开发流程 skill。生成的新 skill 使用 `ASK_MATT_TEMPLATE.md` 的组织方式，特别是「## The main flow: idea → ship」部分。
+用户提供一组 skill 并将其编排成一个新的开发流程 skill。生成的新 skill 使用 `ASK_MATT_TEMPLATE.md` 的结构，特别是「## The main flow: idea → ship」部分。
 
 ## 步骤
 
@@ -24,7 +24,7 @@ disable-model-invocation: true
      - 开发流程选择 TDD/BDD 还是瀑布；
      - **编排流程应该有那些分支**：流入某个阶段是否需要路由到不同逻辑；
        - 例如「讨论」阶段结束后决定是否创建分支生成技术/需求文档还是直接进入下一阶段；
-       - 例如影响面单一、验收路径明确的需求在「计划」结束后可以直接进入下一阶段；跨模块、多会话开发、验收链路复杂的的需求在「计划」结束后需要进行计划的存储/拆分/多会话状态同步。
+       - 例如影响面单一、验收路径明确的需求在「计划」结束后可以直接进入下一阶段；跨模块、多会话开发、验收链路复杂的的需求在「计划」结束后需要调用计划、状态同步或上下文文档 skill。
 
 4. **选择开发流程**
    - 默认优先选择 TDD/BDD：`需求 -> 讨论 -> 计划 -> TDD/BDD (测试 -> 开发 -> 验收 -> 重复) -> 整体验收`。
@@ -42,6 +42,8 @@ disable-model-invocation: true
    - 调用 `writing-great-skills`，基于 `ASK_MATT_TEMPLATE.md` 创建 skill。
    - 新 skill 的“讨论”阶段必须要求使用 `grilling` 与用户对齐需求。
    - 新 skill 仅用于编排和路由 skill，不需要暴露 skill 的内部实现。
+   - 新 skill 原封复制步骤 4 中，选择的开发流程对应的字符串。
+   - 新 skill 原封复制「## 垂直切片开发约束」部分。
 
 ## 上下文约束
 
@@ -63,11 +65,12 @@ disable-model-invocation: true
 WRONG (horizontal):
   RED:   test1, test2, test3, test4, test5
   GREEN: impl1, impl2, impl3, impl4, impl5
+  VERIFY: verify1, verify2, verify3, verify4, verify5
 
 RIGHT (vertical):
-  RED→GREEN: test1→impl1
-  RED→GREEN: test2→impl2
-  RED→GREEN: test3→impl3
+  RED→GREEN: test1→impl1→verify1
+  RED→GREEN: test2→impl2→verify2
+  RED→GREEN: test3→impl3→verify3
   ...
 ```
 

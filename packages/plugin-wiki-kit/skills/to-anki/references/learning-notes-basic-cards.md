@@ -61,7 +61,7 @@ Go::Go-入门
 Go::模块-包-导入
 ```
 
-If a requested hierarchy is deeper than Anki MCP can create, explain the constraint and preview a supported fallback before creating anything.
+If a requested hierarchy is deeper than the available Anki workflow can create, explain the constraint and preview a supported fallback before creating anything.
 
 ## Card Front And Back
 
@@ -130,12 +130,12 @@ Stop after the preview and ask the user to confirm or request changes. Do not cr
 
 Only after the user confirms the current preview:
 
-1. Use Anki MCP to inspect the requested note type and field names.
-2. Use Anki MCP to inspect existing decks and create missing target decks.
-3. Use Anki MCP to create notes per child deck.
+1. Inspect the requested note type and field names with the available Anki workflow.
+2. Inspect existing decks and create missing target decks with the available Anki workflow.
+3. Create notes per child deck with the available Anki workflow.
 4. Avoid duplicates unless the user explicitly requested duplicates.
 5. Preserve HTML in the back field.
-6. Verify created notes using Anki MCP.
+6. Verify created notes with the available Anki workflow.
 
 Create exactly the cards from the confirmed preview. If anything changes, return to preview.
 
@@ -153,5 +153,5 @@ Example:
 
 ```text
 已创建 Anki 卡片，共 57 张，全部使用 基础 模板。
-验证结果：使用 Anki MCP 核对到 57 条目标笔记，创建 57、跳过 0、失败 0。
+验证结果：核对到 57 条目标笔记，创建 57、跳过 0、失败 0。
 ```
