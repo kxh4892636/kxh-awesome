@@ -2,7 +2,7 @@
   "backends": {
     "go-template": {
       "idl": "../go-template",
-      "out": "src/api/gen/go-template"
+      "out": "src/libs/api/gen/go-template"
     }
   }
 }

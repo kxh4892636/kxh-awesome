@@ -1,0 +1,1 @@
+export { PostsSection } from "./components/posts-section";

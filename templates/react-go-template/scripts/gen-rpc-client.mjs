@@ -1,7 +1,7 @@
 import { spawnSync } from "node:child_process";
 import { existsSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
-import { dirname, join, relative, resolve } from "node:path";
+import { dirname, isAbsolute, join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -9,6 +9,7 @@ const projectRoot = resolve(__dirname, "..");
 const configPath = join(projectRoot, "connectrpc.config.json");
 const nodeModulesBin = join(projectRoot, "node_modules", ".bin");
 const pathDelimiter = process.platform === "win32" ? ";" : ":";
+const generatedApiRoot = resolve(projectRoot, "src/libs/api/gen");
 
 const toPosixPath = (value) => value.replaceAll("\\", "/");
 
@@ -45,11 +46,10 @@ const assertSafeBackendId = (backendId) => {
 };
 
 const assertOutputInsideProject = (backendId, outputDir) => {
-  const genRoot = resolve(projectRoot, "src/api/gen");
-  const relativeOutput = relative(genRoot, outputDir);
+  const relativeOutput = relative(generatedApiRoot, outputDir);
 
-  if (relativeOutput.startsWith("..") || resolve(genRoot, relativeOutput) !== outputDir) {
-    throw new Error(`backend "${backendId}" output must stay inside src/api/gen`);
+  if (relativeOutput.startsWith("..") || isAbsolute(relativeOutput)) {
+    throw new Error(`backend "${backendId}" output must stay inside src/libs/api/gen`);
   }
 };
 
@@ -80,7 +80,7 @@ const resolveBackend = ([backendId, entry]) => {
     throw new Error(`backend "${backendId}" must define an idl string`);
   }
 
-  const outputDir = resolve(projectRoot, backend.out ?? `src/api/gen/${backendId}`);
+  const outputDir = resolve(projectRoot, backend.out ?? `src/libs/api/gen/${backendId}`);
   assertOutputInsideProject(backendId, outputDir);
 
   return {

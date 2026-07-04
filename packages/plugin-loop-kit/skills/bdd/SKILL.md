@@ -34,6 +34,7 @@ description: 前端 BDD 行为驱动开发 skill。执行前端页面、组件�
 
 ## 场景格式
 
+BDD 测试应读起来像验收标准。下面是伪代码/风格示例，不是可直接复制运行的模板，实际执行 agent 会操作真实浏览器进行 E2E 验收，不需要写 E2E 测试代码；
 优先使用简短、可执行的业务语言：
 
 ```gherkin
@@ -51,23 +52,6 @@ Scenario: 用户提交缺少必填项的表单
 - Then 只描述可观察结果。
 - 一个场景只证明一个核心行为；相关但独立的行为拆成下一个场景。
 - 场景名描述业务能力或用户结果，不描述内部函数、组件层级或调用顺序。
-
-## 测试写法
-
-BDD 测试应读起来像验收标准。下面是伪代码/风格示例，不是可直接复制运行的模板，实际执行 agent 会操作真实浏览器进行 E2E 验收，不需要写 E2E 测试代码；
-
-```ts
-test('用户提交缺少必填项的表单时看到校验提示', async () => {
-  // 打开创建活动页面
-  renderCreateActivityPage();
-  // 用户不填写活动名称并点击提交
-  await user.click(screen.getByRole('button', { name: '提交' }));
-  // 页面展示“活动名称不能为空”
-  expect(screen.getByText('活动名称不能为空')).toBeInTheDocument();
-  // 表单不会发起创建请求
-  expect(createActivity).not.toHaveBeenCalled();
-});
-```
 
 ## Mock 规则
 
