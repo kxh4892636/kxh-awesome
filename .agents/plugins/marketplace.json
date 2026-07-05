@@ -17,18 +17,6 @@
       "category": "Productivity"
     },
     {
-      "name": "plugin-wiki-kit",
-      "source": {
-        "source": "local",
-        "path": "./packages/plugin-wiki-kit"
-      },
-      "policy": {
-        "installation": "AVAILABLE",
-        "authentication": "ON_INSTALL"
-      },
-      "category": "Productivity"
-    },
-    {
       "name": "plugin-loop-kit",
       "source": {
         "source": "local",

@@ -1,18 +1,23 @@
 {
   "name": "plugin-meta-kit",
   "version": "0.1.4",
-  "description": "Meta workflow skills",
+  "description": "Skill, learning, notes, and knowledge workflows",
   "author": {
     "name": "kxh-awesome"
   },
   "skills": "./skills/",
   "interface": {
     "displayName": "Plugin Meta Kit",
-    "shortDescription": "Skill authoring, extraction, and personal refinement workflows.",
-    "longDescription": "Plugin Meta Kit bundles teaching workflows, skill checking and cleanup, skill writing guidance, skill extraction, personal refinement, and update guidance for Codex workflows.",
+    "shortDescription": "Skill authoring, learning, notes, Anki, and personal refinement workflows.",
+    "longDescription": "Plugin Meta Kit bundles teaching workflows, skill checking and cleanup, skill writing guidance, skill extraction, technical note creation, Anki card planning, personal refinement, and update guidance for Codex workflows.",
     "developerName": "kxh-awesome",
     "category": "Productivity",
     "capabilities": ["Read", "Write"],
-    "defaultPrompt": ["Create a skill from this workflow.", "Analyze my patterns from this context."]
+    "defaultPrompt": [
+      "Create a skill from this workflow.",
+      "Analyze my patterns from this context.",
+      "Refine this technical note.",
+      "Turn these notes into Anki cards."
+    ]
   }
 }
