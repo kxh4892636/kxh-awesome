@@ -99,7 +99,7 @@ For repo changes:
 The bundled source docs are refreshed from the GitHub docs repository with a cross-platform Node.js script:
 
 ```bash
-node packages/plugin-loop-kit/skills/code-spec/references/zod/scripts/update-source-docs.mjs
+node packages/skills-kit/loop/code-spec/references/zod/scripts/update-source-docs.mjs
 ```
 
 The script uses git sparse checkout for `packages/docs/content`, then replaces `references/source-docs/` and updates `references/snapshot.json`. Then review `references/source-docs/`, `references/doc-map.md`, `references/snapshot.json`, and this `README.md` against upstream changes. If new major topics appear in `meta.json`, update the routing tables and the parent `code-spec` routing entry.

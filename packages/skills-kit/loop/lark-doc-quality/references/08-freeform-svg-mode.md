@@ -135,7 +135,7 @@ Planner 必须输出：
 
 ```bash
 # 前置：<session>/ 下已有 diagram.svg / freeform_brief.json / plan.json
-packages/plugin-loop-kit/skills/lark-doc-quality/scripts/render_freeform.sh <session> [--strict-budget]
+packages/skills-kit/loop/lark-doc-quality/scripts/render_freeform.sh <session> [--strict-budget]
 # 产出：<session>/board.openapi.json
 #       <session>/render_freeform.report.json （ok=true 才允许进 Gate B）
 ```

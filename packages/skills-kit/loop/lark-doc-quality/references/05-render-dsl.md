@@ -261,11 +261,11 @@ Render 组装前必须对照下表检查 `plan.chart_type`。对代码原生图�
 whiteboard-cli -i <session>/diagram.svg -f svg --check > <session>/svg_check.json
 whiteboard-cli -i <session>/diagram.svg -f svg -o <session>/preview.png
 whiteboard-cli -i <session>/diagram.svg -f svg --to openapi --format json > <session>/board.openapi.json
-packages/plugin-loop-kit/skills/lark-doc-quality/scripts/lint_premium_style.py <chart_type> <session>/diagram.svg \
+packages/skills-kit/loop/lark-doc-quality/scripts/lint_premium_style.py <chart_type> <session>/diagram.svg \
   > <session>/lint_premium.json
-packages/plugin-loop-kit/skills/lark-doc-quality/scripts/lint_svg_quality.py <session>/diagram.svg \
+packages/skills-kit/loop/lark-doc-quality/scripts/lint_svg_quality.py <session>/diagram.svg \
   --mode <sankey|roadmap|prototype|illustration|custom> \
-  --tokens packages/plugin-loop-kit/skills/lark-doc-quality/assets/style-tokens/_catalog.json \
+  --tokens packages/skills-kit/loop/lark-doc-quality/assets/style-tokens/_catalog.json \
   > <session>/lint_svg_quality.json
 ```
 
@@ -282,17 +282,17 @@ packages/plugin-loop-kit/skills/lark-doc-quality/scripts/lint_svg_quality.py <se
 DSL 输出后必须额外执行：
 
 ```bash
-packages/plugin-loop-kit/skills/lark-doc-quality/scripts/lint_lark_style_architecture.py <session>/board.json
+packages/skills-kit/loop/lark-doc-quality/scripts/lint_lark_style_architecture.py <session>/board.json
 ```
 
 ## 本地验证流程
 
 ```bash
 # 1. 几何门禁（Gate A）
-packages/plugin-loop-kit/skills/lark-doc-quality/scripts/check_board.sh <session>/board.json
+packages/skills-kit/loop/lark-doc-quality/scripts/check_board.sh <session>/board.json
 
 # 2. 渲染 PNG（给 VQA Gate B 用）
-packages/plugin-loop-kit/skills/lark-doc-quality/scripts/render_preview.sh \
+packages/skills-kit/loop/lark-doc-quality/scripts/render_preview.sh \
   <session>/board.json <session>/preview.png
 
 # 3. 需要导成 OpenAPI 原始结构再上传时：

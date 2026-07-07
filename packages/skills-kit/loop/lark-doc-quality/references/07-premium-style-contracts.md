@@ -103,7 +103,7 @@ Gate B 下限：
 三类图渲染后必须运行：
 
 ```bash
-packages/plugin-loop-kit/skills/lark-doc-quality/scripts/lint_premium_style.py <chart_type> <session>/diagram.svg \
+packages/skills-kit/loop/lark-doc-quality/scripts/lint_premium_style.py <chart_type> <session>/diagram.svg \
   > <session>/lint_premium.json
 ```
 

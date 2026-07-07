@@ -65,7 +65,7 @@ lark-cli whiteboard +query \
 ```bash
 whiteboard-cli -i <session>/diagram.svg -f svg --check > <session>/svg_check.json
 whiteboard-cli -i <session>/diagram.svg -f svg --to openapi --format json > <session>/board.openapi.json
-packages/plugin-loop-kit/skills/lark-doc-quality/scripts/lint_premium_style.py <chart_type> <session>/diagram.svg \
+packages/skills-kit/loop/lark-doc-quality/scripts/lint_premium_style.py <chart_type> <session>/diagram.svg \
   > <session>/lint_premium.json
 ```
 
@@ -73,7 +73,7 @@ packages/plugin-loop-kit/skills/lark-doc-quality/scripts/lint_premium_style.py <
 
 ```bash
 # 前置条件：会话目录下已有 diagram.svg / freeform_brief.json / plan.json
-packages/plugin-loop-kit/skills/lark-doc-quality/scripts/render_freeform.sh <session> [--strict-budget]
+packages/skills-kit/loop/lark-doc-quality/scripts/render_freeform.sh <session> [--strict-budget]
 # 产出：<session>/board.openapi.json
 #       <session>/render_freeform.report.json （含 brief schema、whiteboard --check、lint、convert 四步状态）
 ```

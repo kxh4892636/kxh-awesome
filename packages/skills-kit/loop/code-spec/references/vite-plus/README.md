@@ -111,7 +111,7 @@ Do not rely on the deleted summary markdown files for command or config details.
 The upstream docs are refreshed with the same git-based workflow used by the other `code-spec` reference modules:
 
 ```bash
-node packages/plugin-loop-kit/skills/code-spec/references/vite-plus/scripts/update-source-docs.mjs
+node packages/skills-kit/loop/code-spec/references/vite-plus/scripts/update-source-docs.mjs
 ```
 
 The script uses git sparse checkout against:

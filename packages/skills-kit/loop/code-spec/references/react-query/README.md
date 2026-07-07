@@ -107,7 +107,7 @@ For repo changes:
 The bundled source docs are refreshed from the GitHub docs directory with a cross-platform Node.js script:
 
 ```bash
-node packages/plugin-loop-kit/skills/code-spec/references/react-query/scripts/update-source-docs.mjs
+node packages/skills-kit/loop/code-spec/references/react-query/scripts/update-source-docs.mjs
 ```
 
 The script uses git sparse checkout for `docs/framework/react`, then replaces `references/source-docs/` and updates `references/snapshot.json`. Then review `references/source-docs/`, `references/doc-map.md`, `references/snapshot.json`, and this `README.md` against upstream changes. If new guides, hooks, plugins, or migration topics appear, update the routing tables and the parent `code-spec` routing entry.

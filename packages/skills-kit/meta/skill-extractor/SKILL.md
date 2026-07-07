@@ -166,7 +166,7 @@ description: 从 git 仓库、网址 URL、markdown 文档、交互对话或历�
 
 8. **更新登记**
 
-   如果生成的 skill 来自远程 URL，完成后询问用户是否加入 `meta-kit-update`。登记项应包含：
+   如果生成的 skill 来自远程 URL，完成后询问用户是否加入 `kit-update`。登记项应包含：
    - skill 名称和本地路径
    - URL 来源列表或入口 URL
    - 抓取范围规则，例如只抓取给定 URL、同域递归、读取 `llms.txt` 等
