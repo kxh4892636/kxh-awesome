@@ -43,7 +43,7 @@ description: 创建或更新 AGENTS.md 的推荐技能区块。用户要求生�
 <!-- RECOMMEND SKILLS START-->
 
 kxh-awesome
-verify
+verifying
 
 <!-- RECOMMEND SKILLS END -->
 ```
