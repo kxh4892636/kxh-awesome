@@ -1,13 +1,13 @@
 ---
-name: to-bdd
-description: 使用 Gherkin 创建或更新验收文档；用户要求 to-bdd、BDD、Gherkin、验收文档、验收场景，或需要为后续前端 E2E 与后端 TDD 建立验收规格时使用。
+name: to-acceptance
+description: 使用 Gherkin 创建或更新验收文档；用户要求 to-acceptance、验收文档、验收场景、BDD、Gherkin，或需要为后续前端 E2E 与后端 TDD 建立验收规格时使用。
 ---
 
-# To BDD
+# To Acceptance
 
 基于会话上下文，编写中文验收文档，并使用官方标准 Gherkin 语法作为后续前端 E2E 测试和后端 TDD 测试的规格来源。
 
-验收文档路径为 `docs/spec/{yyyy-mm-dd}-bdd-{sessionName}.md`，日期使用创建验收文档当天的本地日期。
+验收文档路径为 `docs/spec/{yyyy-mm-dd}-acceptance-{sessionName}.md`，日期使用创建验收文档当天的本地日期。
 
 ## 工作流程
 
@@ -47,9 +47,9 @@ description: 使用 Gherkin 创建或更新验收文档；用户要求 to-bdd、
 - 其余章节基于上下文按需添加，不限定具体格式和内容。
 - 保留 `<!--  -->` Tag。
 
-<!-- LOOP KIT BDD START -->
+<!-- LOOP KIT ACCEPTANCE START -->
 
-# {{BDD_DOCUMENT_TITLE}}
+# {{ACCEPTANCE_DOCUMENT_TITLE}}
 
 ## 环境变量
 
@@ -80,4 +80,4 @@ Feature: {{FEATURE_NAME}}
 | --- | ---- | -------- | ---- |
 | Q1  |      | S1       | open |
 
-<!-- LOOP KIT BDD END -->
+<!-- LOOP KIT ACCEPTANCE END -->
