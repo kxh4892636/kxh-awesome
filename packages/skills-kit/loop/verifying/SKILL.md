@@ -25,7 +25,7 @@ Verifying 是测试/验收闭环编排：理解验收规格，生成或选择测
 1. 用户明确指定的验收文档、测试用例、issue、PRD、设计稿或发布说明。
 2. 业务 skill 中的验收/测试流程。
 3. `to-acceptance` 生成的 `docs/spec/*-acceptance-*.md`，以场景 ID 作为验收单元。
-4. `to-plan` 生成的 `docs/plan/*-plan*.md`，以 TaskList 的「验证用例」列关联验收场景。
+4. `to-plan` 生成的 `docs/spec/*-plan-*.md`，以 TaskList 的「验证用例」列关联验收场景。
 5. 项目声明的测试入口：最近的 `AGENTS.md`、README、package/build/test 配置、Makefile、CI 配置、脚本目录、测试目录和运行手册。
 6. 当前变更文件、调用链、配置、数据模型、入口点和用户提供的复现步骤。
 
