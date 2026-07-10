@@ -45,7 +45,7 @@ export const DashboardToolbar = (props: DashboardToolbarProps) => {
       <label className="flex min-w-[260px] flex-col gap-1">
         <span className="text-xs text-slate-500">标的</span>
         <Select
-          value={selectedSymbol ?? undefined}
+          value={selectedSymbol}
           loading={isLoading}
           options={securities.map((security) => ({
             value: security.symbol,
