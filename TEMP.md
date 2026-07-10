@@ -1,194 +1,174 @@
-ask-matt
-code-review
-codebase-design
-diagnosing-bugs
-domain-modeling
-grill-me
-grill-with-docs
-grilling
-handoff
-implement
-improve-codebase-architecture
-prototype
-research
-setup-matt-pocock-skills
-tdd
-to-spec
-to-tickets
-wayfinder
-writing-great-skills
+Skill 生成规则
 
-当前 loop-coding 里保留了 19 个。
-过程数量是：
-最初复制：21 个（ask-matt + 20 个被它引用的 skill）
-后来删除：2 个（triage、teach）
-当前剩余：19 个
+1. 先定 invocation
+   - Agent 需要自动触发 → 保留 ，写成 model-invoked skill；
+   - 只由人手动调用 → 加 ， 只写一句人类摘要；
+2. description 只写触发条件
+   - 前置 leading word；
+   - 一个 branch 一个触发条件；
+   - 删除 body 已经会解释的身份说明；
+   - 避免同义重复，如 “debug / diagnose / troubleshoot” 如果是同一分支，只留最能触发的词；
+3. 用 leading word 锚定行为
+   - 选择模型已有概念：、、、、；
+   - 重复术语，不重复解释；
+   - 不自己造词，除非必须且能定义清楚；
+4. 正文优先写 steps
+   - agent 需要按顺序做事 → 写 ；
+   - 每一步必须有可判断的完成条件；
+   - 不写“认真分析”“充分考虑”这类 no-op；
+5. reference 下沉
+   - 每次都要用的规则放 ；
+   - 某个 branch 才用的细则放同目录引用文件，如 、；
+   - 指针要写清何时读取，不要只丢链接；
+6. 每个 skill 只服务一个可预测行为
+   - 一个 skill 不同时承担调研、设计、实现、review；
+   - 如果后续步骤会让 agent 急着跳过当前步骤，拆成多个 skill；
+7. 强完成条件
+   - 差：
+   - 好：
+8. 写 failure modes
+   - 明确常见错误；
+   - 每个错误给检测信号和修正动作；
+   - 例如 premature completion、duplication、scope creep、testing internals；
+9. 用正向指令替代否定
+   - 差：
+   - 好：
+10. 最后 prune - 每句话问：是否改变 agent 行为？- 每个概念是否只有一个 source of truth？- 是否能替换成一个更强 leading word？
+    模板 1：流程型 Skill
 
 ---
 
-可以抽象成这组规则，作为你后续写类似 skill 的 checklist。
-
-**1. 先写行为，不先写解释**
-
-Skill 不是知识文章，而是让 agent 采取稳定流程的执行规程。每段都要回答：
-
-- 什么时候触发
-- 先做什么
-- 做到什么程度才算完成
-- 遇到分支怎么走
-- 什么情况必须停下来
-
-少写“为什么这很重要”，多写“如果 X，就做 Y；完成标准是 Z”。
-
-**2. 用一个 leading word 锚定整条 skill**
-
-每个好 skill 都应该有一个能反复召回行为的核心词：
-
-- debugging: `tight loop`
-- TDD: `red → green`
-- 架构设计: `deep module`、`seam`
-- 大型探索: `map`、`frontier`、`fog of war`
-- 拆票: `tracer bullet`
-
-这个词要短、强、有既有语义。不要每次都解释一长串“快速、确定、低成本反馈循环”，直接压缩成 `tight loop`，然后在文中反复使用。
-
-**3. 每个步骤都要有 completion criterion**
-
-不要写：
-
-> Explore the codebase.
-
-要写：
-
-> Explore until every public entry point touched by the change is named, and each has either a test seam or an explicit reason no seam exists.
-
-完成标准要满足两个条件：
-
-- **可判断**：agent 能知道 done / not done。
-- **有要求**：能逼出足够 legwork，而不是随手扫一眼就结束。
-
-**4. 用强动词和短句控制行为**
-
-这套 skill 的语气通常是：
-
-- `Use ...`
-- `Ask ...`
-- `Stop ...`
-- `Do not proceed until ...`
-- `Record ...`
-- `Run ...`
-- `Present ...`
-
-少用“consider”、“try to”、“it may be useful to”。这些词会把规则变成建议，降低可预测性。
-
-**5. 先正向规定目标，再少量设置硬禁令**
-
-优先写：
-
-> Test through public interfaces.
-
-而不是：
-
-> Do not test implementation details.
-
-禁令可以保留，但要配正向目标：
-
-> Tests live at seams, never against internals.
-
-这样 agent 的注意力落在 `seams`，不是落在被禁止的行为上。
-
-**6. 把 skill 分成 steps 和 reference**
-
-`SKILL.md` 顶层只放每次都要看的内容：
-
-- 触发条件
-- 主流程
-- 分支选择
-- 完成标准
-- 核心术语
-
-只在某些分支才用到的例子、模板、长 glossary、格式规范，放到旁边文件，通过明确的 context pointer 链接过去，例如：
-
-> For UI prototypes, read `UI.md`; for logic prototypes, read `LOGIC.md`.
-
-**7. 一个含义只放一个地方**
-
-不要在 description、正文、引用文件里重复解释同一个规则。重复会造成维护成本，也会把某个概念的权重放大到不该有的程度。
-
-可以重复的是 **leading word**，不是重复整段含义。
-
-**8. description 只负责触发，不负责教学**
-
-Model-invoked skill 的 `description` 应该写成触发器：
-
-```yaml
-description: Use when the user wants to debug a hard bug, diagnose a regression, or investigate flaky behavior.
-```
-
-不要把完整方法论塞进 description。description 常驻上下文，每个词都贵。
-
-**9. 用对比划清边界**
-
-这套风格很喜欢用成对概念：
-
-- Good / Bad
-- Deep / Shallow
-- Standards / Spec
-- HITL / AFK
-- Model-invoked / User-invoked
-- Step / Reference
-- In scope / Out of scope
-
-对比能减少歧义，特别适合告诉 agent “这件事和相邻概念不是一回事”。
-
-**10. 写成“纪律”，不是“偏好”**
-
-类似风格的 skill 应该有明确立场：
-
-> No red-capable command, no Phase 2.
-
-这种句子比“prefer having a repro before debugging”有效得多。Skill 的目标是 predictability，不是表达温和建议。
-
-一个实用模板：
-
-```md
----
 name: <skill-name>
-description: Use when ...
+description: <leading word>. Use when the user wants <trigger branch A>, <trigger branch B>, or when another skill needs <shared behavior>.
+
 ---
 
-# <Skill Name>
+# <Skill Title>
 
-<一句话定义这条 skill 的纪律。>
+<One sentence: what predictable behavior this skill produces.>
 
-## Core principle
+## Core Idea
 
-<leading word + 行为原则。>
+<Define the leading word and why it controls the process.>
 
 ## Process
 
-### 1. <Step>
+### 1. <Step Name>
 
-<做什么。>
+<What the agent does.>
 
-Completion criterion: <可检查的完成标准。>
+Completion criterion: <observable condition that proves this step is done>.
 
-### 2. <Step>
+### 2. <Step Name>
 
-...
+<What the agent does next.>
 
-## Branches
+Completion criterion: <observable condition>.
 
-- If <case A>, do <path A>.
-- If <case B>, read <reference file> and do <path B>.
+## Rules
 
-## Anti-patterns
+- <Positive instruction that changes behavior>.
+- <Positive instruction that changes behavior>.
+- <Hard guardrail only if needed>.
 
-- **<Name>** — <坏模式是什么> → <改成什么>.
+## Failure Modes
 
-## When done
+- **<Failure mode>**: <signal>. Fix by <action>.
+- **<Failure mode>**: <signal>. Fix by <action>.
+  模板 2：Reference / 词汇型 Skill
 
-<产物、验证、记录、交接方式。>
-```
+---
 
-核心判断标准很简单：读完这条 skill 后，agent 在不同会话里是否会走同一套过程。会，就是好 skill；只是“看起来写得完整”，但不会改变行为，就是 no-op。
+name: <skill-name>
+description: Shared vocabulary for <domain>. Use when the user wants to design, review, or discuss <topic>, or when another skill needs this vocabulary.
+
+---
+
+# <Skill Title>
+
+Use these terms exactly. Consistent language is the point.
+
+## Glossary
+
+**<Term>** — <tight definition>.
+_Avoid_: <synonyms that should not be used>.
+
+**<Term>** — <tight definition>.
+_Avoid_: <overloaded terms>.
+
+## Principles
+
+- **<Principle name>**: <rule that changes behavior>.
+- **<Principle name>**: <rule that changes behavior>.
+
+## Rejected Framings
+
+- **<Bad framing>**: <why it misleads the agent>.
+  模板 3：Router Skill
+
+---
+
+name: <router-name>
+description: Ask which skill or flow fits your situation.
+disable-model-invocation: true
+
+---
+
+# <Router Title>
+
+Use this when you don't remember which skill to invoke.
+
+## Main Flow
+
+1. **`/<skill-a>`** — use when <situation>.
+2. **Branch — <decision question>?**
+   - **Yes** → `/<skill-b>` because <reason>.
+   - **No** → `/<skill-c>` because <reason>.
+
+## On-Ramps
+
+- **<Starting situation>** → **`/<skill>`**. <What it produces>.
+- **<Starting situation>** → **`/<skill>`**. <What it produces>.
+
+## Standalone
+
+- **`/<skill>`** — <when to reach for it>.
+  模板 4：分支型 Skill
+
+---
+
+name: <skill-name>
+description: <leading word>. Use when the user wants <branch A> or <branch B>.
+
+---
+
+# <Skill Title>
+
+<One sentence explaining that the question decides the branch.>
+
+## Pick a Branch
+
+- **"<Question A>"** → [A.md](A.md). <Artifact/process produced>.
+- **"<Question B>"** → [B.md](B.md). <Artifact/process produced>.
+
+If ambiguous, ask. If the user is unavailable, choose based on <local context signal> and state the assumption.
+
+## Rules That Apply To Both
+
+1. **<Rule>**: <specific behavior>.
+2. **<Rule>**: <specific behavior>.
+3. **<Rule>**: <specific behavior>.
+
+## When Done
+
+Capture <the durable result>. Delete or absorb <temporary artifact>.
+最小生成检查清单
+
+- 是否能触发该 skill；
+- 是否有一个明确 leading word；
+- 是否每一步都有 completion criterion；
+- 是否删除了 no-op、重复解释和泛化建议；
+- 是否把 branch-only 内容下沉到引用文件；
+- 是否写了 failure modes；
+- 是否能让 agent 每次走同一套过程。
+-
