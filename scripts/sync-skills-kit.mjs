@@ -9,15 +9,13 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const repoRoot = resolve(__dirname, "..");
 const sourceDir = join(repoRoot, "packages", "skills-kit");
 
-const localTargetParent =
-  process.env.SKILLS_KIT_LOCAL_TARGET ?? "/Users/bytedance/.agents/skills";
+const localTargetParent = process.env.SKILLS_KIT_LOCAL_TARGET ?? "/Users/bytedance/.agents/skills";
 const localTargetDir = join(localTargetParent, "skills-kit");
 
 const remoteHost = process.env.SKILLS_KIT_REMOTE_HOST ?? "10.37.247.107";
 const remoteUser = process.env.SKILLS_KIT_REMOTE_USER ?? "kongxiaohan.xiaoyu";
 const remoteTargetParent =
-  process.env.SKILLS_KIT_REMOTE_TARGET ??
-  "/home/kongxiaohan.xiaoyu/.agents/skills";
+  process.env.SKILLS_KIT_REMOTE_TARGET ?? "/home/kongxiaohan.xiaoyu/.agents/skills";
 const remoteTargetDir = `${remoteTargetParent}/skills-kit`;
 const remote = remoteUser ? `${remoteUser}@${remoteHost}` : remoteHost;
 
@@ -75,10 +73,7 @@ async function syncRemote() {
     const tarCreate = spawn("tar", ["-C", join(repoRoot, "packages"), "-cf", "-", "skills-kit"], {
       stdio: ["ignore", "pipe", "inherit"],
     });
-    const tarExtract = spawn("ssh", [
-      remote,
-      `tar -C ${shellQuote(remoteTargetParent)} -xf -`,
-    ], {
+    const tarExtract = spawn("ssh", [remote, `tar -C ${shellQuote(remoteTargetParent)} -xf -`], {
       stdio: ["pipe", "inherit", "inherit"],
     });
 
@@ -97,11 +92,7 @@ async function syncRemote() {
         return;
       }
 
-      reject(
-        new Error(
-          `Remote sync failed: tar=${tarCreateCode}, ssh/tar=${tarExtractCode}`,
-        ),
-      );
+      reject(new Error(`Remote sync failed: tar=${tarCreateCode}, ssh/tar=${tarExtractCode}`));
     };
 
     tarCreate.on("error", reject);
