@@ -20,10 +20,12 @@
     "@tanstack/react-query": "catalog:",
     "@tanstack/react-router": "catalog:",
     "antd": "catalog:",
+    "clsx": "catalog:",
     "dayjs": "catalog:",
     "es-toolkit": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
+    "tailwind-merge": "catalog:",
     "tailwindcss": "catalog:",
     "zustand": "catalog:"
   },
