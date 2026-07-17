@@ -1,15 +1,22 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, type FC, type ReactElement } from "react";
 import { Alert, Card, Spin, Typography } from "antd";
+import type { Security } from "@/libs/api/gen/etf-service/etf/v1/etf_pb";
 import { useDailyBars, useSecurities } from "@/libs/api/use-market";
-import { DashboardToolbar } from "./components/dashboard-toolbar";
-import { KlineChart } from "./components/kline-chart";
-import { MarketSummary } from "./components/market-summary";
-import { aggregateBars, getRangeBars, type ChartPeriod, type ChartRange } from "./utils/chart-data";
+import { DashboardToolbar } from "./dashboard-toolbar";
+import { KlineChart } from "./kline-chart";
+import { MarketSummary } from "./market-summary";
+import {
+  aggregateBars,
+  getRangeBars,
+  type ChartBar,
+  type ChartPeriod,
+  type ChartRange,
+} from "./chart-data";
 
 /**
  * 首页负责串起标的选择、行情查询和图表视图，是 ETF 看板的主要用户工作流入口。
  */
-export const MarketDashboard = () => {
+export const MarketDashboard: FC = (): ReactElement => {
   const [selectedSymbol, setSelectedSymbol] = useState<string | null>(null);
   const [period, setPeriod] = useState<ChartPeriod>("day");
   const [range, setRange] = useState<ChartRange>("all");
@@ -17,20 +24,20 @@ export const MarketDashboard = () => {
   const securitiesQuery = useSecurities();
   const dailyBarsQuery = useDailyBars(selectedSymbol);
 
-  useEffect(() => {
+  useEffect((): void => {
     // 首屏自动选择第一个可用标的，让看板在证券列表返回后立即形成有效查询。
     if (!selectedSymbol && securitiesQuery.data.length > 0) {
       setSelectedSymbol(securitiesQuery.data[0]?.symbol ?? null);
     }
   }, [securitiesQuery.data, selectedSymbol]);
 
-  const fullChartBars = useMemo(() => {
+  const fullChartBars = useMemo((): ChartBar[] => {
     const bars = dailyBarsQuery.data?.bars ?? [];
     return aggregateBars({ bars, period });
   }, [dailyBarsQuery.data?.bars, period]);
 
   const chartBars = useMemo(
-    () =>
+    (): ChartBar[] =>
       getRangeBars({
         bars: fullChartBars,
         range,
@@ -38,7 +45,9 @@ export const MarketDashboard = () => {
     [fullChartBars, range],
   );
 
-  const selectedSecurity = securitiesQuery.data.find((item) => item.symbol === selectedSymbol);
+  const selectedSecurity = securitiesQuery.data.find(
+    (item: Security): boolean => item.symbol === selectedSymbol,
+  );
   const hasError = securitiesQuery.isError || dailyBarsQuery.isError;
 
   return (
@@ -65,9 +74,7 @@ export const MarketDashboard = () => {
           onPeriodChange={setPeriod}
           onRangeChange={setRange}
           onMaTextChange={setMaText}
-          onRefresh={() => {
-            void dailyBarsQuery.refetch();
-          }}
+          onRefresh={dailyBarsQuery.refetch}
         />
       </Card>
       {hasError && <Alert type="error" showIcon title="数据加载失败，请确认 etf-service 已启动" />}

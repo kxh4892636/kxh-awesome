@@ -2,7 +2,8 @@ package main
 
 import (
 	"embed"
-	"log"
+	"log/slog"
+	"os"
 
 	"kxh-awesome/etf-service/internal/app"
 )
@@ -11,7 +12,9 @@ import (
 var docsDir embed.FS
 
 func main() {
-	if err := app.Run(docsDir); err != nil {
-		log.Fatal(err)
+	logger := slog.New(slog.NewJSONHandler(os.Stdout, nil))
+	if err := app.Run(docsDir, logger); err != nil {
+		logger.Error("etf-service stopped", "error", err)
+		os.Exit(1)
 	}
 }

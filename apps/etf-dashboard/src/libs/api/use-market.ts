@@ -13,7 +13,7 @@ interface UseDailyBarsResult {
   isLoading: boolean;
   isFetching: boolean;
   isError: boolean;
-  refetch: () => unknown;
+  refetch: () => void;
 }
 
 export const useSecurities = (): UseSecuritiesResult => {
@@ -39,11 +39,15 @@ export const useDailyBars = (symbol: string | null): UseDailyBarsResult => {
     },
   );
 
+  const refetch = (): void => {
+    void query.refetch();
+  };
+
   return {
     data: query.data,
     isLoading: query.isLoading,
     isFetching: query.isFetching,
     isError: query.isError,
-    refetch: query.refetch,
+    refetch,
   };
 };

@@ -6,7 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"io/fs"
-	"log"
+	"log/slog"
 	"net/http"
 	"os"
 	"os/signal"
@@ -16,108 +16,134 @@ import (
 	"golang.org/x/net/http2"
 	"golang.org/x/net/http2/h2c"
 
-	"kxh-awesome/etf-service/gen/etf/v1/etfv1connect"
 	"kxh-awesome/etf-service/internal/integrations/hongsehuojian"
 	"kxh-awesome/etf-service/internal/modules/market"
 	"kxh-awesome/etf-service/internal/shared/config"
-	"kxh-awesome/etf-service/internal/shared/db"
+	"kxh-awesome/etf-service/internal/shared/database"
 )
 
-func Run(docsDir fs.FS) error {
-	cfg := config.Load()
-	database, err := db.Open(cfg.DatabaseURL)
-	if err != nil {
-		return fmt.Errorf("open database: %w", err)
+const shutdownTimeout = 5 * time.Second
+
+func Run(docsDir fs.FS, logger *slog.Logger) (resultErr error) {
+	if logger == nil {
+		logger = slog.Default()
 	}
-	sqlDB, err := database.DB()
+	loadedConfig, err := config.Load(".env")
+	if err != nil {
+		return fmt.Errorf("load configuration: %w", err)
+	}
+	databaseHandle, err := database.OpenSQLite(loadedConfig.DatabaseDSN)
+	if err != nil {
+		return err
+	}
+	sqlDatabase, err := databaseHandle.DB()
 	if err != nil {
 		return fmt.Errorf("get database handle: %w", err)
 	}
-	defer sqlDB.Close()
-
-	marketRepository := market.NewMarketRepository(database)
-	if err := marketRepository.AutoMigrate(); err != nil {
-		return fmt.Errorf("migrate database: %w", err)
-	}
-	if err := marketRepository.SeedSecurities(context.Background(), config.Securities); err != nil {
-		return fmt.Errorf("seed securities: %w", err)
-	}
-
-	marketService := market.NewMarketService(
-		config.Securities,
-		marketRepository,
-		hongsehuojian.NewHongsehuojianClient(http.DefaultClient),
-	)
-	etfHandler := market.NewEtfHandler(marketService)
-
-	mux := http.NewServeMux()
-	mux.Handle(etfv1connect.NewEtfServiceHandler(etfHandler))
-	mux.HandleFunc("/", healthHandler)
-
-	docsFS, err := fs.Sub(docsDir, "docs")
-	if err == nil {
-		mux.Handle("/doc/", http.StripPrefix("/doc/", http.FileServer(http.FS(docsFS))))
-	}
-
-	server := &http.Server{
-		Addr: fmt.Sprintf(":%d", cfg.Port),
-		Handler: corsMiddleware(
-			// 本地 dashboard 直接从浏览器调用 ConnectRPC，h2c 避免开发环境为 HTTP/2 额外配置证书。
-			h2c.NewHandler(mux, &http2.Server{}),
-		),
-	}
-
-	serverErr := make(chan error, 1)
-	go func() {
-		log.Printf("SQLite database opened at %s", cfg.DatabaseURL)
-		log.Printf("ConnectRPC server listening on http://localhost:%d", cfg.Port)
-		if err := server.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
-			serverErr <- err
+	defer func() {
+		if closeErr := sqlDatabase.Close(); closeErr != nil {
+			resultErr = errors.Join(resultErr, fmt.Errorf("close database: %w", closeErr))
 		}
 	}()
 
+	definitions := market.SupportedSecurities()
+	store := market.NewGormStore(databaseHandle)
+	if err := store.Migrate(); err != nil {
+		return err
+	}
+	if err := store.SeedSecurities(context.Background(), definitions); err != nil {
+		return err
+	}
+	service := market.NewMarketService(
+		definitions,
+		store,
+		hongsehuojian.NewHongsehuojianClient(http.DefaultClient),
+	)
+	handler, err := newApplicationHandler(docsDir, service, logger)
+	if err != nil {
+		return err
+	}
+	server := newHTTPServer(loadedConfig.Port, handler)
+	logger.Info("etf-service starting", "port", loadedConfig.Port, "database_dialect", "sqlite")
+	return serveUntilSignal(server, logger)
+}
+
+func newApplicationHandler(docsDir fs.FS, usecase market.MarketUsecase, logger *slog.Logger) (http.Handler, error) {
+	mux := http.NewServeMux()
+	connectPath, connectHandler := newEtfConnectHandler(usecase, logger)
+	mux.Handle(connectPath, connectHandler)
+	mux.HandleFunc("/", healthHandler(logger))
+	docsFS, err := fs.Sub(docsDir, "docs")
+	if err != nil {
+		return nil, fmt.Errorf("open embedded docs: %w", err)
+	}
+	mux.Handle("/doc/", http.StripPrefix("/doc/", http.FileServer(http.FS(docsFS))))
+	// The local dashboard calls ConnectRPC from another port; h2c avoids development-only TLS setup.
+	return corsMiddleware(h2c.NewHandler(mux, &http2.Server{})), nil
+}
+
+func newHTTPServer(port int, handler http.Handler) *http.Server {
+	return &http.Server{
+		Addr:              fmt.Sprintf(":%d", port),
+		Handler:           handler,
+		ReadHeaderTimeout: 5 * time.Second,
+		IdleTimeout:       60 * time.Second,
+		MaxHeaderBytes:    1 << 20,
+	}
+}
+
+func serveUntilSignal(server *http.Server, logger *slog.Logger) error {
+	serverErrors := make(chan error, 1)
+	go func() {
+		if err := server.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
+			serverErrors <- err
+		}
+	}()
 	quit := make(chan os.Signal, 1)
 	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
-
+	defer signal.Stop(quit)
 	select {
-	case <-quit:
-	case err := <-serverErr:
-		return fmt.Errorf("server error: %w", err)
+	case received := <-quit:
+		logger.Info("etf-service shutdown started", "signal", received.String())
+	case err := <-serverErrors:
+		return fmt.Errorf("serve HTTP: %w", err)
 	}
-
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), shutdownTimeout)
 	defer cancel()
 	if err := server.Shutdown(ctx); err != nil {
-		return fmt.Errorf("server shutdown: %w", err)
+		return fmt.Errorf("shutdown HTTP server: %w", err)
 	}
+	logger.Info("etf-service shutdown completed")
 	return nil
 }
 
-func healthHandler(w http.ResponseWriter, r *http.Request) {
-	if r.URL.Path != "/" {
-		http.NotFound(w, r)
-		return
+type healthResponse struct {
+	Name string `json:"name"`
+	OK   bool   `json:"ok"`
+}
+
+func healthHandler(logger *slog.Logger) http.HandlerFunc {
+	return func(response http.ResponseWriter, request *http.Request) {
+		if request.URL.Path != "/" {
+			http.NotFound(response, request)
+			return
+		}
+		response.Header().Set("Content-Type", "application/json")
+		if err := json.NewEncoder(response).Encode(healthResponse{Name: "etf-service", OK: true}); err != nil {
+			logger.ErrorContext(request.Context(), "write health response", "error", err)
+		}
 	}
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	_ = json.NewEncoder(w).Encode(map[string]interface{}{
-		"name": "etf-service",
-		"ok":   true,
-	})
 }
 
 func corsMiddleware(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		// dashboard 和 service 通常分端口启动，预检请求必须先放行才能进入 ConnectRPC handler。
-		w.Header().Set("Access-Control-Allow-Origin", "*")
-		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
-		w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Connect-Protocol-Version")
-
-		if r.Method == http.MethodOptions {
-			w.WriteHeader(http.StatusNoContent)
+	return http.HandlerFunc(func(response http.ResponseWriter, request *http.Request) {
+		response.Header().Set("Access-Control-Allow-Origin", "*")
+		response.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+		response.Header().Set("Access-Control-Allow-Headers", "Content-Type, Connect-Protocol-Version")
+		if request.Method == http.MethodOptions {
+			response.WriteHeader(http.StatusNoContent)
 			return
 		}
-
-		next.ServeHTTP(w, r)
+		next.ServeHTTP(response, request)
 	})
 }

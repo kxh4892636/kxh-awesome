@@ -2,71 +2,98 @@ package config
 
 import (
 	"bufio"
+	"errors"
+	"fmt"
 	"os"
-	"path/filepath"
 	"strconv"
 	"strings"
 )
 
+const (
+	defaultPort        = 8080
+	defaultDatabaseDSN = "./data/etf-service.sqlite"
+)
+
+var allowedDotEnvKeys = map[string]struct{}{
+	"DATABASE_DSN": {},
+	"PORT":         {},
+}
+
 type Config struct {
 	Port        int
-	DatabaseURL string
+	DatabaseDSN string
 }
 
-func Load() Config {
-	loadDotEnv(".env")
-
-	port := 8080
-	if value := os.Getenv("PORT"); value != "" {
-		if parsed, err := strconv.Atoi(value); err == nil && parsed > 0 && parsed <= 65535 {
-			port = parsed
-		}
+func Load(dotEnvPath string) (Config, error) {
+	if err := loadDotEnv(dotEnvPath); err != nil {
+		return Config{}, err
 	}
 
-	databaseURL := os.Getenv("DATABASE_URL")
-	if databaseURL == "" {
-		databaseURL = "./data/etf-service.sqlite"
-	}
-
-	return Config{
-		Port:        port,
-		DatabaseURL: normalizeDatabasePath(databaseURL),
-	}
-}
-
-func normalizeDatabasePath(value string) string {
-	value = strings.TrimPrefix(value, "file:")
-	if filepath.IsAbs(value) {
-		return value
-	}
-	path, err := filepath.Abs(value)
+	port, err := parsePort(os.Getenv("PORT"))
 	if err != nil {
-		return value
+		return Config{}, err
 	}
-	return path
+	databaseDSN := strings.TrimSpace(os.Getenv("DATABASE_DSN"))
+	if databaseDSN == "" {
+		databaseDSN = defaultDatabaseDSN
+	}
+
+	return Config{Port: port, DatabaseDSN: databaseDSN}, nil
 }
 
-func loadDotEnv(path string) {
+func parsePort(value string) (int, error) {
+	value = strings.TrimSpace(value)
+	if value == "" {
+		return defaultPort, nil
+	}
+	port, err := strconv.Atoi(value)
+	if err != nil || port < 1 || port > 65535 {
+		return 0, fmt.Errorf("invalid PORT %q: expected 1-65535", value)
+	}
+	return port, nil
+}
+
+func loadDotEnv(path string) (resultErr error) {
 	file, err := os.Open(path)
-	if err != nil {
-		return
+	if errors.Is(err, os.ErrNotExist) {
+		return nil
 	}
-	defer file.Close()
+	if err != nil {
+		return fmt.Errorf("open .env %q: %w", path, err)
+	}
+	defer func() {
+		if closeErr := file.Close(); resultErr == nil && closeErr != nil {
+			resultErr = fmt.Errorf("close .env %q: %w", path, closeErr)
+		}
+	}()
 
 	scanner := bufio.NewScanner(file)
-	for scanner.Scan() {
+	for lineNumber := 1; scanner.Scan(); lineNumber++ {
 		line := strings.TrimSpace(scanner.Text())
 		if line == "" || strings.HasPrefix(line, "#") {
 			continue
 		}
 		key, value, ok := strings.Cut(line, "=")
 		if !ok {
-			continue
+			return fmt.Errorf("malformed .env line %d", lineNumber)
 		}
 		key = strings.TrimSpace(key)
-		if key == "" || os.Getenv(key) != "" {
+		value = strings.TrimSpace(value)
+		if _, ok := allowedDotEnvKeys[key]; !ok {
+			return fmt.Errorf("unknown key %q on .env line %d", key, lineNumber)
+		}
+		if value == "" {
+			return fmt.Errorf("empty value for %s on .env line %d", key, lineNumber)
+		}
+		if os.Getenv(key) != "" {
 			continue
 		}
-		os.Setenv(key, strings.TrimSpace(value))
+		if err := os.Setenv(key, value); err != nil {
+			return fmt.Errorf("set %s from .env: %w", key, err)
+		}
 	}
+	if err := scanner.Err(); err != nil {
+		return fmt.Errorf("read .env %q: %w", path, err)
+	}
+	return nil
 }
