@@ -1,12 +1,40 @@
 # Domain Docs
 
-This repo uses a multi-context domain documentation layout.
+How the engineering skills should consume this repo's domain documentation when exploring the codebase.
 
-Before exploring, read `CONTEXT-MAP.md` at the repo root. It points to one `CONTEXT.md` per relevant context. Also read ADRs that touch the area being changed:
+## Layout
 
-- `docs/adr/` for system-wide decisions
-- `src/<context>/docs/adr/` for context-specific decisions
+This repository uses a single-context layout:
 
-If these files do not exist yet, proceed silently. Domain docs are created lazily when terms or decisions are actually resolved.
+- `CONTEXT.md` at the repository root contains the domain glossary.
+- `docs/adr/` contains architectural decision records.
 
-When output names a domain concept, use the vocabulary from the relevant `CONTEXT.md`. If output contradicts an existing ADR, surface that conflict explicitly.
+`CONTEXT.md` 和 `docs/adr/` 中的文件内容使用中文
+
+## Before exploring, read these
+
+- `CONTEXT.md` at the repo root.
+- ADRs under `docs/adr/` that touch the area you're about to work in.
+
+If these files don't exist, proceed silently. Don't flag their absence or suggest creating them upfront. The `/domain-modeling` skill creates them lazily when terms or decisions are resolved.
+
+## File structure
+
+```text
+/
+├── CONTEXT.md
+├── docs/adr/
+│   ├── 0001-example-decision.md
+│   └── 0002-another-decision.md
+└── src/
+```
+
+## Use the glossary's vocabulary
+
+When your output names a domain concept—in an issue title, refactor proposal, hypothesis, or test name—use the term as defined in `CONTEXT.md`. Don't drift to synonyms the glossary explicitly avoids.
+
+If the concept isn't in the glossary yet, reconsider whether you're inventing language the project doesn't use or note the genuine gap for `/domain-modeling`.
+
+## Flag ADR conflicts
+
+If your output contradicts an existing ADR, surface it explicitly rather than silently overriding it.
