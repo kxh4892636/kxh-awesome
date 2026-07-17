@@ -1,1 +1,1 @@
-export { PostsSection } from "./components/posts-section";
+export { PostsSection } from "./posts-section";

@@ -1,1 +1,1 @@
-export { LiveClockSection } from "./components/live-clock-section";
+export { LiveClockSection } from "./live-clock-section";

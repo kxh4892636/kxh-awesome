@@ -1,4 +1,4 @@
-import type { ReactElement } from "react";
+import type * as React from "react";
 import { TechStackSection } from "../../features/tech-stack";
 
-export const AboutPage = (): ReactElement => <TechStackSection />;
+export const AboutPage: React.FC = (): React.ReactElement => <TechStackSection />;

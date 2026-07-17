@@ -1,4 +1,4 @@
-package model
+package posts
 
 type Post struct {
 	ID     int32  `gorm:"primaryKey;column:id"`

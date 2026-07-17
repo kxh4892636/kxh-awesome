@@ -1,10 +1,10 @@
 import { ReloadOutlined } from "@ant-design/icons";
 import { Alert, Button, Card, Table, Typography } from "antd";
 import type { TableProps } from "antd";
-import type { ReactElement } from "react";
+import type * as React from "react";
 import { useState } from "react";
-import { usePosts } from "../../../libs/api";
-import type { Post } from "../../../libs/api";
+import { usePosts } from "../../libs/api";
+import type { Post } from "../../libs/api";
 
 const REFRESH_LOADING_MIN_MS = 250;
 
@@ -18,12 +18,12 @@ const POST_COLUMNS: TableProps<Post>["columns"] = [
     title: "Title",
     dataIndex: "title",
     width: 240,
-    render: (title: string) => <Typography.Text strong>{title}</Typography.Text>,
+    render: (title: string): React.ReactNode => <Typography.Text strong>{title}</Typography.Text>,
   },
   {
     title: "Body",
     dataIndex: "body",
-    render: (body: string) => (
+    render: (body: string): React.ReactNode => (
       <Typography.Paragraph className="m-0 max-w-3xl" ellipsis={{ rows: 2, expandable: true }}>
         {body}
       </Typography.Paragraph>
@@ -31,7 +31,7 @@ const POST_COLUMNS: TableProps<Post>["columns"] = [
   },
 ];
 
-export const PostsSection = (): ReactElement => {
+export const PostsSection: React.FC = (): React.ReactElement => {
   const { data, isLoading, isError, refetch, isRefetching } = usePosts();
   const [isRefreshPending, setIsRefreshPending] = useState(false);
 
@@ -40,10 +40,14 @@ export const PostsSection = (): ReactElement => {
 
     void Promise.all([
       refetch(),
-      new Promise((resolve) => {
-        setTimeout(resolve, REFRESH_LOADING_MIN_MS);
+      new Promise<void>((resolve: (value: void | PromiseLike<void>) => void): void => {
+        setTimeout((): void => resolve(), REFRESH_LOADING_MIN_MS);
       }),
-    ]).finally(() => setIsRefreshPending(false));
+    ])
+      .catch((error: unknown): void => {
+        console.error("Unable to refresh posts", error);
+      })
+      .finally((): void => setIsRefreshPending(false));
   };
 
   return (

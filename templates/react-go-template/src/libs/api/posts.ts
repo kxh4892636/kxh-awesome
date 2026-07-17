@@ -1,4 +1,5 @@
 import { useQuery } from "@connectrpc/connect-query";
+import { useEffect } from "react";
 import { getPosts } from "./gen/go-template/posts/v1/posts-PostsService_connectquery";
 import type { Post } from "./gen/go-template/posts/v1/posts_pb";
 
@@ -10,9 +11,15 @@ interface UsePostsResult {
   refetch: () => Promise<unknown>;
 }
 
-export const usePosts = (random = true): UsePostsResult => {
+export const usePosts = (random: boolean = true): UsePostsResult => {
   const query = useQuery(getPosts, { random });
-  const { data, isLoading, isError, isRefetching, refetch } = query;
+  const { data, error, isLoading, isError, isRefetching, refetch } = query;
+
+  useEffect((): void => {
+    if (error) {
+      console.error("Unable to load posts", error);
+    }
+  }, [error]);
 
   return {
     data: data?.posts,

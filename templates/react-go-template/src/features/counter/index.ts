@@ -1,1 +1,1 @@
-export { CounterSection } from "./components/counter-section";
+export { CounterSection } from "./counter-section";

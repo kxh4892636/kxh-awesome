@@ -37,3 +37,4 @@ vp run dev
 ## BDD
 
 前端 BDD 用 Markdown 维护在各 feature 的 `test/` 目录，验收执行走真实浏览器路径。稳定回归流程只在本次需求验收通过后合并到 `test/index.md`。
+跨前后端变更的日期化执行记录维护在 `e2e/` 目录。

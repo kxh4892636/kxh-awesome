@@ -1,9 +1,9 @@
 import { MinusOutlined, PlusOutlined } from "@ant-design/icons";
 import { Button, Card, Space, Statistic } from "antd";
-import type { ReactElement } from "react";
-import { useCounter } from "../stores/use-counter";
+import type * as React from "react";
+import { useCounter } from "./counter-store";
 
-export const CounterSection = (): ReactElement => {
+export const CounterSection: React.FC = (): React.ReactElement => {
   const { count, increment, decrement } = useCounter();
 
   return (

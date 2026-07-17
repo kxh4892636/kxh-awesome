@@ -1,10 +1,10 @@
 import { Button, Space } from "antd";
-import type { ReactElement } from "react";
+import type * as React from "react";
 import { CounterSection } from "../../features/counter";
 import { LiveClockSection } from "../../features/live-clock";
 import { PostsSection } from "../../features/posts";
 
-export const HomePage = (): ReactElement => (
+export const HomePage: React.FC = (): React.ReactElement => (
   <div className="flex gap-6 max-lg:flex-col">
     <div className="flex min-w-0 flex-1 flex-col gap-6">
       <LiveClockSection />

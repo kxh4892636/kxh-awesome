@@ -1,8 +1,7 @@
 #!/bin/bash
-# 代码生成脚本 - 一键安装 Go 工具链（protoc-gen-go, connect-go, buf, doc），生成 pb 代码和 API 文档
 set -e
+trap 'echo "Contract generation failed." >&2' ERR
 
-# Ensure Go is on PATH
 if ! command -v go &>/dev/null; then
   for dir in /usr/local/go/bin "$HOME/go-local/bin" "$HOME/sdk/go"*"/bin"; do
     if [ -x "$dir/go" ]; then
@@ -24,14 +23,11 @@ install_if_missing() {
   fi
 }
 
-# Ensure Go protoc plugins
 install_if_missing protoc-gen-go google.golang.org/protobuf/cmd/protoc-gen-go
 install_if_missing protoc-gen-connect-go connectrpc.com/connect/cmd/protoc-gen-connect-go
 
-# Ensure buf
 install_if_missing buf github.com/bufbuild/buf/cmd/buf
 
-# Ensure protoc-gen-doc
 install_if_missing protoc-gen-doc github.com/pseudomuto/protoc-gen-doc/cmd/protoc-gen-doc
 
 echo "Generating Go code..."

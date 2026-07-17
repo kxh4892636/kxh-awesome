@@ -1,4 +1,9 @@
-export const TECH_STACK = [
+export interface Technology {
+  name: string;
+  version: string;
+}
+
+export const TECH_STACK: readonly Technology[] = [
   { name: "React", version: "19" },
   { name: "TypeScript", version: "6" },
   { name: "Vite", version: "7" },
@@ -11,4 +16,4 @@ export const TECH_STACK = [
   { name: "es-toolkit", version: "1" },
   { name: "dayjs", version: "1" },
   { name: "Tailwind CSS", version: "4" },
-] as const;
+];

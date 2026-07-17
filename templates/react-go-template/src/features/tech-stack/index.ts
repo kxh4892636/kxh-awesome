@@ -1,1 +1,1 @@
-export { TechStackSection } from "./components/tech-stack-section";
+export { TechStackSection } from "./tech-stack-section";

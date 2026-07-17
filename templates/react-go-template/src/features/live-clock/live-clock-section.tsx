@@ -1,8 +1,8 @@
 import { Card, Tag } from "antd";
-import type { ReactElement } from "react";
-import { useCurrentTime } from "../hooks/use-current-time";
+import type * as React from "react";
+import { useCurrentTime } from "./use-current-time";
 
-export const LiveClockSection = (): ReactElement => {
+export const LiveClockSection: React.FC = (): React.ReactElement => {
   const now = useCurrentTime();
 
   return (

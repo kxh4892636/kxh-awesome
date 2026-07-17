@@ -1,12 +1,12 @@
 import { Button, Layout, Space, Typography } from "antd";
-import type { ReactNode, ReactElement } from "react";
 import { Link } from "@tanstack/react-router";
+import type * as React from "react";
 
 interface AppShellProps {
-  children: ReactNode;
+  children: React.ReactNode;
 }
 
-export const AppShell = (props: AppShellProps): ReactElement => {
+export const AppShell: React.FC<AppShellProps> = (props: AppShellProps): React.ReactElement => {
   const { children } = props;
 
   return (

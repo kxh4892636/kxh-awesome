@@ -9,5 +9,10 @@ export const createApiTransport = (
 ): ReturnType<typeof createConnectTransport> => {
   const { baseUrl } = params;
 
-  return createConnectTransport({ baseUrl });
+  try {
+    return createConnectTransport({ baseUrl });
+  } catch (error) {
+    console.error("Unable to create ConnectRPC transport", error);
+    throw error;
+  }
 };

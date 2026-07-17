@@ -12,12 +12,13 @@ const pathDelimiter = process.platform === "win32" ? ";" : ":";
 const generatedApiRoot = resolve(projectRoot, "src/libs/api/gen");
 
 const toPosixPath = (value) => value.replaceAll("\\", "/");
+const isRecord = (value) => typeof value === "object" && value !== null && !Array.isArray(value);
 
 const readConfig = () => {
   const raw = readFileSync(configPath, "utf8");
   const config = JSON.parse(raw);
 
-  if (!config.backends || typeof config.backends !== "object") {
+  if (!isRecord(config) || !isRecord(config.backends)) {
     throw new Error("connectrpc.config.json must define a backends object");
   }
 
@@ -72,12 +73,30 @@ plugins:
 `;
 };
 
+const checkGeneratedClient = (outputDir) => {
+  const vitePlusScript = join(projectRoot, "node_modules", "vite-plus", "bin", "vp");
+  const result = spawnSync(process.execPath, [vitePlusScript, "check", "--fix", outputDir], {
+    cwd: projectRoot,
+    stdio: "inherit",
+  });
+
+  if (result.error) {
+    throw result.error;
+  }
+  if (result.status !== 0) {
+    throw new Error(`generated client check failed for ${outputDir}`);
+  }
+};
+
 const resolveBackend = ([backendId, entry]) => {
   assertSafeBackendId(backendId);
 
   const backend = typeof entry === "string" ? { idl: entry } : entry;
-  if (!backend || typeof backend.idl !== "string" || backend.idl.length === 0) {
+  if (!isRecord(backend) || typeof backend.idl !== "string" || backend.idl.length === 0) {
     throw new Error(`backend "${backendId}" must define an idl string`);
+  }
+  if (backend.out !== undefined && typeof backend.out !== "string") {
+    throw new Error(`backend "${backendId}" out must be a string`);
   }
 
   const outputDir = resolve(projectRoot, backend.out ?? `src/libs/api/gen/${backendId}`);
@@ -105,35 +124,37 @@ const runBufGenerate = (backend) => {
 
   const tempDir = mkdtempSync(join(tmpdir(), `connectrpc-gen-${backend.id}-`));
   const templatePath = join(tempDir, "buf.gen.yaml");
-  writeFileSync(templatePath, createBufTemplate(backend.outputDir, cwd), "utf8");
+  try {
+    writeFileSync(templatePath, createBufTemplate(backend.outputDir, cwd), "utf8");
+    rmSync(backend.outputDir, { recursive: true, force: true });
 
-  rmSync(backend.outputDir, { recursive: true, force: true });
+    console.log(`Generating ${backend.id}`);
+    console.log(`  idl: ${backend.idl}`);
+    console.log(`  out: ${toPosixPath(relative(projectRoot, backend.outputDir))}`);
 
-  console.log(`Generating ${backend.id}`);
-  console.log(`  idl: ${backend.idl}`);
-  console.log(`  out: ${toPosixPath(relative(projectRoot, backend.outputDir))}`);
+    const bufScript = join(projectRoot, "node_modules", "@bufbuild", "buf", "bin", "buf");
+    const result = spawnSync(process.execPath, [bufScript, ...args, templatePath], {
+      cwd,
+      stdio: "inherit",
+      env: {
+        ...process.env,
+        PATH: `${nodeModulesBin}${pathDelimiter}${process.env.PATH ?? ""}`,
+      },
+    });
 
-  const bufScript = join(projectRoot, "node_modules", "@bufbuild", "buf", "bin", "buf");
-  const result = spawnSync(process.execPath, [bufScript, ...args, templatePath], {
-    cwd,
-    stdio: "inherit",
-    env: {
-      ...process.env,
-      PATH: `${nodeModulesBin}${pathDelimiter}${process.env.PATH ?? ""}`,
-    },
-  });
+    if (result.error) {
+      throw result.error;
+    }
 
-  rmSync(tempDir, { recursive: true, force: true });
+    if (result.status !== 0) {
+      throw new Error(`buf generate failed for backend "${backend.id}"`);
+    }
 
-  if (result.error) {
-    throw result.error;
+    removeExtraTrailingBlankLines(backend.outputDir);
+    checkGeneratedClient(backend.outputDir);
+  } finally {
+    rmSync(tempDir, { recursive: true, force: true });
   }
-
-  if (result.status !== 0) {
-    throw new Error(`buf generate failed for backend "${backend.id}"`);
-  }
-
-  removeExtraTrailingBlankLines(backend.outputDir);
 };
 
 const removeExtraTrailingBlankLines = (dir) => {

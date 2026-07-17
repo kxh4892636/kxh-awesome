@@ -27,7 +27,7 @@ Scenario: 用户查看模板技术栈
 ## 失败定位
 
 - 如果 About 页面打不开，先检查路由注册。
-- 如果技术栈不完整，先检查 `features/tech-stack/model/tech-stack.ts`。
+- 如果技术栈不完整，先检查 `features/tech-stack/tech-stack.ts`。
 - 如果区块不可见，先检查 `AboutPage` 是否组合 `TechStackSection`。
 
 ## 执行结果
