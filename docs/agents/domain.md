@@ -9,8 +9,6 @@ This repository uses a single-context layout:
 - `CONTEXT.md` at the repository root contains the domain glossary.
 - `docs/adr/` contains architectural decision records.
 
-`CONTEXT.md` 和 `docs/adr/` 中的文件内容使用中文
-
 ## Before exploring, read these
 
 - `CONTEXT.md` at the repo root.
