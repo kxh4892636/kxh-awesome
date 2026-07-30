@@ -11,12 +11,13 @@ export interface TooltipMaValue {
 interface KlineTooltipProps {
   record: ChartBar;
   maValues: TooltipMaValue[];
+  virtualMaValue: TooltipMaValue | null;
   left: number;
   top: number;
 }
 
 export const KlineTooltip: FC<KlineTooltipProps> = (props: KlineTooltipProps): ReactElement => {
-  const { record, maValues, left, top } = props;
+  const { record, maValues, virtualMaValue, left, top } = props;
   const trendClass = record.changeAmount >= 0 ? "text-red-600" : "text-emerald-600";
   const title =
     record.startDate !== record.endDate
@@ -52,7 +53,7 @@ export const KlineTooltip: FC<KlineTooltipProps> = (props: KlineTooltipProps): R
         <span>成交额</span>
         <b className="text-right">{formatLargeNumber(record.amount)}</b>
       </div>
-      {maValues.length > 0 && (
+      {(maValues.length > 0 || virtualMaValue) && (
         <div className="mt-2 border-t border-slate-200 pt-2 text-xs">
           {maValues.map(
             (item: TooltipMaValue): ReactElement => (
@@ -61,6 +62,12 @@ export const KlineTooltip: FC<KlineTooltipProps> = (props: KlineTooltipProps): R
                 <b style={{ color: item.color }}>{formatNumber(item.value, 2)}</b>
               </div>
             ),
+          )}
+          {virtualMaValue && (
+            <div className="flex justify-between gap-4">
+              <span>{virtualMaValue.label}</span>
+              <b style={{ color: virtualMaValue.color }}>{formatNumber(virtualMaValue.value, 2)}</b>
+            </div>
           )}
         </div>
       )}

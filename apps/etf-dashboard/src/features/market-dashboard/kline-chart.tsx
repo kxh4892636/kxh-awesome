@@ -11,6 +11,7 @@ interface KlineChartProps {
   bars: ChartBar[];
   maBars: ChartBar[];
   maText: string;
+  virtualMaText?: string;
 }
 
 const getTooltipMaValues = (params: { series: MaSeries[]; index: number }): TooltipMaValue[] =>
@@ -26,12 +27,14 @@ const getTooltipMaValues = (params: { series: MaSeries[]; index: number }): Tool
 
 /** K 线入口只编排行情、均线和交互模块，对页面保持单一稳定接口。 */
 export const KlineChart: FC<KlineChartProps> = (props: KlineChartProps): ReactElement => {
-  const { bars, maBars, maText } = props;
+  const { bars, maBars, maText, virtualMaText = "" } = props;
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [hiddenPeriods, setHiddenPeriods] = useState<Set<number>>(new Set());
+  const [isVirtualMaHidden, setIsVirtualMaHidden] = useState(false);
   const interactions = useKlineInteractions({ canvasRef, bars });
-  const { maSourceSeries, maSeries } = useMaSeries({
+  const { maSourceSeries, maSeries, virtualMa } = useMaSeries({
     maText,
+    virtualMaText,
     maBars,
     bars,
     zoomWindow: interactions.zoomWindow,
@@ -39,6 +42,8 @@ export const KlineChart: FC<KlineChartProps> = (props: KlineChartProps): ReactEl
   });
 
   useEffect((): void => setHiddenPeriods(new Set()), [bars, maText]);
+  // 虚拟图例显隐只随表达式重置，不联动 MA 图例的 hiddenPeriods。
+  useEffect((): void => setIsVirtualMaHidden(false), [virtualMaText]);
   useEffect((): void => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -46,9 +51,16 @@ export const KlineChart: FC<KlineChartProps> = (props: KlineChartProps): ReactEl
       canvas,
       bars: interactions.visibleBars,
       maSeries,
+      virtualMa: isVirtualMaHidden ? null : virtualMa,
       hoverIndex: interactions.tooltip?.index ?? null,
     });
-  }, [interactions.tooltip?.index, interactions.visibleBars, maSeries]);
+  }, [
+    interactions.tooltip?.index,
+    interactions.visibleBars,
+    isVirtualMaHidden,
+    maSeries,
+    virtualMa,
+  ]);
 
   const toggleMa = useCallback((period: number): void => {
     setHiddenPeriods((current: Set<number>): Set<number> => {
@@ -59,12 +71,22 @@ export const KlineChart: FC<KlineChartProps> = (props: KlineChartProps): ReactEl
     });
   }, []);
 
+  const toggleVirtualMa = useCallback((): void => {
+    setIsVirtualMaHidden((current: boolean): boolean => !current);
+  }, []);
+
   const tooltipRecord = interactions.tooltip
     ? interactions.visibleBars[interactions.tooltip.index]
     : undefined;
   const tooltipMaValues = interactions.tooltip
     ? getTooltipMaValues({ series: maSeries, index: interactions.tooltip.index })
     : [];
+  const tooltipVirtualMaValue = ((): TooltipMaValue | null => {
+    if (!interactions.tooltip || !virtualMa || isVirtualMaHidden) return null;
+    const value = virtualMa.values[interactions.tooltip.index];
+    if (!Number.isFinite(value)) return null;
+    return { label: "虚拟均线", value: value as number, color: virtualMa.color };
+  })();
 
   return (
     <div className="relative min-h-[440px] overflow-hidden rounded border border-slate-200 bg-white">
@@ -81,11 +103,21 @@ export const KlineChart: FC<KlineChartProps> = (props: KlineChartProps): ReactEl
             onMouseLeave={interactions.clearTooltip}
             onMouseDown={interactions.handleMouseDown}
           />
-          <MaLegend series={maSourceSeries} hiddenPeriods={hiddenPeriods} onToggle={toggleMa} />
+          <MaLegend
+            series={maSourceSeries}
+            hiddenPeriods={hiddenPeriods}
+            onToggle={toggleMa}
+            virtualMa={
+              virtualMa
+                ? { color: virtualMa.color, hidden: isVirtualMaHidden, onToggle: toggleVirtualMa }
+                : null
+            }
+          />
           {interactions.tooltip && tooltipRecord && (
             <KlineTooltip
               record={tooltipRecord}
               maValues={tooltipMaValues}
+              virtualMaValue={tooltipVirtualMaValue}
               left={interactions.tooltip.left}
               top={interactions.tooltip.top}
             />

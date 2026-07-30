@@ -21,6 +21,7 @@ export const MarketDashboard: FC = (): ReactElement => {
   const [period, setPeriod] = useState<ChartPeriod>("day");
   const [range, setRange] = useState<ChartRange>("all");
   const [maText, setMaText] = useState("5 8 13 21 34 55");
+  const [virtualMaText, setVirtualMaText] = useState("");
   const securitiesQuery = useSecurities();
   const dailyBarsQuery = useDailyBars(selectedSymbol);
 
@@ -69,11 +70,13 @@ export const MarketDashboard: FC = (): ReactElement => {
           period={period}
           range={range}
           maText={maText}
+          virtualMaText={virtualMaText}
           isLoading={securitiesQuery.isLoading || dailyBarsQuery.isFetching}
           onSymbolChange={setSelectedSymbol}
           onPeriodChange={setPeriod}
           onRangeChange={setRange}
           onMaTextChange={setMaText}
+          onVirtualMaTextChange={setVirtualMaText}
           onRefresh={dailyBarsQuery.refetch}
         />
       </Card>
@@ -90,7 +93,12 @@ export const MarketDashboard: FC = (): ReactElement => {
         }
       >
         <Spin spinning={dailyBarsQuery.isLoading && !dailyBarsQuery.data}>
-          <KlineChart bars={chartBars} maBars={fullChartBars} maText={maText} />
+          <KlineChart
+            bars={chartBars}
+            maBars={fullChartBars}
+            maText={maText}
+            virtualMaText={virtualMaText}
+          />
         </Spin>
       </Card>
     </div>

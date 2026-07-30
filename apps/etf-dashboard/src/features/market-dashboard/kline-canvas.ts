@@ -1,5 +1,5 @@
 import { formatLargeNumber, formatNumber } from "./market-number-format";
-import type { ChartBar, MaSeries } from "./chart-data";
+import type { ChartBar, MaSeries, VirtualMaSeries } from "./chart-data";
 
 const MIN_X_AXIS_LABEL_GAP = 92;
 
@@ -150,35 +150,52 @@ const drawCandles = (params: {
   });
 };
 
+// 逐点折线追踪：null 点跳过形成自然断线；dashed 区分虚拟均线虚线与 MA 实线。
+const traceSeriesLine = (params: {
+  ctx: CanvasRenderingContext2D;
+  geometry: ChartGeometry;
+  values: Array<number | null>;
+  color: string;
+  dashed?: boolean;
+}): void => {
+  params.ctx.save();
+  params.ctx.lineWidth = 1.5;
+  params.ctx.strokeStyle = params.color;
+  if (params.dashed) params.ctx.setLineDash([4, 4]);
+  params.ctx.beginPath();
+  let hasPoint = false;
+  params.values.forEach((value: number | null, index: number): void => {
+    if (!Number.isFinite(value)) {
+      return;
+    }
+    const x = xForIndex({ geometry: params.geometry, index });
+    const y = yForPrice({ geometry: params.geometry, value: value ?? 0 });
+    if (!hasPoint) {
+      params.ctx.moveTo(x, y);
+      hasPoint = true;
+      return;
+    }
+    params.ctx.lineTo(x, y);
+  });
+  if (hasPoint) {
+    params.ctx.stroke();
+  }
+  params.ctx.restore();
+};
+
 const drawMaLines = (params: {
   ctx: CanvasRenderingContext2D;
   geometry: ChartGeometry;
   maSeries: MaSeries[];
 }): void => {
-  params.ctx.save();
-  params.ctx.lineWidth = 1.5;
   params.maSeries.forEach((series: MaSeries): void => {
-    params.ctx.strokeStyle = series.color;
-    params.ctx.beginPath();
-    let hasPoint = false;
-    series.values.forEach((value: number | null, index: number): void => {
-      if (!Number.isFinite(value)) {
-        return;
-      }
-      const x = xForIndex({ geometry: params.geometry, index });
-      const y = yForPrice({ geometry: params.geometry, value: value ?? 0 });
-      if (!hasPoint) {
-        params.ctx.moveTo(x, y);
-        hasPoint = true;
-        return;
-      }
-      params.ctx.lineTo(x, y);
+    traceSeriesLine({
+      ctx: params.ctx,
+      geometry: params.geometry,
+      values: series.values,
+      color: series.color,
     });
-    if (hasPoint) {
-      params.ctx.stroke();
-    }
   });
-  params.ctx.restore();
 };
 
 const drawAxes = (params: {
@@ -255,6 +272,7 @@ export const renderKlineCanvas = (params: {
   canvas: HTMLCanvasElement;
   bars: ChartBar[];
   maSeries: MaSeries[];
+  virtualMa: VirtualMaSeries | null;
   hoverIndex: number | null;
 }): void => {
   const rect = params.canvas.getBoundingClientRect();
@@ -282,14 +300,19 @@ export const renderKlineCanvas = (params: {
   const maValues = params.maSeries.flatMap((series: MaSeries): number[] =>
     series.values.filter((value: number | null): value is number => Number.isFinite(value)),
   );
-  // 价格轴同时纳入蜡烛和 MA，避免均线超出当前 K 线高低点时被裁剪。
+  const virtualMaValues = (params.virtualMa?.values ?? []).filter(
+    (value: number | null): value is number => Number.isFinite(value),
+  );
+  // 价格轴同时纳入蜡烛、MA 和虚拟均线，避免线超出当前 K 线高低点时被裁剪。
   const priceMin = Math.min(
     ...params.bars.map((record: ChartBar): number => record.low),
     ...maValues,
+    ...virtualMaValues,
   );
   const priceMax = Math.max(
     ...params.bars.map((record: ChartBar): number => record.high),
     ...maValues,
+    ...virtualMaValues,
   );
   const padded = getPaddedRange({ min: priceMin, max: priceMax });
   const geometry: ChartGeometry = {
@@ -305,6 +328,15 @@ export const renderKlineCanvas = (params: {
   drawGrid({ ctx, geometry });
   drawCandles({ ctx, geometry, bars: params.bars });
   drawMaLines({ ctx, geometry, maSeries: params.maSeries });
+  if (params.virtualMa) {
+    traceSeriesLine({
+      ctx,
+      geometry,
+      values: params.virtualMa.values,
+      color: params.virtualMa.color,
+      dashed: true,
+    });
+  }
   drawAxes({ ctx, geometry, bars: params.bars });
   if (params.hoverIndex !== null) {
     drawHover({ ctx, geometry, bars: params.bars, hoverIndex: params.hoverIndex });
