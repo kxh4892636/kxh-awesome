@@ -1,5 +1,7 @@
 import type { DailyBar } from "@/libs/api/gen/etf-service/etf/v1/etf_pb";
 
+import type { VirtualMaExpression } from "./virtual-ma-expression";
+
 export type ChartPeriod = "day" | "week" | "month" | "quarter" | "year";
 export type ChartRange = "1y" | "3y" | "5y" | "10y" | "all";
 
@@ -18,6 +20,14 @@ export interface MaSeries {
   color: string;
   values: Array<number | null>;
 }
+
+export interface VirtualMaSeries {
+  color: string;
+  values: Array<number | null>;
+}
+
+// 亮金黄虚线，与 MA_COLORS 实线调色板区分；画布为白底，不可用白色。
+export const VIRTUAL_MA_COLOR = "#eab308";
 
 interface DateParts {
   year: number;
@@ -200,3 +210,25 @@ export const calculateMaSeries = (params: { bars: ChartBar[]; periods: number[] 
       values,
     };
   });
+
+// 虚拟均线表达式自包含：引用周期在这里独立计算，不依赖工具栏可见的 MA 配置。
+export const calculateVirtualMaSeries = (params: {
+  bars: ChartBar[];
+  expression: VirtualMaExpression;
+}): Array<number | null> => {
+  const sourceSeries = calculateMaSeries({
+    bars: params.bars,
+    periods: [...params.expression.referencedPeriods],
+  });
+  const valuesByPeriod = new Map<number, Array<number | null>>(
+    sourceSeries.map((series: MaSeries): [number, Array<number | null>] => [
+      series.period,
+      series.values,
+    ]),
+  );
+  return params.bars.map((_: ChartBar, index: number): number | null =>
+    params.expression.evaluate(
+      (period: number): number | null => valuesByPeriod.get(period)?.[index] ?? null,
+    ),
+  );
+};

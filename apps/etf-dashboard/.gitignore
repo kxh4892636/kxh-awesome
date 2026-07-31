@@ -23,3 +23,13 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Playwright e2e 运行产物
+e2e/.backend/
+e2e/evidence/
+e2e/test-results/
+playwright-report/
+
+# Vitest browser mode 运行产物
+.vitest-attachments/
+**/__screenshots__/

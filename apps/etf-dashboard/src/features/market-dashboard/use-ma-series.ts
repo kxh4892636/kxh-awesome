@@ -1,11 +1,21 @@
 import { useMemo } from "react";
-import { calculateMaSeries, parseMaPeriods, type ChartBar, type MaSeries } from "./chart-data";
+import {
+  calculateMaSeries,
+  calculateVirtualMaSeries,
+  parseMaPeriods,
+  VIRTUAL_MA_COLOR,
+  type ChartBar,
+  type MaSeries,
+  type VirtualMaSeries,
+} from "./chart-data";
 import type { ZoomWindow } from "./kline-interactions";
+import { parseVirtualMaExpression, type VirtualMaExpression } from "./virtual-ma-expression";
 
 interface UseMaSeriesResult {
   maPeriods: number[];
   maSourceSeries: MaSeries[];
   maSeries: MaSeries[];
+  virtualMa: VirtualMaSeries | null;
 }
 
 /**
@@ -37,16 +47,17 @@ const getMaStartIndex = (params: { bars: ChartBar[]; maBars: ChartBar[] }): numb
  * 均线数据一站式 hook。
  * 输入原始数据和视图参数，输出渲染就绪的 MA 数组。
  *
- * @returns maPeriods 解析后的均线周期、maSourceSeries 完整均线（供图例开关）、maSeries 已切片并过滤隐藏周期的均线
+ * @returns maPeriods 解析后的均线周期、maSourceSeries 完整均线（供图例开关）、maSeries 已切片并过滤隐藏周期的均线、virtualMa 已切片的虚拟均线（表达式为空或非法时为 null）
  */
 export const useMaSeries = (params: {
   maText: string;
+  virtualMaText?: string;
   maBars: ChartBar[];
   bars: ChartBar[];
   zoomWindow: ZoomWindow;
   hiddenPeriods: Set<number>;
 }): UseMaSeriesResult => {
-  const { maText, maBars, bars, zoomWindow, hiddenPeriods } = params;
+  const { maText, virtualMaText, maBars, bars, zoomWindow, hiddenPeriods } = params;
 
   const maPeriods = useMemo((): number[] => parseMaPeriods(maText), [maText]);
 
@@ -74,5 +85,23 @@ export const useMaSeries = (params: {
     [hiddenPeriods, maSourceSeries, maStartIndex, zoomWindow.end, zoomWindow.start],
   );
 
-  return { maPeriods, maSourceSeries, maSeries };
+  const virtualMaExpression = useMemo(
+    (): VirtualMaExpression | null =>
+      virtualMaText ? parseVirtualMaExpression(virtualMaText) : null,
+    [virtualMaText],
+  );
+
+  const virtualMa = useMemo((): VirtualMaSeries | null => {
+    if (!virtualMaExpression) return null;
+    const sourceValues = calculateVirtualMaSeries({
+      bars: maBars,
+      expression: virtualMaExpression,
+    });
+    return {
+      color: VIRTUAL_MA_COLOR,
+      values: sourceValues.slice(maStartIndex + zoomWindow.start, maStartIndex + zoomWindow.end),
+    };
+  }, [virtualMaExpression, maBars, maStartIndex, zoomWindow.end, zoomWindow.start]);
+
+  return { maPeriods, maSourceSeries, maSeries, virtualMa };
 };

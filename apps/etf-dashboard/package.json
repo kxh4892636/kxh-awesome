@@ -8,7 +8,9 @@
     "gen": "node scripts/gen-rpc-client.mjs",
     "build": "tsc -b && vp build",
     "preview": "vp preview",
-    "check": "vp check"
+    "check": "vp check",
+    "test": "vitest run",
+    "test:e2e": "playwright test"
   },
   "dependencies": {
     "@ant-design/cssinjs": "catalog:",
@@ -32,12 +34,18 @@
   "devDependencies": {
     "@bufbuild/buf": "^1.69.0",
     "@bufbuild/protoc-gen-es": "^2.2.5",
+    "@connectrpc/connect": "catalog:",
     "@connectrpc/protoc-gen-connect-query": "^2.0.2",
+    "@playwright/test": "catalog:",
+    "@types/node": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
     "@typescript/native": "catalog:",
+    "@vitest/browser-playwright": "catalog:",
     "typescript": "catalog:",
     "vite": "catalog:",
-    "vite-plus": "catalog:"
+    "vite-plus": "catalog:",
+    "vitest": "catalog:",
+    "vitest-browser-react": "catalog:"
   }
 }
